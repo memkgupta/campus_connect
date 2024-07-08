@@ -22,37 +22,7 @@ const router = useRouter();
         setUser(null);
         Cookies.remove('token');
       };
-//       useEffect(()=>{
-// const loadUser = async()=>{
-//     const token = Cookies.get('token');
-//     if(token){
-//         try {
-//             const res = await axios.get(`${HOST_URL}/users/auth`,{headers:{Authorization:`Bearer ${token}`}});
-// if(res.status==200){
-//     const data = res.data;
-// setUser({id:data._id,username:data.username});
-// setAuthStatus(true);
-// setLoading(false);
-// }
-// else{
-// toast.error("Invalid token please login again");
-// router.replace("/login");
-// }
-//         } catch (error:any) {
-//             if(error.response){
-//                 console.log(error.response.data);
-//                 console.log(error.response.status)
-//             }
-//             else{
-//                 console.log(error.message);
-//             }
-//         }
-//     }
-//     else{
-// router.replace("/login");
-//     }
-// }
-//       },[])
+ 
 return(
     <SessionProvider>
 {children}

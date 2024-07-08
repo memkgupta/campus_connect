@@ -1,7 +1,8 @@
 import mongoose,{Schema} from "mongoose";
 
 const userSchema = new Schema({
-    email:{type:String,required:true,unique:true,match:/^[^\s@]+@glbitm\.ac\.in$/i},
+    name:{type:String,required:true},
+    email:{type:String,required:true,unique:true},
     username:{type:String,required:true,unique:true},
     otp:{type:String},
     verified:{type:Boolean,required:true,default:false},
@@ -9,7 +10,10 @@ const userSchema = new Schema({
     password:{type:String,required:true},
     
     refresh_token:{type:String},
-    role:{type:String,enum:["ADMIN","CONTRIBUTOR","USER","CLUB"],default:'USER'}
+    role:{type:String,enum:["ADMIN","CONTRIBUTOR","USER","CLUB"],default:'USER'},
+    bio:{type:String},
+    interests:[String],
+    
 },{timestamps:true})
 
 const User = mongoose.models.User || mongoose.model('User',userSchema);
