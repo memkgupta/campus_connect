@@ -6,7 +6,7 @@ import {useDebounceCallback, useDebounceValue} from "usehooks-ts"
 import * as z from "zod"
 import Link from 'next/link'
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { signInSchema, signUpSchema } from '@/schema/signupSchema'
 import axios, { AxiosError } from 'axios'
 import { Button } from '@/components/ui/button'
@@ -22,6 +22,7 @@ function page() {
    
     const {toast} = useToast()
     const router = useRouter();
+    const searchParams = useSearchParams();
     //zod 
     const form = useForm<z.infer<typeof signInSchema>>({
       resolver:zodResolver(signInSchema),
@@ -59,7 +60,14 @@ function page() {
     setIsSubmitting(false)
  }
  if(res?.url){
+  const next = searchParams.get('next');
+  if(next){
+router.replace(next);
+  }
+  else{
     router.replace('/account')
+  }
+    
 }
     }
     return (

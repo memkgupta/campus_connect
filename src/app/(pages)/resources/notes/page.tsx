@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { FileX, Loader2 } from 'lucide-react'
+import { FileX, Folder, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import NoResourceFound from '@/components/NoResourceFound'
@@ -19,7 +19,7 @@ const page = () => {
   const [data,setData] = useState<any[]>([]);
   return (
     <div>
-        <FilterBox subjectsState={setSubjects} loading={setIsLoading} url='/api/resources/pyq' state={setData}/>
+        <FilterBox filters={{year:true,subjects:true,branch:true,university:true}} subjectsState={setSubjects} loading={setIsLoading} url='/api/resources/notes' state={setData}/>
 
        {isLoading?(
         <>
@@ -30,15 +30,15 @@ const page = () => {
         data.length>0?(
           <div className='grid md:grid-cols-3 grid-cols-1 gap-4 justify-items-center mt-12'>
           {
-            data?.map((pyq)=>(
+            data?.map((note)=>(
               <Card>
             <CardHeader>
-              <CardTitle>{subjects.filter((subject:any)=>(subject.value===pyq.code))[0]?.label}</CardTitle>
-              <CardDescription>{pyq.sessionYear}</CardDescription>
+              <CardTitle>{subjects.filter((subject:any)=>(subject.value===note.code))[0]?.label}</CardTitle>
+              <CardDescription>{note.sessionYear}</CardDescription>
             </CardHeader>
            
             <CardFooter>
-              <Link href={`/resources/pyq/${pyq._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
+              <Link href={`/resources/notes/${note._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
             </CardFooter>
           </Card>
             ))
