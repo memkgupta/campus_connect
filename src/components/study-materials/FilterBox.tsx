@@ -232,7 +232,7 @@ const FilterBox = ({
     selectedSession,
   ]);
   return (
-    <div className="hidden md:flex justify-around gap-x-5 ">
+    <div className=" md:flex md:flex-row md:justify-around gap-x-5 flex flex-col items-center justify-center  gap-5">
       {/* Year filter */}
       {filters.year && (
         <ComboBox
