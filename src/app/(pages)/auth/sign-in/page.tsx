@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import {useDebounceCallback, useDebounceValue} from "usehooks-ts"
@@ -71,7 +71,8 @@ router.replace(next);
 }
     }
     return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
+      <Suspense fallback={<div><Loader2 size={40} className='animate-spin text-gray-800'/></div>}>
+<div className="flex items-center justify-center min-h-screen bg-black">
       <div className="w-full max-w-md p-8 space-y-6 bg-slate-950 rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-yellow-400">Sign In</h2>
         <Form {...form} >
@@ -134,6 +135,8 @@ router.replace(next);
         </Form>
       </div>
     </div>
+      </Suspense>
+      
     )
   }
 
