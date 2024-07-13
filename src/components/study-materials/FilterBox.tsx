@@ -156,6 +156,7 @@ const FilterBox = ({
   >([]);
   // fetching subjects
   useEffect(() => {
+    console.log("request")
     var params = "";
     if (year) {
       console.log(year);
@@ -164,19 +165,17 @@ const FilterBox = ({
     if (selectedBranch) {
       params = params.concat(`&branch=${selectedBranch.value}`);
     }
-    const fetchSubjects = async () => {
-      try {
-        const res = await axios.get(`/api/subjects${params}`);
-        const data = res.data;
-        if (data.success) {
-          setSubjectFilterOptions(data.subjects);
-          subjectsState(data.subjects);
-        }
-      } catch (error) {
-        toast({ title: "Error Occured", variant: "destructive", color: "red" });
+    axios.get(`/api/subjects${params}`)
+    .then(res => {
+      const data = res.data;
+      if (data.success) {
+        setSubjectFilterOptions(data.subjects);
+        subjectsState(data.subjects);
       }
-    };
-    fetchSubjects();
+    })
+    .catch(error => {
+      toast({ title: "Error Occurred", variant: "destructive", color: "red" });
+    });
   }, [year, selectedBranch]);
   const [subject, setSubject] = useState();
 
