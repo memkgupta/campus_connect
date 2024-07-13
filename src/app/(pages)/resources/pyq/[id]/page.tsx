@@ -1,4 +1,5 @@
 "use client"
+import NoResourceFound from '@/components/NoResourceFound';
 import { useToast } from '@/components/ui/use-toast';
 import axios from 'axios';
 import { Loader2Icon } from 'lucide-react';
@@ -53,7 +54,10 @@ fetchData();
         </div>
     ):(
         <>
-        <p className='text-center text-2xl font-bold text-white'>{data?.label}</p>
+      {data ? 
+      (
+        <>
+          <p className='text-center text-2xl font-bold text-white'>{data?.label}</p>
         <p className='mt-5 text-center font-bolf text-gray'>Contributed by : - <Link href={`/user/@${data.contributor.username}`}>{data.contributor.name}</Link></p>
 <div className='flex justify-around'>
     <p className="text-gray-500 font-bold">Year : {data.sessionYear}</p>
@@ -62,6 +66,9 @@ fetchData();
         <div className="mt-5 flex justify-center">
 {data?.file&&(<iframe src={data.file} width="640" height="640" allow="autoplay"></iframe>)}
         </div>
+        </>
+      ):
+      (<NoResourceFound/>)}
         </>
     )
    }
