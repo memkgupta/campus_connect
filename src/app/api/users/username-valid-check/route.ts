@@ -13,12 +13,12 @@ const UsernameQuerySchema = z.object({
 
 export async function GET(request: Request) {
   await connect();
-
-  try {
-    const { searchParams } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
     const queryParams = {
       username: searchParams.get('username'),
     };
+  try {
+  
 
     const result = UsernameQuerySchema.safeParse(queryParams);
 
