@@ -1,11 +1,23 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ComboBox from "../ComboBox";
 import axios from "axios";
 import { useToast } from "../ui/use-toast";
 import { paperType, universities } from "@/constants";
 import { yearTillNow } from "@/helpers/yearUtility";
-
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+interface Params {
+  collegeYear?: string;
+  branch?: string;
+  university?: string;
+  sessionYear?: string;
+}
 const FilterBox = ({
   state,
   url,
@@ -51,132 +63,36 @@ const FilterBox = ({
     id: string;
   } | null>({ value: "first-year", label: "First Year", id: "first-year" });
 
-  // const [subjectsOptions,setSubjectsOptions] = useState<SubjectOptions[]>([
-  //   {
-  //     year: 1,
-  //     label: "Engineering Mathematics-I",
-  //     code: "maths-1",
-  //     branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Engineering Physics",
-  //     code: "physics",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Engineering Chemistry",
-  //     code: "chemistry",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Engineering Mechanics",
-  //     code: "mechanics",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Programming for Problem Solving",
-  //     code: "pps",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Soft Skills",
-  //     code: "soft_skills",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Engineering Physics Lab",
-  //     code: "physics lab",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Engineering Chemistry Lab",
-  //     code: "chemistry lab",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Engineering Mechanics Lab",
-  //     code: "mechanics lab",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Programming for Problem Solving Lab",
-  //     code: "pps lab",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Workshop Practice",
-  //     code: "workshop",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Engineering Mathematics-II",
-  //     code: "maths-2",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Basic Electrical Engineering",
-  //     code: "electrical",branch:'all'
-  //   },
 
-  //   {
-  //     year: 1,
-  //     label: "Basic Electronics Engineering",
-  //     code: "electronics",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Engineering Graphics & Design",
-  //     code: "graphics",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Environment & Ecology",
-  //     code: "evs",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Basic Electrical Engineering Lab",
-  //     code: "electrical lab",branch:'all'
-  //   },
 
-  //   {
-  //     year: 1,
-  //     label: "Basic Electronics Engineering Lab",
-  //     code: "electronics lab",branch:'all'
-  //   },
-  //   {
-  //     year: 1,
-  //     label: "Soft Skills Lab",
-  //     code: "soft_skills_lab",branch:'all'
-  //   }
-  // ]);
-  const [subjectsFilterOptions, setSubjectFilterOptions] = useState<
-    { value: string; id: string; label: string }[]
-  >([]);
   // fetching subjects
-  useEffect(() => {
-    console.log("request")
-    var params = "";
-    if (year) {
-      console.log(year);
-      params = params.concat("?year=").concat(year.value);
-    }
-    if (selectedBranch) {
-      params = params.concat(`&branch=${selectedBranch.value}`);
-    }
-    axios.get(`/api/subjects${params}`)
-    .then(res => {
-      const data = res.data;
-      if (data.success) {
-        setSubjectFilterOptions(data.subjects);
-        subjectsState(data.subjects);
-      }
-    })
-    .catch(error => {
-      toast({ title: "Error Occurred", variant: "destructive", color: "red" });
-    });
-  }, [year, selectedBranch]);
+const fetchSubjects = async()=>{
+  var params = "";
+  if (year) {
+    console.log(year);
+    params = params.concat("?year=").concat(year.value);
+  }
+  if (selectedBranch) {
+    params = params.concat(`&branch=${selectedBranch.value}`);
+  }
+try {
+   const res  = await axios.get(`/api/subjects/${params}`);
+   const data = res.data;
+   subjectsState(data.subjects);
+   return res.data.subjects;
+  
+} catch (error) {
+  toast({ title: "Error Occurred", variant: "destructive", color: "red" });
+  return Promise.reject("Some error occured")
+}
+   
+
+  
+}
+const {data:subjectsFilterOptions} = useQuery<{value:string,label:string,id:string}[]>({
+  queryKey:[year,selectedBranch],
+  queryFn:fetchSubjects
+})
   const [subject, setSubject] = useState();
 
   const sessions = yearTillNow();
@@ -193,8 +109,8 @@ const FilterBox = ({
   });
   const [selectedSession, setSelectedSession] = useState(sessions[0]);
 
-  useEffect(() => {
-    var params: any = {};
+const fetchResources = async()=>{
+  var params: any = {};
     if (year) {
       params.collegeYear = year.value;
     }
@@ -207,29 +123,82 @@ const FilterBox = ({
     if (selectedSession) {
       params.sessionYear = selectedSession.value;
     }
-    const fetchData = async () => {
-      try {
-        loading(true);
-        const res = await axios.get(url, { params: params });
-        state(res.data.data);
-      } catch (error: any) {
-        toast({
-          title: "Some error occured",
-          variant: "destructive",
-        });
-      } finally {
-        loading(false);
-      }
-    };
-    fetchData();
-  }, [
-    year,
-    selectedBranch,
-    selectedUniversity,
-    subject,
-    selectedPaperType,
-    selectedSession,
-  ]);
+    try {
+      loading(true);
+      const res = await axios.get(url, { params: params });
+      return res.data.data;
+    } catch (error: any) {
+      toast({
+        title: "Some error occured",
+        variant: "destructive",
+      });
+      return Promise.reject("Some error occured")
+    } finally {
+      loading(false);
+    }
+}
+
+const {data:resourceData,isSuccess} = useQuery<any>(
+  {
+    queryKey:[year,selectedBranch,selectedUniversity,selectedSession],
+    queryFn:fetchResources,
+    // refetchOnMount:false,
+    refetchOnWindowFocus:false
+  }
+)
+
+useEffect(()=>{
+  if(isSuccess){
+    state(resourceData);
+  }
+},[resourceData])
+  // const cache = useRef<{ [key: string]: any }>({}); 
+  // const [params, setParams] = useState<Params>({});
+
+  // // Create a unique key based on the parameters
+  // const createCacheKey = (params: Params) => {
+  //   return JSON.stringify(params);
+  // };
+
+  // Update params when inputs change
+  // useEffect(() => {
+  //   const newParams: Params = {};
+  //   if (year) newParams.collegeYear = year.value;
+  //   if (selectedBranch) newParams.branch = selectedBranch.value;
+  //   if (selectedUniversity) newParams.university = selectedUniversity.value;
+  //   if (selectedSession) newParams.sessionYear = selectedSession.value;
+  //   setParams(newParams);
+  // }, [year, selectedBranch, selectedUniversity, selectedSession]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const cacheKey = createCacheKey(params);
+
+  //     if (cache.current[cacheKey]) {
+  //       state(cache.current[cacheKey]);
+  //       return;
+  //     }
+
+  //     try {
+  //       loading(true);
+  //       const res = await axios.get(url, { params });
+  //       cache.current[cacheKey] = res.data.data;
+  //       state(res.data.data);
+  //     } catch (error) {
+  //       toast({
+  //         title: 'Some error occurred',
+  //         variant: 'destructive',
+  //       });
+  //     } finally {
+  //       loading(false);
+  //     }
+  //   };
+
+  //   if (Object.keys(params).length > 0) {
+  //     const debounceFetchData = setTimeout(fetchData, 500); // Debounce the API call
+  //     return () => clearTimeout(debounceFetchData); // Cleanup the timeout on component unmount or params change
+  //   }
+  // }, [params, url, state, loading, toast]);
   return (
     <div className=" md:flex md:flex-row md:justify-around gap-x-5 flex flex-col items-center justify-center  gap-5">
       {/* Year filter */}
@@ -265,7 +234,7 @@ const FilterBox = ({
       {filters.subjects && (
         <ComboBox
           label="Select Subject"
-          options={subjectsFilterOptions}
+          options={subjectsFilterOptions?subjectsFilterOptions:[]}
           stateSetter={setSubject}
         />
       )}

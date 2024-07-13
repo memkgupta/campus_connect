@@ -9,8 +9,7 @@ import React, { useEffect, useState } from 'react'
 import {Document, Page,pdfjs} from 'react-pdf'
 
 const page = ({params}:{params:{id:string}}) => {
-    // pdfjs.GlobalWorkerOptions.workerSrc =  
-    // `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`; 
+  
     const id = params.id;
     const[isLoading,setIsLoading] = useState(true);
     const[data,setData] = useState<any>();
@@ -18,33 +17,29 @@ const page = ({params}:{params:{id:string}}) => {
     const router = useRouter();
     const {toast} = useToast();
     useEffect(()=>{
-const fetchData = async()=>{
-    setIsLoading(true);
-    try {
-        if(id){
-            const res = await axios.get(`/api/resources/notes/${id}`);
-            const data = res.data;
-            setData(data.data);
-            
-        }
-       else{
-        router.replace("/not-found");
-        
-       }
-    } catch (error) {
-        toast({
-            title:'Some error occured',
-            variant:'destructive'
-        })
-    }
-    finally{
-        setIsLoading(false);
-    }
-}
-fetchData();
+        console.log("req");
+        if (id) {
+            axios.get(`/api/resources/notes/${id}`)
+              .then((res) => {
+                const data = res.data;
+                setData(data.data);
+              })
+              .catch((error) => {
+                toast({
+                  title: 'Some error occurred',
+                  variant: 'destructive'
+                });
+              })
+              .finally(() => {
+                setIsLoading(false);
+              });
+          } else {
+            router.replace("/not-found");
+            setIsLoading(false);
+          }
     },[])
-    const [totalPages,setTotalPages] = useState(null);
-    const onDocumentLoadSuccess = ({numPages}:{numPages:any})=>{setTotalPages(numPages)}
+    
+  
   return (
    <>
    {

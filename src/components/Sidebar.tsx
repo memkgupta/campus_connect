@@ -45,12 +45,12 @@ const Sidebar = ({show,setter}:{show:boolean,setter:any}) => {
         />
     )
 
-    const DropDown = ({list}:{list:{id:number,title:string,link:string}[]})=>{
+    const DropDown = ({list}:{list:{id:number,title:string,href:string}[]})=>{
         return (
           <div>
             {list.map(listItem=>(
                   <Link key={listItem.id}
-                  href={listItem.link}
+                  href={listItem.href}
                   onClick={() => {
                       setter((oldVal:any) => !oldVal);
                   }}
@@ -103,7 +103,42 @@ const Sidebar = ({show,setter}:{show:boolean,setter:any}) => {
             </div>
             {isResourceDropdownOpen && (
                 <div className='bg-slate-950 ml-4'>
-                    <DropDown list={[{id:1,title:"Question Bank",link:"/resources/qb"}]}/>
+                    <DropDown list={
+                        [
+                            {
+                                title: "PYQ's",
+                                href: "/resources/pyq",
+                                id:
+                                  1,
+                              },
+                              {
+                                title: "Question Bank",
+                                href: "/resources/question-bank",
+                                id:2,
+                              },
+                              {
+                                title: "Lectures",
+                                href: "/resources/lectures",
+                                id:3,
+                              },
+                              {
+                                title: "Notes",
+                                href: "/resources/notes",
+                               id:4,
+                              },
+                              {
+                                title: "Short Notes",
+                                href: "/resources/short-notes",
+                                id:4,
+                              },
+                              {
+                                title: "Quantum",
+                                href: "/resources/quantum",
+                               id:5,
+                              },  
+                        
+                        ]
+                        }/>
                 </div>
             )} 
         
