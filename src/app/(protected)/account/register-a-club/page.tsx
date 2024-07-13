@@ -40,7 +40,7 @@ router.replace(`/sign-in?next=${encodeURIComponent("/account/register-a-club")}`
     },[status])
     const {toast} = useToast()
  
-    const searchParams = useSearchParams();
+   
     //zod 
     const form = useForm<z.infer<typeof clubRegistrationSchema>>({
       resolver:zodResolver(clubRegistrationSchema),

@@ -14,7 +14,7 @@ import { Form,FormControl, FormDescription, FormField, FormItem, FormLabel } fro
 import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
 import {signIn} from "next-auth/react"
-function page() {
+function Signin() {
     // const [email,setEmail] = useState<string>("");
     const[username,setUsername] = useState('')
    
@@ -71,8 +71,7 @@ router.replace(next);
 }
     }
     return (
-      <Suspense fallback={<div><Loader2 size={40} className='animate-spin text-gray-800'/></div>}>
-<div className="flex items-center justify-center min-h-screen bg-black">
+      <div className="flex items-center justify-center min-h-screen bg-black">
       <div className="w-full max-w-md p-8 space-y-6 bg-slate-950 rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-yellow-400">Sign In</h2>
         <Form {...form} >
@@ -135,9 +134,17 @@ router.replace(next);
         </Form>
       </div>
     </div>
-      </Suspense>
+  
       
     )
   }
-
+function page(){
+  return(
+   
+          <Suspense fallback={<div><Loader2 size={40} className='animate-spin text-gray-800'/></div>}>
+<Signin/>
+</Suspense>
+   
+  )
+}
 export default page
