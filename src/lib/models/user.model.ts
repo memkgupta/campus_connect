@@ -1,6 +1,7 @@
 import mongoose,{Schema} from "mongoose";
 
 const userSchema = new Schema({
+    profile:{type:String,required:true},
     name:{type:String,required:true},
     email:{type:String,required:true,unique:true},
     username:{type:String,required:true,unique:true},
@@ -8,11 +9,11 @@ const userSchema = new Schema({
     verified:{type:Boolean,required:true,default:false},
     otpExpiry:{type:Date},
     password:{type:String,required:true},
-    
     refresh_token:{type:String},
     role:{type:String,enum:["ADMIN","CONTRIBUTOR","USER","CLUB"],default:'USER'},
-    bio:{type:String},
-    interests:[String],
+    bio:{type:String,default:''},
+    college:{type:Schema.Types.ObjectId,ref:'College'},
+    interests:[{type:String}],
     
 },{timestamps:true})
 

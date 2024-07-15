@@ -24,7 +24,7 @@ const handleInputChange = (e:any) => {
 
   
   return (
-    <div className='flex items-center justify-between w-full text-yellow-300 bg-slate-950 px-4'>
+    <div className='z-20 flex items-center justify-between w-full text-yellow-300 bg-slate-950 px-4'>
         <Image src={"/logo.png"} width={70} height={70} alt='logo'/>
         <div className='md:block hidden'>
 <NavigationMenuDemo/>

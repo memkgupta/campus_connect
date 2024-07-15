@@ -8,3 +8,10 @@ export type AuthContextProps = {
 authStatus:boolean;
 logout: () => void;
 }
+
+// export type UserDetails = {
+//     username:string,
+//     name:string,
+//     bio:string,
+
+// }

@@ -74,7 +74,7 @@ const projects:{title: string; href: string; description: string }[]=[
 ]
 export function NavigationMenuDemo() {
   return (
-    <NavigationMenu>
+    <NavigationMenu className="z-20">
       <NavigationMenuList>
       <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>

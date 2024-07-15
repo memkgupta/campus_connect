@@ -3,11 +3,16 @@ import User from "@/lib/models/user.model";
 import {v4 as uuidV4} from 'uuid'
 import bcrypt from 'bcryptjs'
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
+import College from "@/lib/models/college.model";
 export async function POST(request:Request){
     await connect();
     try{
-      const{username,email,password} =  await request.json();
-      
+      const{username,email,password,name} =  await request.json();
+      const emailDomain = email.split('@')[1];
+      const college = await College.findOne({emailDomain:emailDomain});
+      if(!college){
+        return Response.json({success:false,message:"College email entered is not registered yet"},{status:400});
+      }
       const isUsernameTaken = await User.findOne({username:username,verified:true});
       if(isUsernameTaken){
         return Response.json({success:false,message:"Username already taken"},{status:400});
@@ -38,7 +43,7 @@ isUserAlreadyExistsByEmail.otpExpiry = expiryDate;
         expiryDate.setHours(expiryDate.getHours()+1)
 
         const user = new User({
-            email,username,password:hashed,otp,otpExpiry:expiryDate,
+            name:name,email,username,password:hashed,otp,otpExpiry:expiryDate,colleg:college._id
         });
         await user.save()
       }
