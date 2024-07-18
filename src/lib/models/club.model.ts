@@ -7,7 +7,8 @@ const clubSchema = new Schema({
     clubLogo:{type:String,required:true},
     contactPhone:{type:String,required:true},
     clubName:{type:String,required:true},
-    isVerified:{type:Boolean,required:true,default:false}
+    isVerified:{type:Boolean,required:true,default:false},
+    admin:{type:Schema.Types.ObjectId,ref:'User',required:true},
 });
 
 const Club = mongoose.models.Club || mongoose.model('Club',clubSchema);

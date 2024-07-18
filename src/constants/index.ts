@@ -19,3 +19,15 @@ export const paperType = [
     
     {value:'mid-term',label:'Mid term exams',id:'mid-term'}
 ]
+export const eventCategories = [
+    { value: 'tech-fest', label: 'Technical Fest', id: 'tech-fest' },
+    { value: 'cultural-fest', label: 'Cultural Fest', id: 'cultural-fest' },
+    { value: 'workshop', label: 'Workshop', id: 'workshop' },
+    { value: 'conference', label: 'Conference', id: 'conference' },
+    { value: 'seminar', label: 'Seminar', id: 'seminar' },
+    { value: 'hackathon', label: 'Hackathon', id: 'hackathon' },
+    { value: 'competition', label: 'Competition', id: 'competition' },
+    { value: 'sports', label: 'Sports Event', id: 'sports' },
+   
+    
+  ];

@@ -14,7 +14,13 @@ const userSchema = new Schema({
     bio:{type:String,default:''},
     college:{type:Schema.Types.ObjectId,ref:'College'},
     interests:[{type:String}],
-    
+    socials: {
+        twitter: { type: String },
+        instagram: { type: String },
+        linkedin: { type: String },
+        portfolio:{type:String},
+        github:{type:String},
+      },
 },{timestamps:true})
 
 const User = mongoose.models.User || mongoose.model('User',userSchema);
