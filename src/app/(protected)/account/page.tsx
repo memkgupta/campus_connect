@@ -190,7 +190,7 @@ useEffect(()=>{
          <div className=' relative bg-slate-900 min-h-[250px] rounded-b-md '>
          
             
-             <Dialog >
+             <Dialog>
            <DialogTrigger> <Button className='absolute top-10 right-10 bg-yellow-300 hover:bg-yellow-400 flex gap-3'>Edit <Pencil size={20}/></Button></DialogTrigger>
            <DialogContent>
              <DialogHeader>
@@ -223,8 +223,8 @@ useEffect(()=>{
         }}
       />
     </div>
-             <Form {...form}  >
-                   <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+             <Form {...form} >
+                   <form  onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 px-5">
                   
                    
                      
@@ -328,8 +328,8 @@ render={(field)=>(
            
          </Dialog>
          <div className='flex flex-col mt-24 ml-10'>
-           <p className='font-bold text-white text-2xl'>{userDetails.name}</p>
-           <p className='mt-3 text-lg'>{userDetails.bio}</p>
+           <p className='font-bold text-white md:text-2xl sm:text-lg'>{userDetails.name}</p>
+           <p className='mt-3 md:text-lg sm:text-sm'>{userDetails.bio}</p>
            {/* socials */}
            <div className="flex gap-x-3 mt-3">
              <Link className='text-gray-700' href={"#"}><Instagram size={20}/></Link>
@@ -342,10 +342,10 @@ render={(field)=>(
          {/* Cards */}
          <div className="justify-self-stretch w-full grid md:grid-cols-4 gap-5 p-2">
           {/* Quick actions */}
-          <div className='col-span-1 flex p-2 md:flex-col flex-row gap-4 justify-center  bg-slate-900 rounded-md'>
-            <Link className='w-1/6'  href={"/projects/add-a-project"}><Button className='bg-yellow-300 hover:bg-yellow-400 '>Add a project</Button></Link>
-            <Link className='w-1/6' href={"/account/bookmarks"}><Button className='bg-yellow-300 hover:bg-yellow-400 '>Bookmarks</Button></Link>
-            <Link className='w-1/6' href={"/contribute"}><Button className='bg-yellow-300 hover:bg-yellow-400 '>Contribute</Button></Link>
+          <div className='w-full col-span-2 md:col-span-1 flex p-2 md:flex-col flex-row gap-x-4 gap-y-3 justify-center  bg-slate-900 rounded-md'>
+            <Link className='sm:w-1/3 md:w-full text-center py-2 text-black rounded-md bg-yellow-300 hover:bg-yellow-400 text-xs'  href={"/projects/add-a-project"}>Add a project</Link>
+            <Link className='sm:w-1/3 md:w-full text-center py-2 text-black rounded-md bg-yellow-300 hover:bg-yellow-400 text-xs' href={"/account/bookmarks"}>Bookmarks</Link>
+            <Link className='sm:w-1/3 md:w-full text-center py-2 text-black rounded-md bg-yellow-300 hover:bg-yellow-400 text-xs' href={"/contribute"}>Contribute</Link>
           </div>
           {/* Active courses */}
           
@@ -357,7 +357,7 @@ render={(field)=>(
           </div>
           
           {/* Upcoming events */}
-          <div className='col-span-1 flex flex-col bg-slate-900 rounded-md justify-center items-center'>
+          <div className='col-span-2 md:col-span-1 flex flex-col bg-slate-900 rounded-md justify-center items-center'>
           <h2>Upcoming events</h2>
           <p className='text-center mt-4 text-xl font-bold opacity-30'>Coming soon</p>
           {userDetails.events.map((event:any)=>(
