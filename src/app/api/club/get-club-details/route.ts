@@ -18,6 +18,7 @@ try {
 if(!user){
     return Response.json({success:false,message:"Invalid session"},{status:500});
 }
+
 const club = await Club.findOne({admin:user._id});
 if(!club){
     return Response.json({success:false,message:"No club registered"},{status:200})

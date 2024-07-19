@@ -21,7 +21,7 @@ stateSetter(value);
     
    }
     return (
-        <div className="  w-52 pt-10">
+        <div className="  w-52 ">
             <p className="text-sm text-slate-700">{label}</p>
         <Combobox value={value} onChange={(value) => setValue(value)} onClose={() => setQuery('')}>
           <div className="relative">

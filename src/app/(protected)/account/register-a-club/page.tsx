@@ -17,7 +17,7 @@ import { UploadButton } from '@/utils/uploadthing';
 import ComboBox from '@/components/ComboBox';
 
 
-const page = () => {
+const Page = () => {
   const [isLoading,setIsLoading] = useState(true)
     const [isHovered, setIsHovered] = useState(false);
 const [collegeId,setCollegeId] = useState(null);
@@ -58,19 +58,16 @@ try {
         });
         return;
     }
-    if(!collegeId){
-        toast({
-            title:"Please select an college",variant:"destructive"
-        })
-    }
+   
     const res = await axios.post(`/api/register-a-club`,{
-        clubEmail:data.clubEmail,collegeId:collegeId,clubName:data.clubName,clubDescription:data.clubDescription,contactPhone:data.contactPhone,clubLogo:preview
+        clubEmail:data.clubEmail,clubName:data.clubName,clubDescription:data.clubDescription,contactPhone:data.contactPhone,clubLogo:preview
     });
 if(res.data.success){
     toast({
         title:"Club registered successfully verification pending",
         variant:'default'
-    })
+    });
+    router.push("/success")
 }
 else{
     toast({
@@ -86,6 +83,9 @@ else{
         title:message||"Some error occured",
         variant:'destructive'
     })
+}
+finally{
+  setIsSubmitting(false);
 }
     }
     const handleProfileSelect = ()=>{
@@ -234,4 +234,4 @@ setPreview(null);
   )
 }
 
-export default page
+export default Page

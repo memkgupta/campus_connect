@@ -1,59 +1,55 @@
 "use client"
-import { ClubContext } from '@/context/ClubContext'
-import { ChevronDownIcon, CircleX, Loader2, Trash } from 'lucide-react';
-import Link from 'next/link';
-import { useForm } from 'react-hook-form';
-import React, { useContext, useState } from 'react'
-import { Form,FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
-import { eventRegistrationSchema } from '@/schema/eventRegistrationSchema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Input } from '@/components/ui/input'
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
- 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Textarea } from '@/components/ui/textarea';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Switch } from '@/components/ui/switch';
-
-import { eventCategories } from '@/constants';
-import clsx from 'clsx';
-import ComboBox from '@/components/ComboBox';
+import ErrorCard from '@/components/ErrorCard';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/use-toast';
+import { eventCategories } from '@/constants';
+import axios, { AxiosError } from 'axios';
+import { CalendarIcon, Loader2, Pencil, Trash } from 'lucide-react';
+import React, { useEffect, useState } from 'react'
+import ComboBox from '@/components/ComboBox';
+import { Form,FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { UploadButton } from '@/utils/uploadthing';
-import axios from 'axios';
+import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { Label } from '@/components/ui/label';
-const Page = () => {
-  const {toast} = useToast();
-  const [date, setDate] = React.useState<Date>()
-  const clubDetails = useContext(ClubContext);
-  const [category,setCateg] = useState<NoInfer<{value:string,label:string,id:string}>|null>(eventCategories[0]);
-const[isSubmitting,setIsSubmitting] = useState(false);
-const router = useRouter();
-const[banner,setBanner] = useState<string|null>(null);
+import { z } from 'zod';
+import { eventRegistrationSchema } from '@/schema/eventRegistrationSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '@/components/ui/input';
+import { format } from "date-fns"
+import { Textarea } from '@/components/ui/textarea';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { Calendar } from '@/components/ui/calendar';
+import { Switch } from '@/components/ui/switch';
+const Page = ({params}:{params:{id:string}}) => {
+    const [isSubmitting,setIsSubmitting]=useState(false);
+    const {id} = params
+    
+    const {toast} = useToast();
+    const [loading,setLoading] = useState(true);
+    const [error,setError] = useState(null)
+    const [data,setData] = useState<any>();
+    const [category,setCateg] = useState<NoInfer<{value:string,label:string,id:string}>|null>(eventCategories[0]);
+    const[banner,setBanner] = useState<string|null>(null);
   const form  = useForm<z.infer<typeof eventRegistrationSchema>>({
     resolver:zodResolver(eventRegistrationSchema),
    
   });
+  const [date, setDate] = React.useState<Date>()
   const [participantsFromOutsideAllowed,setParticipantFromOutsideAllowed] = useState(false);
   const [isHovered,setIsHovered] = useState(false);
   const handlesubmit = async(data:Zod.infer<typeof eventRegistrationSchema>)=>{
     // console.log(data);
     setIsSubmitting(true);
-   if(!clubDetails){
-    toast({title:'Invalid request',variant:'destructive'})
-    return;
-   }
+   
    if(!category){
     toast({title:'Please Select a category',variant:'destructive'})
     return;
    }
     const reqData = {
-      clubId:clubDetails._id,
+      
       name:data.name,
       venueAddress:data.venueAddress,
       description:data.description,
@@ -72,7 +68,7 @@ const[banner,setBanner] = useState<string|null>(null);
       const data = res.data
       if(data.success){
         toast({title:'Event registered successfully will be redirecting soon'})
-     router.replace(`/account/club/event/${data.id}`)
+    
       }
       else{
         toast({title:data.message,variant:'destructive'})
@@ -83,10 +79,53 @@ const[banner,setBanner] = useState<string|null>(null);
     }
   console.log(reqData);
   }
+    useEffect(()=>{
+     axios.get(`/api/events/club/${id}`)
+     .then((res)=>{
+        const data = res.data;
+        if(!data.success){
+            setError(data.message);
+            toast({title:data.message,variant:"destructive"})
+        }
+        else{
+            setData(data.data);
+            console.log(data.data)
+        }
+        
+     })
+     .catch((error)=>{
+        const axiosError= error as AxiosError<any>;
+        if(axiosError.response?.data){
+            toast({title:axiosError.response.data.message,variant:"destructive"})
+        }  
+        else{
+            toast({title:"Some error occured",variant:"destructive"})
+        }
+     })
+     .finally(()=>{
+        setLoading(false)
+     })
+    },[id])
   return (
-    <div className='flex justify-center items-center p-5'>
-{clubDetails ? (
-  <div className="w-2/3 border-2 border-gray-800 flex flex-col items-center justify-center py-10">
+    <>
+    {loading?(<div className='min-h-screen w-full flex justify-center items-center'><Loader2 className='text-gray animate-spin' size={40}/></div>):(
+        <>
+        {error?(
+            <ErrorCard title='Some error occured' message={error} />
+        ):(
+            <div className='w-full flex justify-center'>
+                <div className="relative w-3/4 lg:max-w-3/4  bg-slate-900/50 border-2 border-gray-700 shadow-md rounded-md  mx-10 my-4">
+      
+        {/* Edit Dialog */}
+        <Dialog>
+           <DialogTrigger> <Button className='absolute top-10 right-10 bg-yellow-300 hover:bg-yellow-400 flex gap-3'>Edit <Pencil size={20}/></Button></DialogTrigger>
+           <DialogContent className='overflow-y-scroll max-h-screen flex flex-col justify-center items-center'>
+             <DialogHeader>
+               <DialogTitle>Update User Details</DialogTitle>
+              
+             </DialogHeader>
+             <div className='max-h-[80vh]'>
+             <div className="w-2/3 border-2 border-gray-800 flex flex-col items-center justify-center py-10">
 <div onMouseEnter={()=>{
             setIsHovered(true)
         }} onMouseLeave={()=>{setIsHovered(false)}} className={`relative w-3/4 rounded-md h-[200px] mb-4 flex items-center justify-center ${!banner && 'bg-slate-900/50' }`} onClick={(e)=>{
@@ -114,8 +153,9 @@ const[banner,setBanner] = useState<string|null>(null);
        }}
      />
 </div>
-
-<Form {...form}>
+</div>
+<div>
+<Form {...form} >
   <form onSubmit={form.handleSubmit(handlesubmit)} className='space-y-6'>
 <FormField control={form.control} name='name' render={({field})=>(
   <FormItem>
@@ -196,16 +236,50 @@ const[banner,setBanner] = useState<string|null>(null);
 <Button type='submit' className='bg-yellow-300 hover:bg-yellow-400 text-black'>{isSubmitting?(<div className='flex gap-2'>Please Wait <Loader2 className='animate-spin text-gray-800' size={20}></Loader2></div>):('Submit')}</Button>
   </form>
 </Form>
-  </div>
-):
-(
-  <div className='bg-slate-800 h-[200px] items-center text-center flex justify-center flex-col gap-5 p-10'>
-    <p className="font-bold text-xl text-gray-750"> Club Not Registered</p>
-    <CircleX size={50} className='text-gray-700'/>
-   <Link href={"/account/register-a-club"} className='text-indigo-700 text-center'>Register Now your club</Link>
-  </div>
-)}
+</div>
+
+             </div>
+    
+         <DialogFooter>
+          <DialogClose asChild>
+            <Button disabled={isSubmitting} className='bg-red-300  hover:bg-red-400'>Close</Button>
+          </DialogClose>
+         </DialogFooter>
+           </DialogContent>
+           
+         </Dialog>
+      <div className="w-full h-auto lg:h-[500px] p-12 mt-5">
+        <img className="object-cover w-full h-full " src={data.banner} alt={data.name} />
+      </div>
+      <div className="p-4 text-white flex flex-col justify-between leading-normal">
+        <div className="mb-8">
+          <div className=" font-bold text-xl mb-2">{data.name}</div>
+          <p className=" text-base">{data.description}</p>
+        </div>
+        <div className="mb-8">
+          <div className="flex items-center">
+            <img className="w-10 h-10 rounded-full mr-4" src={data.clubDetails.clubLogo} alt={data.clubDetails.clubName} />
+            <div className="text-sm">
+              <p className=" leading-none">{data.clubDetails.clubName}</p>
+            </div>
+          </div>
+          <p className="text-gray-600">{data.location}</p>
+          <p className="text-gray-600">{new Date(data.dateTime).toLocaleString()}</p>
+          <p className="text-gray-600">Category: {data.category}</p>
+        </div>
+        <div className="flex items-center">
+          <p className={`text-sm ${data.isFull ? 'text-red-500' : 'text-green-500'}`}>
+            {data.isFull ? 'Full' : 'Available'}
+          </p>
+          <p className="text-sm text-gray-600 ml-4">Registrations: {data.totalRegistrations}/{data.maxCapacity}</p>
+        </div>
+      </div>
     </div>
+            </div>
+        )}
+        </>
+    )}
+    </>
   )
 }
 

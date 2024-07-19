@@ -22,7 +22,7 @@ try {
    
     const event = await Event.aggregate([
         {
-            $match:{_id:id},
+            $match:{_id:new mongoose.Types.ObjectId(id)},
            
     },
     {$lookup:{
@@ -76,9 +76,9 @@ clubName:1
         return Response.json({success:false,message:"No such event exists"},{status:400});
     }
    
-    return Response.json({success:true,data:event[0]});
+    return Response.json({success:true,data:event[0]},{status:200});
 } catch (error) {
     console.log(error);
-    return Response.json({success:false,message:"Some error occured"})
+    return Response.json({success:false,message:"Some error occured"},{status:500})
 }
 }

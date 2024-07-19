@@ -43,6 +43,9 @@ if(session.user){
             })
         }
     })
+    .finally(()=>{
+        setIsLoading(false);
+    })
 }
 }
 else{
@@ -55,9 +58,12 @@ return(()=>{})
     <ClubContext.Provider value={state} >
       <>
       {isLoading?(
-           <Loader2 className="animate-spin" size={40}/>
+        <div className="flex jsutify-center items-center min-h-[80vh] w-full">
+           <Loader2 className="animate-spin text-gray-500"  size={40}/>
+
+        </div>
         ):
-        ( {children})
+        children
         }
       </>
     </ClubContext.Provider>

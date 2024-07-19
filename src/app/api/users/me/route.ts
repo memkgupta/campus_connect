@@ -17,6 +17,7 @@ try {
     if(!user){
         return Response.json({success:false,message:"Invalid session"},{status:401});
     }
+
     const res = {username:user.username,name:user.name,profile:user.profile,bio:user.bio,interest:user.interests,courses:[],events:[]}
     return Response.json({success:true,data:res},{status:200});
 } catch (error) {
