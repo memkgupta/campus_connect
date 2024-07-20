@@ -20,6 +20,7 @@ export const paperType = [
     {value:'mid-term',label:'Mid term exams',id:'mid-term'}
 ]
 export const eventCategories = [
+    {value:'all',label:'All',id:'all'},
     { value: 'tech-fest', label: 'Technical Fest', id: 'tech-fest' },
     { value: 'cultural-fest', label: 'Cultural Fest', id: 'cultural-fest' },
     { value: 'workshop', label: 'Workshop', id: 'workshop' },

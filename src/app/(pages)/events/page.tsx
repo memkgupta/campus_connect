@@ -1,0 +1,131 @@
+"use client"
+import ComboBox from '@/components/ComboBox';
+import EventCard from '@/components/events/EventCard';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/components/ui/use-toast';
+import { eventCategories } from '@/constants';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { Loader2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react'
+import { useDebounceCallback } from 'usehooks-ts';
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+  } from "@/components/ui/pagination"
+const Page = () => {
+const [events,setEvents] = useState([]);
+const [happening,setHappening] = useState({value:"this-week",label:'This Week',id:"this-week"});
+const [location,setLocation] = useState(null)   
+const [college,setCollege] = useState(null);
+const [keyword,setKeyword] = useState("");
+const debounced = useDebounceCallback(setKeyword,500);
+const [page,setPage] = useState(1);
+const[category,setCategory] = useState<{value:string,label:string,id:string}|null>(null);
+const [loading,setLoading] = useState(true);
+const {toast} = useToast();
+const fetchEvents = async()=>{
+        const params:any = {}
+        if(happening){
+            params.happening=happening.value
+        }
+        if(location){
+            params.location = location
+        }
+        if(college){
+            params.college=college;
+        }
+        if(keyword){
+            params.keyword = keyword;
+        }
+        if(category){
+            params.category = category.value
+        }
+try {
+    setLoading(true)
+    const res = await axios.get(`/api/events`,{params:params});
+   return res.data.events;
+} catch (error) {
+    toast({
+        title: "Some error occured",
+        variant: "destructive",
+      });
+      return Promise.reject("Some error occured")
+}
+finally{
+    setLoading(false);
+}
+    }
+    const {data:eventsData,isSuccess} = useQuery<any>(
+        {
+          queryKey:[happening,keyword,category],
+          queryFn:fetchEvents,
+          // refetchOnMount:false,
+          refetchOnWindowFocus:false
+        }
+      )
+      
+      useEffect(()=>{
+        if(isSuccess){
+          setEvents(eventsData);
+          console.log(eventsData)
+        }
+       
+      },[eventsData])
+  return (
+   <>
+   <div className='mb-12 gap-y-3 grid grid-cols-1 md:grid-cols-3 justify-items-center content-center'>
+        <ComboBox label='When' options={[
+            {value:"this-week",label:"This week",id:"this-week"},
+            {value:"this-month",label:"This month",id:"this-month"},
+            {value:"this-year",label:"This year",id:"this-year"}
+        ]} stateSetter={setHappening}/>
+          <ComboBox  label='Category' options={eventCategories} stateSetter={setCategory}/>
+          {/* <Label>Search</Label> */}
+         <div>
+         <p className="text-sm text-slate-700">{"Search"}</p>
+         <Input placeholder='Search by name' type='text' onChange={(e)=>{debounced(e.target.value)}} className='max-w-56 text-white border-2 border-white'/>
+         </div>
+    </div>
+   {loading?(
+    <div className='w-full min-h-screen flex justify-center items-center'>
+        <Loader2 className='text-gray-500 animate-spin'/>
+    </div>
+   ):(
+
+   <div>
+    
+     <div className='grid grid-cols-1 md:grid-cols-3 gap-5 justify-items-center'>
+   {events.length>0 && 
+   events.map((event:any)=>(<EventCard key={event._id} data={event}/>))
+   }
+   </div>
+   <Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious  />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink >1</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationEllipsis />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext  />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+   </div>
+   )}
+   </>
+  )
+}
+
+export default Page

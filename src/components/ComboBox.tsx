@@ -4,9 +4,9 @@ import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOption
 // import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import { CheckIcon, ChevronDownIcon } from 'lucide-react'
-const ComboBox = ({options,stateSetter,label}:{options:{id:string,value:string,label:string}[],stateSetter:any,label:string}) => {
+const ComboBox = ({options,stateSetter,label,defaultNull}:{options:{id:string,value:string,label:string}[],stateSetter:any,label:string,defaultNull?:boolean}) => {
     const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState<{ id:string,value: string; label: string; }|null>(options[0])
+    const [value, setValue] = React.useState<{ id:string,value: string; label: string; }|null>(defaultNull?null:options[0])
     const [query,setQuery] = useState('');
     const filteredData =
     query === ''

@@ -1,5 +1,8 @@
 import connect from "@/lib/db";
 import { Event } from "@/lib/models/event.model";
+import User from "@/lib/models/user.model";
+import mongoose from "mongoose";
+import { getServerSession } from "next-auth";
 
 export const GET = async(req:Request)=>{
     const {searchParams} = new URL(req.url);
@@ -7,6 +10,7 @@ export const GET = async(req:Request)=>{
         
     };
     const queryParams = {
+        happening:searchParams.get('happening'),
         location:searchParams.get('location'),
         category:searchParams.get('category'),
         college:searchParams.get('college'),
@@ -16,19 +20,52 @@ export const GET = async(req:Request)=>{
 if(queryParams.location){
     matchStage.location = queryParams.location
 }
-if(queryParams.category){
+if(queryParams.category && queryParams.category!="all"){
     matchStage.category = queryParams.category
 }
 if(queryParams.college){
-    matchStage.college=queryParams.college
+    matchStage.college=new mongoose.Types.ObjectId(queryParams.college)
 }
 if(queryParams.keyword){
     matchStage.name = {$regex:queryParams.keyword,$options:'i'}
 }
+var startDate = new Date();
+var endDate = new Date();
+if(queryParams.happening){
+
+    const h = queryParams.happening;
+    if(h==="this-week"){
+       startDate = getWeekStart(startDate);
+       endDate = getWeekEnd(endDate);
+ 
+    }
+    if(h==="this-month"){
+        startDate = getMonthStart(startDate);
+        endDate = getMonthEnd(endDate);
+    
+    }
+    if(h==="this-year"){
+        startDate = getYearStart(startDate)
+        endDate = getYearEnd(endDate)
+       
+    }
+    matchStage.dateTime={
+        $gte:startDate,
+        $lt:endDate
+    }
+}
+const session =await getServerSession();
+const _user = session?.user;
+if(!queryParams.college && _user){
+    const user = await User.findOne({email:_user.email});
+    matchStage.college = new mongoose.Types.ObjectId(user.college)
+}
 const skip = (queryParams.page - 1) * 10;
 await connect();
+
 try {
     const events = await Event.aggregate([
+      
         {$match:matchStage},
          {
             $lookup:{
@@ -46,6 +83,9 @@ try {
             as:'club',
          }
         },
+        {$unwind:{
+            path:'$club'
+        }},
         {$lookup:{
             from:'event_registrations',
             localField:'_id',
@@ -55,6 +95,7 @@ try {
         {$project:{
             dateTime:1,
             name:1,
+            brief_description:{$substr:["$description", 0, 100]},
             location:1,
             category:1,
             participantsFromOutsideAllowed:1,
@@ -77,6 +118,45 @@ try {
     
     return Response.json({success:true,events:events},{status:200});
 } catch (error) {
+    // console.log(error.message)
     return Response.json({success:false,message:"Some error occured"},{status:500})
 }
 }
+
+function startOfDay(date:Date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+  
+  // Helper function to get the start of the week (Sunday)
+  function getWeekStart(date:Date) {
+    const day = date.getDay();
+    const diff = date.getDate() - day;
+    return startOfDay(new Date(date.setDate(diff)));
+  }
+  
+  // Helper function to get the end of the week (Saturday)
+  function getWeekEnd(date:Date) {
+    const day = date.getDay();
+    const diff = date.getDate() + (6 - day);
+    return startOfDay(new Date(date.setDate(diff) + 1)); // Adding 1 to include the whole day
+  }
+  
+  // Helper function to get the start of the month
+  function getMonthStart(date:Date) {
+    return new Date(date.getFullYear(), date.getMonth(), 1);
+  }
+  
+  // Helper function to get the end of the month
+  function getMonthEnd(date:Date) {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999); // Last day of the current month
+  }
+  
+  // Helper function to get the start of the year
+  function getYearStart(date:Date) {
+    return new Date(date.getFullYear(), 0, 1);
+  }
+  
+  // Helper function to get the end of the year
+  function getYearEnd(date:Date) {
+    return new Date(date.getFullYear(), 11, 31, 23, 59, 59, 999); // Last day of the current year
+  }
