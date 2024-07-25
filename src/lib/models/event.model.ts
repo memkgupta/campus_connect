@@ -3,6 +3,8 @@ import mongoose,{Schema} from "mongoose";
 const eventCategoriesEnum = eventCategories.map(categ=>categ.value);
 const eventSchema = new Schema({
     admin: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    isTeamEvent:{type:Boolean,required:true,default:false},
+    maxTeamSize:{type:Number,default:null},
     name: { type: String, required: true },
     description: { type: String, required: true },
     dateTime: { type: Date, required: true },
@@ -11,6 +13,7 @@ const eventSchema = new Schema({
     category: { type: String, enum: eventCategoriesEnum, required: true },
     banner:{type:String,required:true},
     participantsFromOutsideAllowed:{type:Boolean,required:true,default:false},
+    isAcceptingVolunteerRegistrations:{type:Boolean,default:false},
     maxCapacity:{type:Number,required:true,default:100},
     creationTimestamp: { type: Date, default: Date.now },
     college:{type:Schema.Types.ObjectId,ref:'College'},
@@ -19,11 +22,15 @@ const eventSchema = new Schema({
 const eventRegistrationSchema =new Schema({
     event:{type:Schema.Types.ObjectId,ref:'Event',required:true},
     user:{type:Schema.Types.ObjectId,ref:'User',required:true},
-    isAccepted:{type:Schema.Types.ObjectId,ref:'User',required:true},
+    isAccepted:{type:Boolean,default:false,required:true},
     applicationNote:{type:String,required:true},
-    links:{title:{type:String},url:{type:String}},
+    
+    registrationType:{type:String,enum:['volunteer','participant']},
     rsvp:{type:Schema.Types.ObjectId,ref:'RSVP',default:null},
+    volunteerType:{type:String,enum:["general","technical"]},
     registrationTimestamp:{type:Date,default:Date.now},
+    links:[{type:String,url:String}],
+    resume:{type:String,default:null},
 },{timestamps:true});
 const rsvpSchema = new Schema({
 event:{type:Schema.Types.ObjectId,ref:'Event',required:true},

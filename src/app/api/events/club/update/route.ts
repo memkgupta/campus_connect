@@ -8,7 +8,7 @@ export const PUT = async(req:Request)=>{
     const queryParams = {
       id: searchParams.get('id'),
     };
-    const {clubId,name,description,dateTime,location,category,banner} = await req.json();
+    const {clubId,name,description,dateTime,location,category,banner,isAcceptingVolunteerRegistrations,isTeamEvent,maxTeamSize,maxCapacity} = await req.json();
     const session = await getServerSession();
     if(!session){
         return Response.redirect('/auth/sign-in');
@@ -50,6 +50,16 @@ export const PUT = async(req:Request)=>{
         }
         if(category){
             event.category = category;
+        }
+        // isAcceptingVolunteerRegistrations,isTeamEvent,maxTeamSize,maxCapacity
+        if(isAcceptingVolunteerRegistrations){
+            event.isAcceptingVolunteerRegistrations = isAcceptingVolunteerRegistrations
+        }
+        if(isTeamEvent){
+            event.isTeamEvent = isTeamEvent;
+        }
+        if(maxTeamSize){
+            event.maxTeamSize = maxTeamSize
         }
         await event.save();
 return Response.json({success:true,message:"Event updated successfully"});

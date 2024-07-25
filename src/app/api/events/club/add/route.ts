@@ -4,7 +4,7 @@ import { Event } from "@/lib/models/event.model";
 import User from "@/lib/models/user.model";
 import { getServerSession } from "next-auth/next";
 export const POST = async(req:Request)=>{
-    const {clubId,name,description,dateTime,location,category,creationTimestamp,banner,participantsFromOutsideAllowed,maxCapacity,venueAddress} = await req.json();
+    const {clubId,name,description,dateTime,location,category,creationTimestamp,banner,participantsFromOutsideAllowed,maxCapacity,venueAddress,isTeamEvent,maxTeamSize,isAcceptingVolunteerRegistrations} = await req.json();
     const session = await getServerSession();
     if(!session){
         return Response.redirect('/auth/sign-in');
@@ -37,7 +37,8 @@ export const POST = async(req:Request)=>{
                 category,
                 club:club._id,
                 college:club.college,
-                participantsFromOutsideAllowed
+                participantsFromOutsideAllowed,
+                maxTeamSize,isTeamEvent,isAcceptingVolunteerRegistrations
             }
         )
 return Response.json({success:true,message:"Event created successfully",id:event._id});

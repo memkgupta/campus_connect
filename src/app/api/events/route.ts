@@ -16,6 +16,7 @@ export const GET = async(req:Request)=>{
         college:searchParams.get('college'),
         keyword:searchParams.get('keyword'),
         page : parseInt(searchParams.get('page')||'1'),
+        id:searchParams.get('id'),
     } 
 if(queryParams.location){
     matchStage.location = queryParams.location
@@ -28,6 +29,9 @@ if(queryParams.college){
 }
 if(queryParams.keyword){
     matchStage.name = {$regex:queryParams.keyword,$options:'i'}
+}
+if(queryParams.id){
+matchStage._id=new mongoose.Types.ObjectId(queryParams.id)
 }
 var startDate = new Date();
 var endDate = new Date();
@@ -56,14 +60,15 @@ if(queryParams.happening){
 }
 const session =await getServerSession();
 const _user = session?.user;
-if(!queryParams.college && _user){
-    const user = await User.findOne({email:_user.email});
-    matchStage.college = new mongoose.Types.ObjectId(user.college)
-}
+
 const skip = (queryParams.page - 1) * 10;
 await connect();
 
 try {
+    if(!queryParams.college && _user){
+        const user = await User.findOne({email:_user.email});
+        matchStage.college = new mongoose.Types.ObjectId(user.college)
+    }
     const events = await Event.aggregate([
       
         {$match:matchStage},
@@ -115,10 +120,25 @@ try {
         {$skip:skip},
         {$limit:10}
     ])
-    
-    return Response.json({success:true,events:events},{status:200});
-} catch (error) {
-    // console.log(error.message)
+    const totalResults = await Event.aggregate([
+      
+        {$match:matchStage},
+         {
+            $lookup:{
+            from:'colleges',
+            foreignField:'_id',
+            localField:'college',
+            as:'college',
+         }
+        },
+        
+        {
+            $count:'totalResults'
+        }
+    ])
+    return Response.json({success:true,events:events,totalResults:totalResults[0]?.totalResults},{status:200});
+} catch (error:any) {
+    console.log(error.message)
     return Response.json({success:false,message:"Some error occured"},{status:500})
 }
 }
@@ -131,7 +151,7 @@ function startOfDay(date:Date) {
   function getWeekStart(date:Date) {
     const day = date.getDay();
     const diff = date.getDate() - day;
-    return startOfDay(new Date(date.setDate(diff)));
+    return startOfDay(new Date());
   }
   
   // Helper function to get the end of the week (Saturday)

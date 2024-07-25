@@ -27,6 +27,7 @@ const [college,setCollege] = useState(null);
 const [keyword,setKeyword] = useState("");
 const debounced = useDebounceCallback(setKeyword,500);
 const [page,setPage] = useState(1);
+const [totalResults,setTotalResults]=useState<number|null>(null);
 const[category,setCategory] = useState<{value:string,label:string,id:string}|null>(null);
 const [loading,setLoading] = useState(true);
 const {toast} = useToast();
@@ -47,10 +48,15 @@ const fetchEvents = async()=>{
         if(category){
             params.category = category.value
         }
+        if(page){
+          params.page = page;
+        }
+  
 try {
     setLoading(true)
     const res = await axios.get(`/api/events`,{params:params});
-   return res.data.events;
+    
+   return {events:res.data.events,totalResults:res.data.totalResults};
 } catch (error) {
     toast({
         title: "Some error occured",
@@ -64,7 +70,7 @@ finally{
     }
     const {data:eventsData,isSuccess} = useQuery<any>(
         {
-          queryKey:[happening,keyword,category],
+          queryKey:[happening,keyword,category,page],
           queryFn:fetchEvents,
           // refetchOnMount:false,
           refetchOnWindowFocus:false
@@ -73,7 +79,8 @@ finally{
       
       useEffect(()=>{
         if(isSuccess){
-          setEvents(eventsData);
+          setEvents(eventsData.events);
+          setTotalResults(eventsData.totalResults)
           console.log(eventsData)
         }
        
@@ -109,16 +116,17 @@ finally{
    <Pagination>
   <PaginationContent>
     <PaginationItem>
-      <PaginationPrevious  />
+      <PaginationPrevious disabled={page==1}  onClick={(e)=>{page>1&&setPage(page-1)}} />
     </PaginationItem>
     <PaginationItem>
-      <PaginationLink >1</PaginationLink>
+      <PaginationLink onClick={()=>{setPage(1)}} >1</PaginationLink>
+    
     </PaginationItem>
     <PaginationItem>
       <PaginationEllipsis />
     </PaginationItem>
     <PaginationItem>
-      <PaginationNext  />
+      <PaginationNext disabled={totalResults!=null && (Math.floor(totalResults/10)<page)} onClick={(e)=>{setPage(page+1)}} />
     </PaginationItem>
   </PaginationContent>
 </Pagination>

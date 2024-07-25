@@ -23,19 +23,26 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
 import { Switch } from '@/components/ui/switch';
+import { EventParticipantRequestResponse } from '@/types';
+import {DataTable} from "@/components/ui/data-table"
+import { columns } from './columns';
+import usePagination from '@/hooks/usePagination';
+import { useQuery } from '@tanstack/react-query';
 const Page = ({params}:{params:{id:string}}) => {
     const [isSubmitting,setIsSubmitting]=useState(false);
     const {id} = params
+    const [data,setData] = useState<any>();
     
     const {toast} = useToast();
     const [loading,setLoading] = useState(true);
     const [error,setError] = useState(null)
-    const [data,setData] = useState<any>();
     const [category,setCateg] = useState<NoInfer<{value:string,label:string,id:string}>|null>(eventCategories[0]);
     const[banner,setBanner] = useState<string|null>(null);
   const form  = useForm<z.infer<typeof eventRegistrationSchema>>({
     resolver:zodResolver(eventRegistrationSchema),
-   
+   defaultValues:{
+
+   }
   });
   const [date, setDate] = React.useState<Date>()
   const [participantsFromOutsideAllowed,setParticipantFromOutsideAllowed] = useState(false);
@@ -79,17 +86,83 @@ const Page = ({params}:{params:{id:string}}) => {
     }
   console.log(reqData);
   }
+  const [isRequestsLoading,setIsRequestsLoading] = useState(true);
+const [registrationRequestCount,setRegistrationRequestsCount]=useState(10);
+  const { limit, onPaginationChange, skip, pagination } = usePagination();
+const [registrationRequests,setRegistrationRequests] = useState<any>(
+  [
+    {
+      _id: "1a2b3c4d",
+      user_name: "Mayank Sharma",
+      user_profile: "https://example.com/profile/mayank.jpg",
+      user_username: "mayank_dev",
+     
+      note: "Exploring advanced Java concepts for upcoming project.",
+      date: new Date("2024-07-23")
+    },
+    {
+      _id: "2b3c4d5e",
+      user_name: "Aditi Singh",
+      user_profile: "https://example.com/profile/aditi.jpg",
+      user_username: "aditi_code",
+     
+      note: "Working on a new frontend framework.",
+      date: new Date("2024-06-15")
+    },
+    {
+      _id: "3c4d5e6f",
+      user_name: "Rohan Verma",
+      user_profile: "https://example.com/profile/rohan.jpg",
+      user_username: "rohan_dev",
+  
+      note: "Experimenting with Kafka for real-time data processing.",
+      date: new Date("2024-05-20")
+    }
+  ]
+)
+const fetchRegistrationRequests = async()=>{
+  try {
+    const res = await axios.get(`/api/events/club/get-registrations`,{params:{event_id:id,page:pagination.pageIndex}})
+    const data = res.data;
+    setRegistrationRequests(data.registrations.map((registration:EventParticipantRequestResponse)=>({_id:registration._id,user_name:registration.user.name,user_profile:registration.user.profile,user_username:registration.user.username,note:registration.applicationNote,date:registration.createdAt})));
+    setRegistrationRequestsCount(Math.ceil(data.total/limit));
+    return {registrations:data.registrations,total:data.total}
+  } catch (error) {
+    toast({
+      title:"Some error occured",
+      variant:"destructive"
+    })
+    return Promise.reject("Some error occured")
+  }
+  finally{
+    setIsRequestsLoading(false);
+  }
+}
+const {data:registrationData,isSuccess} = useQuery<any>(
+  {
+    queryKey:[pagination,limit],
+    queryFn:fetchRegistrationRequests
+   
+  }
+)
     useEffect(()=>{
      axios.get(`/api/events/club/${id}`)
      .then((res)=>{
-        const data = res.data;
-        if(!data.success){
-            setError(data.message);
+        const res_data = res.data;
+        if(!res_data.success){
+            setError(res_data.message);
             toast({title:data.message,variant:"destructive"})
         }
         else{
-            setData(data.data);
-            console.log(data.data)
+            setData(res_data.data);
+            form.setValue('name',res_data.data.name)
+            form.setValue('description',res_data.data.description)
+            form.setValue('location',res_data.data.location)
+            form.setValue('maxCapacity',res_data.data.maxCapacity)
+            form.setValue('venueAddress',res_data.data.venueAddress)
+            setBanner(res_data.data.banner)
+            setParticipantFromOutsideAllowed(res_data.data.participantsFromOutsideAllowed)
+            setDate(res_data.data.dateTime)
         }
         
      })
@@ -105,7 +178,7 @@ const Page = ({params}:{params:{id:string}}) => {
      .finally(()=>{
         setLoading(false)
      })
-    },[id])
+    },[id]);
   return (
     <>
     {loading?(<div className='min-h-screen w-full flex justify-center items-center'><Loader2 className='text-gray animate-spin' size={40}/></div>):(
@@ -113,11 +186,11 @@ const Page = ({params}:{params:{id:string}}) => {
         {error?(
             <ErrorCard title='Some error occured' message={error} />
         ):(
-            <div className='w-full flex justify-center'>
+            <div className='w-full grid md:flex justify-center justify-items-center'>
                 <div className="relative w-3/4 lg:max-w-3/4  bg-slate-900/50 border-2 border-gray-700 shadow-md rounded-md  mx-10 my-4">
       
         {/* Edit Dialog */}
-        <Dialog>
+        <Dialog >
            <DialogTrigger> <Button className='absolute top-10 right-10 bg-yellow-300 hover:bg-yellow-400 flex gap-3'>Edit <Pencil size={20}/></Button></DialogTrigger>
            <DialogContent className='overflow-y-scroll max-h-screen flex flex-col justify-center items-center'>
              <DialogHeader>
@@ -241,9 +314,9 @@ const Page = ({params}:{params:{id:string}}) => {
              </div>
     
          <DialogFooter>
-          <DialogClose asChild>
+          {/* <DialogClose asChild>
             <Button disabled={isSubmitting} className='bg-red-300  hover:bg-red-400'>Close</Button>
-          </DialogClose>
+          </DialogClose> */}
          </DialogFooter>
            </DialogContent>
            
@@ -258,9 +331,9 @@ const Page = ({params}:{params:{id:string}}) => {
         </div>
         <div className="mb-8">
           <div className="flex items-center">
-            <img className="w-10 h-10 rounded-full mr-4" src={data.clubDetails.clubLogo} alt={data.clubDetails.clubName} />
+            <img className="w-10 h-10 rounded-full mr-4" src={data.clubDetails?.clubLogo} alt={data.clubDetails?.clubName} />
             <div className="text-sm">
-              <p className=" leading-none">{data.clubDetails.clubName}</p>
+              <p className=" leading-none">{data.clubDetails?.clubName}</p>
             </div>
           </div>
           <p className="text-gray-600">{data.location}</p>
@@ -274,7 +347,21 @@ const Page = ({params}:{params:{id:string}}) => {
           <p className="text-sm text-gray-600 ml-4">Registrations: {data.totalRegistrations}/{data.maxCapacity}</p>
         </div>
       </div>
+
+  
+     
+
     </div>
+    {/* Tables */}
+    <div className="container mx-auto py-10">
+      <p className='text-center font-bold text-lg text-white b-5'>Registration requests</p>
+      <DataTable loading={isRequestsLoading} pagination = {pagination} count={registrationRequestCount} onPaginationChange={onPaginationChange} columns={columns} data={registrationRequests} />
+    </div>
+
+    {/* <div className="container mx-auto py-10">
+      <p className='text-center font-bold text-lg text-white b-5'>RSVP's</p>
+      <DataTable columns={rsvpColumns} data={rsvpData} />
+    </div> */}
             </div>
         )}
         </>
