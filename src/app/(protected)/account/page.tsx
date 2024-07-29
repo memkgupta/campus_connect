@@ -1,5 +1,5 @@
 "use client"
-import React, { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, KeyboardEvent, useContext, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Github, Instagram, Linkedin, Loader2, Pencil, Trash, X } from 'lucide-react';
@@ -27,6 +27,7 @@ import { Label } from '@/components/ui/label';
 import { useDebounceCallback } from 'usehooks-ts';
 import { UploadButton } from '@/utils/uploadthing';
 import ActiveCourse from '@/components/ActiveCourse';
+import { useQuery } from '@tanstack/react-query';
 function Page( ) {
 const [userDetails,setUserDetails] = useState({
   profile:'',
@@ -36,7 +37,9 @@ const [userDetails,setUserDetails] = useState({
    interest:[''],
    courses:[],
    events:[],
+   isClubAdmin:false,
 })
+// const clubContextData = useContext(Cl)
 const [isLoading,setIsLoading] = useState(true);
   const form = useForm<z.infer<typeof editProfileSchema>>({
     resolver:zodResolver(editProfileSchema),
@@ -116,7 +119,8 @@ const [usernameMessage,setUsernameMessage] = useState('');
   const {data:session,status} = useSession();
   const debounced = useDebounceCallback(setUsername,500);
   useEffect(()=>{
-    axios.get(`/api/users/me`).then(res=>{
+    axios.get(`/api/users/me`)
+    .then(res=>{
 if(res.data.success){
 setUserDetails(res.data.data);
 setPreview(res.data.data.profile)
@@ -187,10 +191,11 @@ useEffect(()=>{
          d
          </div>
          {/* details */}
-         <div className=' relative bg-slate-900 min-h-[250px] rounded-b-md '>
+         <div className='flex gap-4 relative bg-slate-900 min-h-[250px] rounded-b-md py-2'>
          
-            
+       
              <Dialog>
+              
            <DialogTrigger> <Button className='absolute top-10 right-10 bg-yellow-300 hover:bg-yellow-400 flex gap-3'>Edit <Pencil size={20}/></Button></DialogTrigger>
            <DialogContent>
              <DialogHeader>
@@ -336,6 +341,7 @@ render={(field)=>(
              <Link className='text-gray-700' href={"#"}><Github size={20}/></Link>
              <Link className='text-gray-700' href={"#"}><Linkedin size={20}/></Link>
            </div>
+           {userDetails.isClubAdmin && <Link className='bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black w-fit mt-4 justify-self-end' href={"/account/club"}>Your Club</Link>}   
          </div>
          </div>
 

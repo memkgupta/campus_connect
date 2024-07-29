@@ -11,7 +11,7 @@ import {
 import Link from 'next/link'
 import { MapPin } from 'lucide-react'
 import { Badge } from '../ui/badge'
-const EventCard = ({data}:{data:any}) => {
+const EventCard = ({data,isAdmin}:{data:any,isAdmin?:boolean}) => {
   return (
     <Card className="w-[350px]">
       <CardHeader>
@@ -29,13 +29,13 @@ const EventCard = ({data}:{data:any}) => {
        <p className='flex gap-2'>Max {data.maxCapacity}</p>
        </div>
 {!data.participantsFromOutsideAllowed &&        <p className='text-xs text-gray-300'>* Only participants from our colleges are allowed</p>}
-      <Link href={`/events/${data._id}`} className='bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black mt-2 text-center'>View More</Link>
+      <Link href={`${isAdmin?'/account/club/event/':'/events/'}${data._id}`} className='bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black mt-2 text-center'>View More</Link>
       </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <p className='text-white'>{data.club.clubName}</p>
+   {data.club &&   <CardFooter className="flex justify-between">
+       <p className='text-white'>{data.club.clubName}</p>
        <img src={data.club.clubLogo} className='w-8 h-8 rounded-full' alt="" />
-      </CardFooter>
+      </CardFooter>}
     </Card>
   )
 }

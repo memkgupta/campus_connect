@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import connect from '@/lib/db';
 import User from '@/lib/models/user.model';
+import Club from '@/lib/models/club.model';
 
 export const GET = async(req:Request)=>{
 await connect();
@@ -17,8 +18,8 @@ try {
     if(!user){
         return Response.json({success:false,message:"Invalid session"},{status:401});
     }
-
-    const res = {username:user.username,name:user.name,profile:user.profile,bio:user.bio,interest:user.interests,courses:[],events:[]}
+    const isClubAdmin = await Club.findOne({admin:user._id});
+    const res = {username:user.username,name:user.name,profile:user.profile,bio:user.bio,interest:user.interests,courses:[],events:[],isClubAdmin:isClubAdmin?true:false}
     return Response.json({success:true,data:res},{status:200});
 } catch (error) {
     console.log(error);
