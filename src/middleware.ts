@@ -16,6 +16,10 @@ export async function middleware(request: NextRequest) {
     if(!token&&(url.pathname.startsWith('/users/me'))){
       return NextResponse.redirect(new URL("/auth/sign-in",request.url))
     }
+    if(!token&&(url.pathname.startsWith('/club'))){
+      return NextResponse.redirect(new URL('/auth/sign-in',request.url))
+    }
+    
     return NextResponse.redirect(new URL('/auth/sign-in', request.url))
 }
  
