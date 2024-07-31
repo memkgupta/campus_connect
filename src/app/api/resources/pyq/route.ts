@@ -1,4 +1,5 @@
 import connect from "@/lib/db"
+import Contributions from "@/lib/models/contribution.model";
 import PYQ from "@/lib/models/pyq.model";
 
 export const GET = async(request:Request)=>{
@@ -19,7 +20,7 @@ export const GET = async(request:Request)=>{
         if(params.get('sessionYear')){
             filters.sessionYear = params.get('sessionYear')?.toString()
         }
-        const pyqs = await PYQ.find(filters);
+        const pyqs = await Contributions.find({...filters,type:'pyq'});
         return Response.json({success:true,data:pyqs},{status:200});
     } catch (error) {
         return Response.json({success:false,message:"Some error occured"},{status:500})

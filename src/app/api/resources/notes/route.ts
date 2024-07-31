@@ -1,4 +1,5 @@
 import connect from "@/lib/db";
+import Contributions from "@/lib/models/contribution.model";
 import NOTES from "@/lib/models/notes.model";
 
 export const GET = async(req:Request)=>{
@@ -19,7 +20,7 @@ export const GET = async(req:Request)=>{
     }
    try {
     await connect();
-    const notes = await NOTES.find(filters);
+    const notes = await Contributions.find({...filters,type:'notes'});
     return Response.json({success:true,data:notes},{status:200});
    } catch (error) {
     console.log(error);

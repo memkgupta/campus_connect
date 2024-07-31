@@ -1,13 +1,13 @@
 import connect from "@/lib/db";
-import NOTES from "@/lib/models/notes.model";
-import PYQ from "@/lib/models/pyq.model";
+import Contributions from "@/lib/models/contribution.model";
+
 import { NextApiRequest, NextApiResponse } from "next";
 
 export const GET = async(req:Request,{ params }: { params: { id: string } })=>{
     const {id} = params;
     await connect();
     try {
-        const notes = await NOTES.findById(id).populate('contributor');
+        const notes = await Contributions.findById(id).populate('contributor');
         if(!notes){
             return Response.json({success:false,message:"Not found"},{status:404});
         }

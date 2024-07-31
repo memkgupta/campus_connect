@@ -32,3 +32,32 @@ export const eventCategories = [
    
     
   ];
+
+ export const branches = [
+    { value: 'CSE CORE', label: 'Computer Science and Engineering (CORE)', id: 'cse-core' },
+      { value: 'CSE AI', label: 'Computer Science and Engineering (Artificial Intelligence)', id: 'cse-ai' },
+      { value: 'CSE DS', label: 'Computer Science and Engineering (Data Science)', id: 'cse-ds' },
+      { value: 'CSE CS', label: 'Computer Science and Engineering (Cyber Security)', id: 'cse-cs' },
+      { value: 'CSIT', label: 'Computer Science and Information Technology', id: 'csit' },
+      { value: 'ECE', label: 'Electronics and Communication Engineering', id: 'ece' },
+      { value: 'EE', label: 'Electrical Engineering', id: 'ee' },
+      { value: 'ME', label: 'Mechanical Engineering', id: 'me' },
+      { value: 'CE', label: 'Civil Engineering', id: 'ce' },
+      { value: 'IT', label: 'Information Technology', id: 'it' },
+      { value: 'CHE', label: 'Chemical Engineering', id: 'che' },
+      { value: 'BT', label: 'Biotechnology', id: 'bt' },
+      { value: 'MT', label: 'Manufacturing Technology', id: 'mt' },
+      { value: 'AE', label: 'Aeronautical Engineering', id: 'ae' },
+      { value: 'EI', label: 'Electronics and Instrumentation Engineering', id: 'ei' },
+      { value: 'EN', label: 'Environmental Engineering', id: 'en' },
+      { value: 'FT', label: 'Food Technology', id: 'ft' },
+      { value: 'IN', label: 'Instrumentation Engineering', id: 'in' },
+      { value: 'AEI', label: 'Applied Electronics and Instrumentation Engineering', id: 'aei' },
+      { value: 'CE IT', label: 'Civil Engineering with Information Technology', id: 'ce-it' }
+        ]
+
+        export const resourceTypes = [
+            {value:'PYQ',label:'PYQ',id:'pyq'},
+            {value:'Notes',label:'NOTES',id:'notes'},
+            {value:'question-bank',label:'Question Bank',id:'question-bank'}
+        ]

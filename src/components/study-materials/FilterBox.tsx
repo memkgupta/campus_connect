@@ -152,53 +152,7 @@ useEffect(()=>{
     state(resourceData);
   }
 },[resourceData])
-  // const cache = useRef<{ [key: string]: any }>({}); 
-  // const [params, setParams] = useState<Params>({});
-
-  // // Create a unique key based on the parameters
-  // const createCacheKey = (params: Params) => {
-  //   return JSON.stringify(params);
-  // };
-
-  // Update params when inputs change
-  // useEffect(() => {
-  //   const newParams: Params = {};
-  //   if (year) newParams.collegeYear = year.value;
-  //   if (selectedBranch) newParams.branch = selectedBranch.value;
-  //   if (selectedUniversity) newParams.university = selectedUniversity.value;
-  //   if (selectedSession) newParams.sessionYear = selectedSession.value;
-  //   setParams(newParams);
-  // }, [year, selectedBranch, selectedUniversity, selectedSession]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const cacheKey = createCacheKey(params);
-
-  //     if (cache.current[cacheKey]) {
-  //       state(cache.current[cacheKey]);
-  //       return;
-  //     }
-
-  //     try {
-  //       loading(true);
-  //       const res = await axios.get(url, { params });
-  //       cache.current[cacheKey] = res.data.data;
-  //       state(res.data.data);
-  //     } catch (error) {
-  //       toast({
-  //         title: 'Some error occurred',
-  //         variant: 'destructive',
-  //       });
-  //     } finally {
-  //       loading(false);
-  //     }
-  //   };
-
-  //   if (Object.keys(params).length > 0) {
-  //     const debounceFetchData = setTimeout(fetchData, 500); // Debounce the API call
-  //     return () => clearTimeout(debounceFetchData); // Cleanup the timeout on component unmount or params change
-  //   }
-  // }, [params, url, state, loading, toast]);
+ 
   return (
     <div className=" md:flex md:flex-row md:justify-around gap-x-5 flex flex-col items-center justify-center  gap-5">
       {/* Year filter */}

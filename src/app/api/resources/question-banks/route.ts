@@ -1,4 +1,5 @@
 import connect from "@/lib/db";
+import Contributions from "@/lib/models/contribution.model";
 import QuestionBank from "@/lib/models/question-bank.model";
 
 
@@ -20,7 +21,7 @@ export const GET = async(req:Request)=>{
     }
    try {
     await connect();
-    const question_banks = await QuestionBank.find(filters);
+    const question_banks = await Contributions.find({...filters,type:'question-bank'});
     return Response.json({success:true,data:question_banks},{status:200});
    } catch (error) {
     console.log(error);
