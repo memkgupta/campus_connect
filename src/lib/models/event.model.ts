@@ -24,7 +24,7 @@ const eventRegistrationSchema =new Schema({
     user:{type:Schema.Types.ObjectId,ref:'User',required:true},
     isAccepted:{type:Boolean,default:false,required:true},
     applicationNote:{type:String,required:true},
-    
+    status:{type:String,default:'pending',enum:['pending','rejected','accepted']},
     registrationType:{type:String,enum:['volunteer','participant']},
     rsvp:{type:Schema.Types.ObjectId,ref:'RSVP',default:null},
     volunteerType:{type:String,enum:["general","technical"]},
@@ -34,9 +34,11 @@ const eventRegistrationSchema =new Schema({
 },{timestamps:true});
 const rsvpSchema = new Schema({
 event:{type:Schema.Types.ObjectId,ref:'Event',required:true},
+isAccepted:{type:Boolean,default:false},
+status:{type:String,default:'pending',enum:['pending','rejected','accepted']},
 user:{type:Schema.Types.ObjectId,ref:'User',required:true},
 eventRegistration:{type:Schema.Types.ObjectId,ref:'EventRegistration',required:true},
-timestamp:{type:Date,default:Date.now}
+
 },{timestamps:true});
 
 export const Event = mongoose.models.Event||mongoose.model('Event',eventSchema);

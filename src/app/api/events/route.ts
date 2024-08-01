@@ -39,10 +39,14 @@ if(queryParams.happening){
 
     const h = queryParams.happening;
     if(h==="this-week"){
-       startDate = getWeekStart(startDate);
+      
        endDate = getWeekEnd(endDate);
- 
+      console.log(startDate);
+      console.log(endDate)
     }
+    // if(h==="next-7-days"){
+    //     startDate = 
+    // }
     if(h==="this-month"){
         startDate = getMonthStart(startDate);
         endDate = getMonthEnd(endDate);
@@ -150,15 +154,21 @@ function startOfDay(date:Date) {
   // Helper function to get the start of the week (Sunday)
   function getWeekStart(date:Date) {
     const day = date.getDay();
+    console.log(day);
     const diff = date.getDate() - day;
-    return startOfDay(new Date());
-  }
+    console.log(diff)
+   
+    return startOfDay(new Date(date.setDate(diff) + 1));
+ 
+}
   
   // Helper function to get the end of the week (Saturday)
   function getWeekEnd(date:Date) {
     const day = date.getDay();
-    const diff = date.getDate() + (6 - day);
-    return startOfDay(new Date(date.setDate(diff) + 1)); // Adding 1 to include the whole day
+    const diff = 7;
+    
+    return startOfDay(new Date(date.setDate(diff+1) + 1)); // Adding 1 to include the whole day
+    
   }
   
   // Helper function to get the start of the month

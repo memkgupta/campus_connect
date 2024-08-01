@@ -44,8 +44,8 @@ export default EventCard
 
 function dateToString(date:Date){
    let string = "";
-string =  string.concat(date.getDate().toString()+"/")
- string  = string.concat(date.getMonth().toString()+"/")
+string =  string.concat((date.getDate()-1).toString()+"/")
+ string  = string.concat((date.getMonth()+1).toString()+"/")
  string= string.concat(date.getFullYear().toString());
  return string;
 }

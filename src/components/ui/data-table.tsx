@@ -32,11 +32,13 @@ export function DataTable<TData, TValue>({
   pagination,
   count,
   loading,
-  onPaginationChange
+  onPaginationChange,
+  handleAccept,
+  handleReject
 }:{columns:ColumnDef<TData, TValue>[],data:TData[],loading:boolean,count:number,pagination:{pageIndex:number,pageSize:number},onPaginationChange:Dispatch<SetStateAction<{
     pageIndex: number;
     pageSize: number;
-}>>}) {
+}>>,handleAccept:(rows:any[])=>Promise<void>,handleReject:(rows:any[])=>Promise<void>}) {
     const [sorting, setSorting] = React.useState<SortingState>([])
    
       
@@ -63,7 +65,7 @@ export function DataTable<TData, TValue>({
       sorting,columnFilters,rowSelection,pagination
     },
   })
-//  console.log(table.getColumn("user_name"))
+
   return (
  <div>
        <div className="flex items-center py-4">
@@ -141,7 +143,7 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => console.log(rowSelection)}
+          onClick={()=>handleAccept(table.getPreSelectedRowModel().rows)}
           disabled={Object.keys(rowSelection).length===0}
         >
           Accept Selected
@@ -149,7 +151,7 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => console.log(rowSelection)}
+          onClick={()=>handleReject(table.getPreSelectedRowModel().rows)}
           disabled={Object.keys(rowSelection).length===0}
         >
          Reject Selected

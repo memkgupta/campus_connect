@@ -87,39 +87,15 @@ const Page = ({params}:{params:{id:string}}) => {
   console.log(reqData);
   }
   const [isRequestsLoading,setIsRequestsLoading] = useState(true);
+  const [isRsvpLoading,setIsRsvpLoading] = useState(true);
 const [registrationRequestCount,setRegistrationRequestsCount]=useState(10);
   const { limit, onPaginationChange, skip, pagination } = usePagination();
-const [registrationRequests,setRegistrationRequests] = useState<any>(
-  [
-    {
-      _id: "1a2b3c4d",
-      user_name: "Mayank Sharma",
-      user_profile: "https://example.com/profile/mayank.jpg",
-      user_username: "mayank_dev",
-     
-      note: "Exploring advanced Java concepts for upcoming project.",
-      date: new Date("2024-07-23")
-    },
-    {
-      _id: "2b3c4d5e",
-      user_name: "Aditi Singh",
-      user_profile: "https://example.com/profile/aditi.jpg",
-      user_username: "aditi_code",
-     
-      note: "Working on a new frontend framework.",
-      date: new Date("2024-06-15")
-    },
-    {
-      _id: "3c4d5e6f",
-      user_name: "Rohan Verma",
-      user_profile: "https://example.com/profile/rohan.jpg",
-      user_username: "rohan_dev",
-  
-      note: "Experimenting with Kafka for real-time data processing.",
-      date: new Date("2024-05-20")
-    }
-  ]
+  const rsvp_pagination = usePagination();
+const [registrationRequests,setRegistrationRequests] = useState<any[]>(
+  []
 )
+const[rsvps,setRsvps] = useState<any[]>([]);
+const [rsvpCount,setRsvpCount] = useState(0);
 const fetchRegistrationRequests = async()=>{
   try {
     const res = await axios.get(`/api/events/club/get-registrations`,{params:{event_id:id,page:pagination.pageIndex}})
@@ -138,6 +114,98 @@ const fetchRegistrationRequests = async()=>{
     setIsRequestsLoading(false);
   }
 }
+const fetchRsvps = async()=>{
+  try {
+    const res = await axios.get(`/api/events/club/get-rsvps`,{params:{event_id:id,page:rsvp_pagination.pagination.pageIndex}})
+    const data = res.data;
+    setRsvps(data.rsvps.map((rsvp:EventParticipantRequestResponse)=>({_id:rsvp._id,user_name:rsvp.user.name,user_profile:rsvp.user.profile,user_username:rsvp.user.username,note:rsvp.applicationNote,date:rsvp.createdAt})));
+    setRsvpCount(Math.ceil(data.total/limit));
+    return {rsvps:data.rsvps,total:data.total}
+  } catch (error) {
+    toast({
+      title:"Some error occured",
+      variant:"destructive"
+    })
+    return Promise.reject("Some error occured")
+  }
+  finally{
+    setIsRsvpLoading(false);
+  }
+}
+const handleAcceptRegistrations = async (rows:any[])=>{
+
+const selections = rows.map((row:any)=>row.original._id);
+try {
+  await axios.post(`/api/events/club/accept-registrations`,{selections,event_id:id});
+  // const data = res.data;
+  toast({title:'Registrations accepted successfully'});
+  const filtered = registrationRequests.filter((request)=>(!selections.includes(request._id)));
+  setRegistrationRequests(filtered);
+} catch (error) {
+  const axiosError = error as AxiosError<any>;
+ if(axiosError.response?.data){
+  toast({title:axiosError.response.data.message,variant:'destructive'});
+ }
+ else{
+  toast({title:"Some error occured",variant:'destructive'});
+ }
+}
+}
+const handleRejectRegistrations = async(rows:any[])=>{
+  const selections = rows.map((row:any)=>row.original._id);
+  try {
+    await axios.post(`/api/events/club/reject-registrations`,{selections,event_id:id});
+    // const data = res.data;
+    toast({title:'Registrations rejected successfully'});
+    const filtered = registrationRequests.filter((request)=>(!selections.includes(request._id)));
+    setRegistrationRequests(filtered);
+  } catch (error) {
+    const axiosError = error as AxiosError<any>;
+   if(axiosError.response?.data){
+    toast({title:axiosError.response.data.message,variant:'destructive'});
+   }
+   else{
+    toast({title:"Some error occured",variant:'destructive'});
+   }
+  }
+}
+const handleAcceptRSVP = async (rows:any[])=>{
+
+  const selections = rows.map((row:any)=>row.original._id);
+  try {
+    await axios.post(`/api/events/club/accept-rsvps`,{selections,event_id:id});
+    // const data = res.data;
+    toast({title:'RSVPs accepted successfully'});
+    const filtered = rsvps.filter((request)=>(!selections.includes(request._id)));
+    setRsvps(filtered);
+  } catch (error) {
+    const axiosError = error as AxiosError<any>;
+   if(axiosError.response?.data){
+    toast({title:axiosError.response.data.message,variant:'destructive'});
+   }
+   else{
+    toast({title:"Some error occured",variant:'destructive'});
+   }
+  }
+  }
+  const handleRejectRSVP = async(rows:any[])=>{
+    const selections = rows.map((row:any)=>row.original._id);
+    try {
+      await axios.post(`/api/events/club/reject-rsvps`,{selections,event_id:id});
+      // const data = res.data;
+      toast({title:'RSVPS rejected successfully'});
+      const filtered = rsvps.filter((request)=>(!selections.includes(request._id)));
+      setRsvps(filtered);
+    } catch (error) {
+      const axiosError = error as AxiosError<any>;
+     if(axiosError.response?.data){
+      toast({title:axiosError.response.data.message,variant:'destructive'});
+     }
+     else{
+      toast({title:"Some error occured",variant:'destructive'});
+     }
+    }
+  }
 const {data:registrationData,isSuccess} = useQuery<any>(
   {
     queryKey:[pagination,limit],
@@ -145,6 +213,10 @@ const {data:registrationData,isSuccess} = useQuery<any>(
    
   }
 )
+const {data:rsvpData}=useQuery<any>({
+  queryKey:[rsvp_pagination.pagination,rsvp_pagination.limit],
+  queryFn:fetchRsvps
+})
     useEffect(()=>{
      axios.get(`/api/events/club/${id}`)
      .then((res)=>{
@@ -353,9 +425,14 @@ const {data:registrationData,isSuccess} = useQuery<any>(
 
     </div>
     {/* Tables */}
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-10 grid gap-4">
+      <div>
       <p className='text-center font-bold text-lg text-white b-5'>Registration requests</p>
-      <DataTable loading={isRequestsLoading} pagination = {pagination} count={registrationRequestCount} onPaginationChange={onPaginationChange} columns={columns} data={registrationRequests} />
+      <DataTable handleAccept={handleAcceptRegistrations} handleReject = {handleRejectRegistrations} loading={isRequestsLoading} pagination = {pagination} count={registrationRequestCount} onPaginationChange={onPaginationChange} columns={columns} data={registrationRequests} />
+      </div>
+      {/* Rsvp tables */}
+      <p className='text-center font-bold text-lg text-white b-5'>RSVP's</p>
+      <DataTable handleAccept={handleAcceptRSVP} handleReject = {handleRejectRSVP} loading={isRsvpLoading} pagination = {rsvp_pagination.pagination} count={rsvpCount} onPaginationChange={rsvp_pagination.onPaginationChange} columns={columns} data={rsvps} />
     </div>
 
     {/* <div className="container mx-auto py-10">
@@ -366,6 +443,7 @@ const {data:registrationData,isSuccess} = useQuery<any>(
         )}
         </>
     )}
+
     </>
   )
 }
