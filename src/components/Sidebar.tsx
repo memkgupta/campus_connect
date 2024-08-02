@@ -85,19 +85,19 @@ const Sidebar = ({show,setter}:{show:boolean,setter:any}) => {
                 icon={<Book />}
             > */}
             <div className='flex gap-4 items-center border-b-[1px] border-b-white/10'>
-            <Link
-                href={"/resources"}
+            <p 
+       
                 onClick={() => {
                     setter((oldVal:any) => !oldVal);
                 }}
-                className={`flex gap-1 [&>*]:my-auto text-md pl-6 py-3 `}
+                className={`flex gap-1 cursor-pointer [&>*]:my-auto text-md pl-6 py-3 `}
             >
                 <div className="text-xl flex [&>*]:mx-auto w-[30px]">
                     {<Book/>}
                 </div>
                 <div>Resources</div>
                
-            </Link>
+            </p>
            {isResourceDropdownOpen? <ChevronUp className='cursor-pointer' onClick={(e)=>{setIsResourceDropDownOpen(!isResourceDropdownOpen)}}/>:
             <ChevronDown className='cursor-pointer' onClick={(e)=>{setIsResourceDropDownOpen(!isResourceDropdownOpen)}}/>}
             </div>
