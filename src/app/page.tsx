@@ -16,8 +16,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-4">Welcome to Campus Connect</h1>
-          <p className="text-lg mb-8">
+          <h1 className=" text-2xl md:text-5xl font-bold mb-4">Welcome to Campus Connect</h1>
+          <p className="text-md md:text-lg mb-8">
             Connect with your campus community, discover events, and stay engaged.
           </p>
           <Link href={"/auth/sign-up"} className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100">
