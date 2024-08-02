@@ -60,7 +60,7 @@ setIsSubmitting(true);
 try {
  const res = await axios.post(`/api/users/sign-up`,data)
  toast({title:"Success",description:res.data.message})
- router.replace(`/verify/${username}`);
+ router.replace(`/auth/verify/${username}`);
  setIsSubmitting(false);
 } catch (error) {
   console.error("Error in signup of user",error)
@@ -81,7 +81,22 @@ try {
       <h2 className="text-2xl font-bold text-center text-yellow-400">Sign Up</h2>
       <Form {...form} >
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-       
+        <FormField
+          control={form.control}
+          name='name'
+          render={({field})=>(
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              
+                <Input  placeholder='name' {...field} onChange={(e)=>{
+                  field.onChange(e);
+                }}/>
+                <FormDescription>
+                  Your Name
+                </FormDescription>
+             
+            </FormItem>
+          )}/>
         
           <FormField
           control={form.control}

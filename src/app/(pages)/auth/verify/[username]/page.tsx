@@ -55,7 +55,7 @@ if(data.code&&data.code!=""){
       variant:'default',
       color:"green"
     });
-    router.replace("/")
+    router.replace("/auth/sign-in")
   }
   else{
     toast({

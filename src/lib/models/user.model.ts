@@ -1,7 +1,7 @@
 import mongoose,{Schema} from "mongoose";
 
 const userSchema = new Schema({
-    profile:{type:String,required:true},
+    profile:{type:String,default:"/"},
     name:{type:String,required:true},
     email:{type:String,required:true,unique:true},
     username:{type:String,required:true,unique:true},

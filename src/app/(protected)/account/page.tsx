@@ -64,7 +64,9 @@ const [username,setUsername] = useState(userDetails.username);
 const handleSubmit = async(data:Zod.infer<typeof editProfileSchema>)=>{
 setIsSubmitting(true)
   try {
-   const res = await axios.put(`/api/users/update`,data);
+    const reqData:any = {...data};
+    reqData.profile = preview;
+   const res = await axios.put(`/api/users/update`,reqData);
   if(res.data.success){
     toast({title:"Details updated successfully"});
   }
