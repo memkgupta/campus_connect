@@ -4,12 +4,11 @@ import User from "@/lib/models/user.model";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 
-export const GET = async(req:Request,{params}:{params:{id:string}})=>{
-    if(!params||!params.id){
-        return Response.json({success:false,message:"Internal server error"},{status:500})
-    }
+export const GET = async(req:Request)=>{
+   
 await connect();
 try {
+    
     const session = await getServerSession();
     const _user = session?.user;
     if(!session||!_user){
@@ -19,9 +18,10 @@ try {
     if(!user){
         return Response.json({success:false,message:"Invalid session"},{status:403});
     }
+    
     const registration = await EventRegistration.aggregate([
         {$match:{
-            event:new mongoose.Types.ObjectId(params.id),
+           
             user:user._id,
         }},
         {
@@ -41,7 +41,9 @@ try {
             }
         },
         {$project:{
+            _id:1,
             event:{
+                _id:1,
            name:1,
            description:1,
            dateTime:1,
@@ -59,10 +61,10 @@ try {
             }
         }}
     ]);
-    if(registration.length===0){
-        return Response.json({success:false,message:"You have not registered for the event"})
-    }
-    return Response.json({success:true,registration:registration[0]},{status:200});
+    // if(registration.length===0){
+    //     return Response.json({success:false,message:"You have not registered for the event"})
+    // }
+    return Response.json({success:true,registrations:registration},{status:200});
 
 } catch (error) {
     console.log(error);

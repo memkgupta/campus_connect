@@ -214,7 +214,7 @@ const {data:registrationData,isSuccess} = useQuery<any>(
   }
 )
 const {data:rsvpData}=useQuery<any>({
-  queryKey:[rsvp_pagination.pagination,rsvp_pagination.limit],
+  queryKey:[],
   queryFn:fetchRsvps
 })
     useEffect(()=>{

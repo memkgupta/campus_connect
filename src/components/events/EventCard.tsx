@@ -42,7 +42,7 @@ const EventCard = ({data,isAdmin}:{data:any,isAdmin?:boolean}) => {
 
 export default EventCard
 
-function dateToString(date:Date){
+export function dateToString(date:Date){
    let string = "";
 string =  string.concat((date.getDate()-1).toString()+"/")
  string  = string.concat((date.getMonth()+1).toString()+"/")

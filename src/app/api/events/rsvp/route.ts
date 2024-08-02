@@ -16,7 +16,7 @@ export const POST = async(req:Request)=>{
         if(!user){
             return Response.json({success:false,message:"Invalid session"},{status:403})
         }
-       
+       console.log(registration_id)
        
 const registration = await EventRegistration.findById(registration_id);
 
@@ -35,6 +35,8 @@ const rsvp = await RSVP.create({
     eventRegistration:registration._id,
 
 })
+registration.rsvp = rsvp._id;
+await registration.save()
 return Response.json({success:true,message:"RSVP done successfully"},{status:200})
     } catch (error) {
         console.log(error);

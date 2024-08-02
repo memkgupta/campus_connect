@@ -126,7 +126,7 @@ export function DataTable<TData, TValue>({
           variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
-          disabled={pagination.pageIndex===0}
+          disabled={pagination.pageIndex===1}
         >
           Previous
         </Button>
