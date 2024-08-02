@@ -170,7 +170,7 @@ Register Now
           
            )}
            </>
-          ):(<Button className='bg-green-300 rounded-md hover:bg-green-400 text-white'>Status</Button>))}
+          ):(<Link href={`/account/registrations/${id}`} className='bg-green-300 rounded-md hover:bg-green-400 text-white'>Status</Link>))}
           </div>
         </div>
       </div>
