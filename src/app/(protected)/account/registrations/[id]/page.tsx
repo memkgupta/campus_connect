@@ -68,7 +68,9 @@ variant:"destructive"
     }
 const {data:rdata} = useQuery<any>({
   queryKey:[id],
-  queryFn:fetchRegistrationData
+  queryFn:fetchRegistrationData,
+  refetchOnWindowFocus:false,
+        retry:false
 })
   
   return (

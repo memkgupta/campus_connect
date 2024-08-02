@@ -45,7 +45,9 @@ const {
   data:contributionData
 } = useQuery({
   queryKey:[],
-  queryFn:fetchContributorData
+  queryFn:fetchContributorData,
+  refetchOnWindowFocus:false,
+  retry:false
 })
 
   const contributionItems:contributionItem[] = [

@@ -215,7 +215,9 @@ const {data:registrationData,isSuccess} = useQuery<any>(
 )
 const {data:rsvpData}=useQuery<any>({
   queryKey:[],
-  queryFn:fetchRsvps
+  queryFn:fetchRsvps,
+  refetchOnWindowFocus:false,
+  retry:false
 })
     useEffect(()=>{
      axios.get(`/api/events/club/${id}`)

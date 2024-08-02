@@ -91,7 +91,9 @@ try {
 }
 const {data:subjectsFilterOptions} = useQuery<{value:string,label:string,id:string}[]>({
   queryKey:[year,selectedBranch],
-  queryFn:fetchSubjects
+  queryFn:fetchSubjects,
+  refetchOnWindowFocus:false,
+        retry:false
 })
   const [subject, setSubject] = useState();
 
@@ -143,7 +145,8 @@ const {data:resourceData,isSuccess} = useQuery<any>(
     queryKey:[year,selectedBranch,selectedUniversity,selectedSession],
     queryFn:fetchResources,
     // refetchOnMount:false,
-    refetchOnWindowFocus:false
+    refetchOnWindowFocus:false,
+        retry:false
   }
 )
 

@@ -11,5 +11,5 @@ const contributionSchema = new Schema({
    contributor:{type:Schema.Types.ObjectId,ref:'User'}
 });
 
-const Contributions = mongoose.models.NOTES||mongoose.model("Contribution",contributionSchema);
+const Contributions = mongoose.models.Contribution||mongoose.model("Contribution",contributionSchema);
 export default Contributions;

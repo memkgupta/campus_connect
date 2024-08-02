@@ -20,7 +20,7 @@ try{
     }
 
     const {label,branch,code,collegeYear,university,type,file} = await request.json();
-    const contribution = new Contributions({
+    const contribution =await Contributions.create({
         label:label,
         branch:branch,
         file:file,
@@ -30,11 +30,11 @@ try{
         contributor:user._id,
         university:university,
     });
-    await contribution.save();
+    
     return Response.json({success:true,message:"File uploaded successfully"},{status:200});
 }
 catch(error:any){
-    
+    console.log(error)
 return Response.json({success:false,message:error.message},{status:500})
 }
 }

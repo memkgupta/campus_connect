@@ -73,7 +73,8 @@ finally{
           queryKey:[happening,keyword,category,page],
           queryFn:fetchEvents,
           // refetchOnMount:false,
-          refetchOnWindowFocus:false
+          refetchOnWindowFocus:false,
+          retry:false,
         }
       )
       

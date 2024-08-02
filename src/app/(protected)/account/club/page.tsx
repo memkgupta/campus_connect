@@ -124,7 +124,9 @@ const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
 }
     const {data:clubData,isSuccess}=useQuery({
         queryKey:[clubContextData?._id],
-        queryFn:fetchClubDashboardData
+        queryFn:fetchClubDashboardData,
+        refetchOnWindowFocus:false,
+        retry:false
     });
   return (
    <>

@@ -108,7 +108,8 @@ setIsSubmitting(false);
     const {data:eventData,isSuccess} = useQuery<any>({
         queryKey:[id],
         queryFn:fetchEvent,
-        refetchOnWindowFocus:false
+        refetchOnWindowFocus:false,
+        retry:false,
     })
 //    useEffect(()=>{},[id])
     return (

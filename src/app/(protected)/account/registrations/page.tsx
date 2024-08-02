@@ -30,7 +30,9 @@ const Page = () => {
     }
     const {data:registrations} = useQuery({
         queryKey:[],
-        queryFn:fetchRegistrations
+        queryFn:fetchRegistrations,
+        refetchOnWindowFocus:false,
+        retry:false
     });
   return (
     <div>

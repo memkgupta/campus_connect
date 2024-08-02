@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Form,FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 function page() {
   // const [email,setEmail] = useState<string>("");
   const[username,setUsername] = useState('')
@@ -31,7 +32,7 @@ function page() {
       password:''
     }
   })
-
+const {data:session} = useSession();
   useEffect(()=>{
 const checkUsername = async()=>{
   if(username!=""){
@@ -69,6 +70,11 @@ try {
   setIsSubmitting(false);
 }
   }
+  useEffect(()=>{
+    if(session?.user){
+      router.replace("/account")
+    }
+  },[session])
   return (
     <div className="flex items-center justify-center min-h-screen bg-black">
     <div className="w-full max-w-md p-8 space-y-6 bg-slate-950 rounded-lg shadow-lg">

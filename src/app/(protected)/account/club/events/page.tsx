@@ -36,7 +36,9 @@ const page = () => {
     }
     const {data:eventData} = useQuery({
       queryKey:[],
-        queryFn:fetchEvents
+        queryFn:fetchEvents,
+        refetchOnWindowFocus:false,
+        retry:false
     })
   return (
     <div>
