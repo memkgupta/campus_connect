@@ -4,9 +4,10 @@ import User from "@/lib/models/user.model";
 import { getServerSession } from "next-auth";
 
 export const GET = async(req:Request)=>{
+    const {searchParams} = new URL(req.url);
     try {
         await connect();
-        const {searchParams} = new URL(req.url);
+       
         const page = searchParams.get('page');
         const skip = (parseInt(page?.toString()||'1')-1)*10;
         const session = await getServerSession();

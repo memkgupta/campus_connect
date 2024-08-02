@@ -6,10 +6,11 @@ import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 
 export const GET = async(req:Request)=>{
+    const {searchParams} = new URL(req.url);
     try {
         await connect();
         const session = await getServerSession();
-        const {searchParams} = new URL(req.url);
+        
         const page = searchParams.get('page'); 
         const _user = session?.user;
         if(!_user){
@@ -66,6 +67,6 @@ export const GET = async(req:Request)=>{
         return Response.json({success:true,events:events,totalResults:totalResults[0]?.totalResults},{status:200});
     
     } catch (error) {
-        
+        return Response.json({success:false,message:"Some error occured",},{status:500});
     }
 }
