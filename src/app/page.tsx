@@ -5,7 +5,14 @@ export default function Home() {
   return (
 
     <>
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col overflow-hidden whitespace-nowrap">
+    <div className="bg-red-500 text-white">
+    <div className="inline-block animate-marquee ">
+        <span className="mx-4 text-lg " >This is under development and is beta version and can (will 🫠) contain bugs . Stable version will be released soon</span>
+        
+      </div>
+    </div>
+   
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20">
         <div className="container mx-auto px-4 text-center">
