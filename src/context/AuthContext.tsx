@@ -14,15 +14,7 @@ const AuthContext = createContext<AuthContextProps>({
   });
 
   export const AuthProvider= ({children}:{children:ReactNode})=>{
-    const [user,setUser] = useState<User|null>(null);
-    const [loading,setLoading] = useState<boolean>(true);
-    const[authStatus,setAuthStatus] = useState<boolean>(false);
-const router = useRouter();
-      const logout = () => {
-        setUser(null);
-        Cookies.remove('token');
-      };
- 
+
 return(
     <SessionProvider>
 {children}

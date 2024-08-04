@@ -168,6 +168,7 @@ try {
        
         </form>
       </Form>
+      <div className='flex justify-center'><Link className='text-indigo-600' href={"/auth/sign-in"}>Already have an account ? Log in</Link></div>
     </div>
   </div>
   )

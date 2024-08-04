@@ -1,8 +1,8 @@
 "use client"
 import React, { ChangeEvent, KeyboardEvent, useContext, useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { Github, Instagram, Linkedin, Loader2, Pencil, Trash, X } from 'lucide-react';
+import { Github, Instagram, Linkedin, Loader2, LogOutIcon, Pencil, Trash, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -28,6 +28,7 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { UploadButton } from '@/utils/uploadthing';
 import ActiveCourse from '@/components/ActiveCourse';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 function Page( ) {
 const [userDetails,setUserDetails] = useState({
   profile:'',
@@ -55,7 +56,7 @@ const [isLoading,setIsLoading] = useState(true);
   const {toast} = useToast();
   const [isHovered, setIsHovered] = useState(false);
   const [preview, setPreview] = useState<any>(userDetails.profile!=''?userDetails.profile:null);
-
+const router = useRouter()
 const [isSubmitting,setIsSubmitting] = useState(false);
 const[currentInterest,setCurrentInterest] = useState('');
 const [error,setError] = useState(false);
@@ -145,10 +146,11 @@ form.reset(res.data.data);
         variant:'destructive'
       })
     }
-
+router.replace("/auth/sign-in")
     })
     .finally(()=>{
       setIsLoading(false);
+
     })
   },[])
 useEffect(()=>{
@@ -195,10 +197,11 @@ useEffect(()=>{
          {/* details */}
          <div className='flex gap-4 relative bg-slate-900 min-h-[250px] rounded-b-md py-2'>
          
-       
-             <Dialog>
+      <div className='absolute top-10 right-10 flex gap-3'>
+      <Button onClick={()=>{signOut({callbackUrl:"/auth/sign-in"})}} className=' bg-yellow-300 hover:bg-yellow-400 ' >Logout <LogOutIcon/></Button>
+         <Dialog>
               
-           <DialogTrigger> <Button className='absolute top-10 right-10 bg-yellow-300 hover:bg-yellow-400 flex gap-3'>Edit <Pencil size={20}/></Button></DialogTrigger>
+           <DialogTrigger> <Button className=' bg-yellow-300 hover:bg-yellow-400 flex gap-3'>Edit <Pencil size={20}/></Button></DialogTrigger>
            <DialogContent>
              <DialogHeader>
                <DialogTitle>Update User Details</DialogTitle>
@@ -334,6 +337,7 @@ render={(field)=>(
            </DialogContent>
            
          </Dialog>
+      </div>
          <div className='flex flex-col mt-24 ml-10'>
            <p className='font-bold text-white md:text-2xl sm:text-lg'>{userDetails.name}</p>
            <p className='mt-3 md:text-lg sm:text-sm'>{userDetails.bio}</p>
@@ -351,7 +355,7 @@ render={(field)=>(
          <div className="justify-self-stretch w-full grid md:grid-cols-4 gap-5 p-2">
           {/* Quick actions */}
           <div className='w-full col-span-2 md:col-span-1 flex p-2 md:flex-col flex-row gap-x-4 gap-y-3 justify-center  bg-slate-900 rounded-md'>
-            <Link className='sm:w-1/3 md:w-full text-center py-2 text-black rounded-md bg-yellow-300 hover:bg-yellow-400 text-xs'  href={"/projects/add-a-project"}>Add a project</Link>
+            <Link className='sm:w-1/3 md:w-full text-center py-2 text-black rounded-md bg-yellow-300 hover:bg-yellow-400 text-xs'  href={"/account/projects/add-a-project"}>Add a project</Link>
             <Link className='sm:w-1/3 md:w-full text-center py-2 text-black rounded-md bg-yellow-300 hover:bg-yellow-400 text-xs' href={"/account/bookmarks"}>Bookmarks</Link>
             <Link className='sm:w-1/3 md:w-full text-center py-2 text-black rounded-md bg-yellow-300 hover:bg-yellow-400 text-xs' href={"/account/contributions"}>Contribute</Link>
           </div>

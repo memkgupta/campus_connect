@@ -61,3 +61,29 @@ export const eventCategories = [
             {value:'notes',label:'NOTES',id:'notes'},
             {value:'question-bank',label:'Question Bank',id:'question-bank'}
         ]
+
+        export const projectCategories = [
+            {value: 'backend', label: 'Backend', id: 'backend'},
+            {value: 'frontend', label: 'Frontend', id: 'frontend'},
+            {value: 'fullstack', label: 'Full Stack', id: 'fullstack'},
+            {value: 'mobile', label: 'Mobile Development', id: 'mobile'},
+            {value: 'data-science', label: 'Data Science', id: 'data-science'},
+            {value: 'devops', label: 'DevOps', id: 'devops'},
+            {value: 'game-dev', label: 'Game Development', id: 'game-dev'},
+            {value: 'security', label: 'Cybersecurity', id: 'security'},
+            {value: 'embedded', label: 'Embedded Systems', id: 'embedded'},
+            {value: 'blockchain', label: 'Blockchain', id: 'blockchain'},
+            {value: 'machine-learning', label: 'Machine Learning', id: 'machine-learning'},
+            {value: 'artificial-intelligence', label: 'Artificial Intelligence', id: 'artificial-intelligence'},
+            {value: 'cloud-computing', label: 'Cloud Computing', id: 'cloud-computing'},
+            {value: 'ui-ux', label: 'UI/UX Design', id: 'ui-ux'},
+            {value: 'iot', label: 'Internet of Things', id: 'iot'},
+            {value: 'ar-vr', label: 'AR/VR', id: 'ar-vr'},
+            {value: 'database', label: 'Database Management', id: 'database'},
+            {value: 'networking', label: 'Networking', id: 'networking'},
+            {value: 'automation', label: 'Automation', id: 'automation'},
+            {value: 'quantum-computing', label: 'Quantum Computing', id: 'quantum-computing'},
+            {value: 'robotics', label: 'Robotics', id: 'robotics'},
+            {value: 'bioinformatics', label: 'Bioinformatics', id: 'bioinformatics'},
+            {value: 'fintech', label: 'Fintech', id: 'fintech'}
+        ];      
