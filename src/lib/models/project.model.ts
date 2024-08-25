@@ -14,7 +14,7 @@ const projectSchema = new mongoose.Schema({
     currently_working:{type:Boolean,default:true},
     tags:[String],
     live_link:{type:String},
-    github:[{id:Number,title:String,link:String,required:true}],
+    github:[{id:Number,title:String,link:String}],
     demo:{type:String},
     contributors:[{user_id:mongoose.Schema.Types.ObjectId,
         role:{type:String,enum:["lead","contributor"],required:true}}]

@@ -2,7 +2,7 @@ import connect from "@/lib/db"
 import { Project } from "@/lib/models/project.model";
 import User from "@/lib/models/user.model";
 import { getServerSession } from "next-auth";
-import { use } from "react";
+
 
 export const POST = async(req:Request)=>{
     let {category,title,description,banner,images,openForCollab,start,end,currently_working,tags,live,github_repos,contributors} = await req.json();
