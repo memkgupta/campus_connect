@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import {GithubIcon, LinkedinIcon} from "lucide-react";
+import {Bug, GithubIcon, LinkedinIcon} from "lucide-react";
 
 export default function Home() {
     const about = [
@@ -35,16 +35,26 @@ export default function Home() {
        <div className={"flex-col items-center justify-center"}>
            <h1 className={"md:text-7xl text-center text-4xl font-bold mb-4"}>Campus Connect</h1>
            <p className={"text-center  text-xl"}>"Discover, Connect, and Collaborate with Fellow Students"</p>
-           <div className={"flex justify-center"}><p className={"w-[300px] text-sm text-yellow-300 antialiased italic text-center mt-4"}>Your One-Stop
+           <div className={"flex justify-center"}><p
+               className={"w-[300px] text-sm text-yellow-300 antialiased italic text-center mt-4"}>Your One-Stop
                place for all your academic resources and projects ideas and collaboration</p></div>
+           <div className={"flex justify-center gap-2 mt-4"}><Link href={"https://github.com/memkgupta/campus_connect"}
+                                                              className={"flex gap-2 mt-2 bg-amber-300 border border-yellow-400 p-2 rounded-full w-fit text-black hover:bg-yellow-100"}><GithubIcon/>Star
+               our repo</Link>
+               <Link target={"_blank"} href={"https://docs.google.com/forms/d/e/1FAIpQLSdiumf-CgOqwSmuHEk06CFOoAG5OXxfMTml824hLsqRgxbyfg/viewform?usp=sf_link"}
+                     className={"flex gap-2 mt-2 bg-red-500 border border-yellow-400 p-2 rounded-full w-fit  hover:bg-red-300"}><Bug/>Report
+                   a bug</Link>
+           </div>
        </div>
+
    </section>
 
-    {/*  About  */}
-    <div className={"flex-col px-12 items-center justify-center"}>
-        <p className={"text-center font-bold text-3xl mb-4"}>About</p>
-        <p className={`text-center mx-auto md:px-24 px-10 text-yellow-200 text-sm antialiased `}>
-            This platform is created for connecting students of our college with the aim of promoting collaboration and connecting students with each other. This platform provides you all the ongoing events details and clubs and communities can also register themselves and can share their events. And Moreover you can share your projects here and can also open them for collaboration. And last but not least this is an open source so if you want any feature and find any bug you can contribute to it and get featured on this website.
+        {/*  About  */}
+        <div className={"flex-col px-12 items-center justify-center"}>
+            <p className={"text-center font-bold text-3xl mb-4"}>About</p>
+            <p className={`text-center mx-auto md:px-24 px-10 text-yellow-200 text-sm antialiased `}>
+                This platform is created for connecting students of our college with the aim of promoting collaboration
+                and connecting students with each other. This platform provides you all the ongoing events details and clubs and communities can also register themselves and can share their events. And Moreover you can share your projects here and can also open them for collaboration. And last but not least this is an open source so if you want any feature and find any bug you can contribute to it and get featured on this website.
         </p>
     </div>
         <section className={"md:px-24 px-10 mt-24"}>
