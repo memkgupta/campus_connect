@@ -1,96 +1,78 @@
 import Image from "next/image";
 import Link from "next/link";
+import {GithubIcon, LinkedinIcon} from "lucide-react";
 
 export default function Home() {
+    const about = [
+        {   id:1,
+            heading:"Resources",
+            description:"Find all the academic resources you need in one place. Our platform offers access to study guides, lecture notes, textbooks, and interactive tools to support your learning journey. Whether for exam prep or daily study, we’ve got everything to help you succeed",
+            image:"/resources.png"
+        },
+        {
+            id:2,
+            heading:"Events",
+            description: "Stay informed about all campus events with ease. Our platform keeps you updated on upcoming seminars, workshops, social gatherings, and more. From major events to small activities, find everything you need to stay connected and engaged with campus life.",
+            image:"/events.png"
+        },
+        {
+            id:3,
+            heading:"Projects",
+            description: "Explore and collaborate on a variety of projects with fellow students. Our platform connects you with project ideas, team opportunities, and resources to bring your academic and extracurricular projects to life. Find the perfect project to enhance your skills and work together with peers.",
+            image:"/projects.png"
+        }
+    ]
+
+
   return (
 
     <>
-    <div className="min-h-screen flex flex-col overflow-hidden whitespace-nowrap">
-    <div className="bg-red-500 text-white">
-    <div className="inline-block animate-marquee ">
-        <span className="mx-4 text-lg " >This is under development and is beta version and can (will 🫠) contain bugs . Stable version will be released soon</span>
-        
-      </div>
+
+   <section className={"md:flex justify-center items-center px-12 py-10"}>
+    <div className={"hero-img"}>
+        <Image width={500} height={500} alt={"hero-image"} src={"/hero.svg"} className={"w-[500px] h-[400px]"}/>
     </div>
-   
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className=" text-2xl md:text-5xl font-bold mb-4">Welcome to Campus Connect</h1>
-          <p className="text-md md:text-lg mb-8">
-            Connect with your campus community, discover events, and stay engaged.
-          </p>
-          <Link href={"/auth/sign-up"} className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100">
-            Join Now
-          </Link>
-        </div>
-      </section>
+       <div className={"flex-col items-center justify-center"}>
+           <h1 className={"md:text-7xl text-center text-4xl font-bold mb-4"}>Campus Connect</h1>
+           <p className={"text-center  text-xl"}>"Discover, Connect, and Collaborate with Fellow Students"</p>
+           <div className={"flex justify-center"}><p className={"w-[300px] text-sm text-yellow-300 antialiased italic text-center mt-4"}>Your One-Stop
+               place for all your academic resources and projects ideas and collaboration</p></div>
+       </div>
+   </section>
 
-      {/* Features Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-semibold text-center mb-8">Features</h2>
-          <div className="flex flex-wrap justify-center">
-            <div className="w-full sm:w-1/2 lg:w-1/4 p-4">
-              <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-                <div className="mb-4">
-                  {/* Icon */}
-                  <svg className="w-12 h-12 mx-auto text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m-6 0h6m6-7a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                </div>
-                <h3 className="text-xl font-bold mb-2">Event Management</h3>
-                <p className="text-gray-700">Easily organize and participate in campus events.</p>
-              </div>
-            </div>
-           
-            <div className="w-full sm:w-1/2 lg:w-1/4 p-4">
-              <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-                <div className="mb-4">
-                  {/* Icon */}
-                  <svg className="w-12 h-12 mx-auto text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-4.418 0-8 2.015-8 4.5S7.582 17 12 17s8-2.015 8-4.5S16.418 8 12 8zm0-4c-1.5 0-2.815 1.79-3.452 4.002A5.988 5.988 0 0112 8c1.372 0 2.636-.383 3.452-1.002C14.815 5.79 13.5 4 12 4z" /></svg>
-                </div>
-                <h3 className="text-xl font-bold mb-2">Community Building</h3>
-                <p className="text-gray-700">Foster a sense of community on campus.</p>
-              </div>
-            </div>
-            <div className="w-full sm:w-1/2 lg:w-1/4 p-4">
-              <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-                <div className="mb-4">
-                  {/* Icon */}
-                  <svg className="w-12 h-12 mx-auto text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 12c1.656 0 3-1.344 3-3s-1.344-3-3-3-3 1.344-3 3 1.344 3 3 3zm-9 8h3.879l-1.772-3.545a1.5 1.5 0 112.686-1.326l1.772 3.545H18.22l1.772-3.545a1.5 1.5 0 112.686 1.326L18.12 20H21v2H3v-2z" /></svg>
-                </div>
-                <h3 className="text-xl font-bold mb-2">Resource Sharing</h3>
-                <p className="text-gray-700">Access and share academic resources easily.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* Call-to-Action Section */}
-      <section className="py-16 bg-blue-500 text-white text-center">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-semibold mb-4">Get Started with Campus Connect</h2>
-          <p className="text-lg mb-8">Join now and start exploring all that Campus Connect has to offer.</p>
-          <Link href={"/auth/sign-up"} className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100">
-            Sign Up Today
-          </Link>
-        </div>
-      </section>
-
-      {/* Footer Section */}
-      <footer className="py-8 bg-gray-800 text-white text-center">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-center space-x-6 mb-4">
-            <a href="#" className="text-white hover:text-gray-400">About</a>
-            <a href="#" className="text-white hover:text-gray-400">Contact</a>
-            <a href="#" className="text-white hover:text-gray-400">Privacy Policy</a>
-          </div>
-          <p>© 2024 Campus Connect. All rights reserved.</p>
-        </div>
-      </footer>
+    {/*  About  */}
+    <div className={"flex-col px-12 items-center justify-center"}>
+        <p className={"text-center font-bold text-3xl mb-4"}>About</p>
+        <p className={`text-center mx-auto md:px-24 px-10 text-yellow-200 text-sm antialiased `}>
+            This platform is created for connecting students of our college with the aim of promoting collaboration and connecting students with each other. This platform provides you all the ongoing events details and clubs and communities can also register themselves and can share their events. And Moreover you can share your projects here and can also open them for collaboration. And last but not least this is an open source so if you want any feature and find any bug you can contribute to it and get featured on this website.
+        </p>
     </div>
+        <section className={"md:px-24 px-10 mt-24"}>
+            {
+about.map((item)=> (
+    <div key={item.id} className={`md:flex gap-3 items-center`}>
+        <Image src={item.image} alt={item.image} className={"py-3 mx-auto"} width={300} height={300}/>
+        <div className={"px-12"}>
+            <p className={"mb-5 font-bold text-4xl"}>{item.heading}</p>
+            <p className={"text-justify"}>{item.description}</p>
+        </div>
+    </div>
+))
+            }
+        </section>
+        <section className={"mt-2 md:px-24 px-12 flex flex-col justify-center items-center"}>
+            <p className={"text-center font-bold text-4xl my-4"}>Open Source</p>
+            <p className={"text-center"}>This project is an effort to cultivate an open-source mindset within our community. By contributing your ideas, adding new features, and fixing bugs, you have the opportunity to directly shape and improve this platform. We encourage everyone to participate, learn, and grow together, making this platform better for all. Your involvement not only enhances your skills but also fosters a collaborative environment where we all benefit from shared knowledge and creativity. Let's work together to build something truly impactful.</p>
+            <Link href={"https://github.com/memkgupta/campus_connect"} className={"flex gap-2 mt-2 bg-amber-300 border border-yellow-400 p-2 rounded-full w-fit text-black hover:bg-yellow-100"}><GithubIcon/>Star our repo</Link>
+        </section>
+        <footer className={"mt-3 flex flex-col items-center justify-center  bottom-0 w-full h-20 bg-slate-900"}>
+            <p className={"mt-1"}>Made by ~ <Link href={"https://bento.me/mkgupta"}>Mayank Gupta</Link></p>
+       <div className={"flex gap-2 mt-2 "}>
+           <Link href={"https://github.com/memkgupta"}><GithubIcon/></Link>
+           <Link href={"https://www.linkedin.com/in/mayankgupta2005/"}><LinkedinIcon/></Link>
+       </div>
+
+        </footer>
     </>
   );
 }

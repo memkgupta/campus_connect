@@ -78,3 +78,17 @@
       @apply bg-background text-foreground;
     }
   }
+.hero-img{
+  animation: upAndDown 3s ease-in-out infinite;
+}
+@keyframes upAndDown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px); /* Move up by 20px */
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
