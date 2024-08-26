@@ -27,7 +27,9 @@ export default function Home() {
   return (
 
     <>
-
+<div className="bg-red-500 w-full">
+    <p className="animate-marquee">This project is currently in beta version and it may (will 🫠) contain bugs.</p>
+</div>
    <section className={"md:flex justify-center items-center px-12 py-10"}>
     <div className={"hero-img"}>
         <Image width={500} height={500} alt={"hero-image"} src={"/hero.svg"} className={"w-[500px] h-[400px]"}/>
