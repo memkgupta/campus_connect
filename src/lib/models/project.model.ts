@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const projectCategoriesEnum = projectCategories.map(categ=>categ.value);
 const projectSchema = new mongoose.Schema({
     user:{type:mongoose.Schema.Types.ObjectId,ref:'User'},
-    category:{type:String,enum:projectCategoriesEnum,required:true},
+    // category:{type:String,enum:projectCategoriesEnum,},
     title:{type:String,required:true},
     description:{type:String,required:true},
     banner:{type:String},

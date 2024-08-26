@@ -25,10 +25,11 @@ export const POST = async(req:Request)=>{
         contributors.push({user_id:user._id,role:"lead"})
         const project = await Project.create({
 user:user._id,
-category,title,description,banner,images,openForCollab,start,end,currently_working,tags,live,github_repos,contributors
+title,description,banner,images,openForCollab,start,end,currently_working,tags,live,github_repos,contributors
         });
         return Response.json({success:true,message:"Project Created Successfully",id:project._id},{status:200});
     } catch (error) {
+        console.log(error);
         return Response.json({success:false,message:"Some error occured"},{status:500});
     }
 }
