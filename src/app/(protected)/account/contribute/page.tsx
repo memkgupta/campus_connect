@@ -210,7 +210,7 @@ fetchSubjects();
       <div className="bg-slate-800/30 p-6 rounded-lg shadow-lg max-w-md text-center">
         <h2 className="text-2xl font-bold mb-4">Not a Contributor Yet?</h2>
         <p className="mb-6">You are not currently a contributor. Click the link below to fill out the form and become a contributor.</p>
-       <Link href='/become-a-contributor' className='text-blue-900'>Become a contributor</Link>
+       <Link href='https://forms.gle/5pyeVcoRk68FbE9v8' className='text-blue-900'>Become a contributor</Link>
       </div>
     </div>
         </>
