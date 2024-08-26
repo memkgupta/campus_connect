@@ -1,4 +1,24 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Campus Connect
+Overview
+
+Campus Connect is a platform designed to connect students within our college, fostering collaboration and communication. The platform allows users to stay updated on ongoing events, register clubs and communities, share projects, and open them for collaboration.
+
+As an open-source project, Campus Connect invites contributions from anyone interested in enhancing the platform—whether by adding new features, fixing bugs, or sharing new ideas.
+Features
+
+    Event Listings: Stay informed about ongoing events within the college.
+    Club & Community Registration: Clubs and communities can register themselves and share their events.
+    Project Sharing: Share your projects with the community and invite others to collaborate.
+    Open Source: Contribute to the platform by adding features, fixing bugs, or suggesting improvements.
+
+## Current Status
+
+The project is currently in the underworking phase and requires significant bug fixing and feature development. Contributions are highly appreciated.
+How to Contribute
+
+    Fork the Repository: Start by forking the repo and creating a local copy.
+    Fix Bugs / Add Features: Work on any issues or features you want to contribute to.
+    Create a Pull Request: Once you're done, submit a pull request, and we'll review your changes.
 
 ## Getting Started
 
