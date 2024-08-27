@@ -21,7 +21,7 @@ if(!user){
 
 const club = await Club.findOne({admin:user._id});
 if(!club){
-    return Response.json({success:false,message:"No club registered"},{status:200})
+    return Response.json({success:false,message:"No club registered"},{status:404})
 }
 return Response.json({success:true,data:{name:club.clubName,_id:club._id,logo:club.clubLogo,isVerified:club.isVerified}},{status:200});
 } catch (error) {

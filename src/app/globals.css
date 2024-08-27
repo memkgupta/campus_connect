@@ -1,3 +1,6 @@
+
+@import '/node_modules/nprogress/nprogress.css';
+
 @tailwind base;
   @tailwind components;
   @tailwind utilities;

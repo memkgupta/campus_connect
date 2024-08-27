@@ -72,7 +72,7 @@ const {
     </CardDescription>
   </CardHeader>
   <CardContent>
-    <a href='#' className='bg-yellow-300 hover:bg-yellow-400 p-2 text-black rounded-md ' >Become a contributor </a>
+    <Link target='_blank' href='https://forms.gle/5pyeVcoRk68FbE9v8' className='bg-yellow-300 hover:bg-yellow-400 p-2 text-black rounded-md ' >Become a contributor </Link>
   </CardContent>
  
 </Card>

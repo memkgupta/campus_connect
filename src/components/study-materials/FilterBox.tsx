@@ -21,6 +21,7 @@ interface Params {
 const FilterBox = ({
   state,
   url,
+  type,
   loading,
   subjectsState,
   filters = {
@@ -34,6 +35,7 @@ const FilterBox = ({
 }: {
   state: any;
   url: string;
+  type:string,
   loading: any;
   subjectsState?: any;
   filters?: {
@@ -69,12 +71,13 @@ const FilterBox = ({
 const fetchSubjects = async()=>{
   var params = "";
   if (year) {
-    console.log(year);
+  
     params = params.concat("?year=").concat(year.value);
   }
   if (selectedBranch) {
     params = params.concat(`&branch=${selectedBranch.value}`);
   }
+  
 try {
    const res  = await axios.get(`/api/subjects/${params}`);
    const data = res.data;
@@ -125,11 +128,17 @@ const fetchResources = async()=>{
     if (selectedSession) {
       params.sessionYear = selectedSession.value;
     }
+    if(type){
+      console.log(type)
+      params.type = type;
+    }
     try {
       loading(true);
       const res = await axios.get(url, { params: params });
-      return res.data.data;
+      state(res.data.resources)
+      return res.data.resources;
     } catch (error: any) {
+      console.log(error)
       toast({
         title: "Some error occured",
         variant: "destructive",
@@ -150,11 +159,7 @@ const {data:resourceData,isSuccess} = useQuery<any>(
   }
 )
 
-useEffect(()=>{
-  if(isSuccess){
-    state(resourceData);
-  }
-},[resourceData])
+
  
   return (
     <div className=" md:flex md:flex-row md:justify-around gap-x-5 flex flex-col items-center justify-center  gap-5">

@@ -19,7 +19,7 @@ const page = () => {
   const [data,setData] = useState<any[]>([]);
   return (
     <div>
-        <FilterBox filters={{year:true,subjects:true,branch:true,university:true}} subjectsState={setSubjects} loading={setIsLoading} url='/api/resources/notes' state={setData}/>
+        <FilterBox type='notes' filters={{year:true,subjects:true,branch:true,university:true}} subjectsState={setSubjects} loading={setIsLoading} url='/api/resources?type=notes' state={setData}/>
 
        {isLoading?(
         <>
@@ -38,7 +38,7 @@ const page = () => {
             </CardHeader>
            
             <CardFooter>
-              <Link href={`/resources/notes/${note._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
+              <Link href={`/resources/${note._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
             </CardFooter>
           </Card>
             ))

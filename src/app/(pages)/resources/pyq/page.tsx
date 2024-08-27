@@ -19,7 +19,7 @@ const page = () => {
   const [data,setData] = useState<any[]>([]);
   return (
     <div>
-        <FilterBox subjectsState={setSubjects} loading={setIsLoading} url='/api/resources/pyq' state={setData}/>
+        <FilterBox type="pyq" subjectsState={setSubjects} loading={setIsLoading} url='/api/resources' state={setData}/>
 
        {isLoading?(
         <>
@@ -33,12 +33,12 @@ const page = () => {
             data?.map((pyq)=>(
               <Card>
             <CardHeader>
-              <CardTitle>{subjects.filter((subject:any)=>(subject.value===pyq.code))[0]?.label}</CardTitle>
-              <CardDescription>{pyq.sessionYear}</CardDescription>
+              <CardTitle>{pyq.data.label}</CardTitle>
+              <CardDescription>{pyq.data.sessionYear}</CardDescription>
             </CardHeader>
            
             <CardFooter>
-              <Link href={`/resources/pyq/${pyq._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
+              <Link href={`/resources/pyq/${pyq.data._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
             </CardFooter>
           </Card>
             ))

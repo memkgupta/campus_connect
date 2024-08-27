@@ -22,7 +22,7 @@ const fetchData = async()=>{
     setIsLoading(true);
     try {
         if(id){
-            const res = await axios.get(`/api/resources/question-banks/${id}`);
+            const res = await axios.get(`/api/resources/${id}`);
             const data = res.data;
             setData(data.data);
             

@@ -2,7 +2,7 @@
 import React, { ChangeEvent, KeyboardEvent, useContext, useEffect, useState } from 'react'
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { Github, Instagram, Linkedin, Loader2, LogOutIcon, Pencil, Trash, X } from 'lucide-react';
+import { CircleFadingPlus, Github, Instagram, Linkedin, Loader2, LogOutIcon, Pencil, Plus, PlusIcon, Trash, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -29,10 +29,13 @@ import { UploadButton } from '@/utils/uploadthing';
 import ActiveCourse from '@/components/ActiveCourse';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { validateURL } from '@/utils/validator';
+import Image from 'next/image';
 function Page( ) {
 const [userDetails,setUserDetails] = useState({
   profile:'',
   username:'',
+  socials:[''],
   name:'',
   bio:'',
    interest:[''],
@@ -53,6 +56,7 @@ const [isLoading,setIsLoading] = useState(true);
     
     }
   })
+  const[socialLink,setSocialLink] = useState<string>('');
   const {toast} = useToast();
   const [isHovered, setIsHovered] = useState(false);
   const [preview, setPreview] = useState<any>(userDetails.profile!=''?userDetails.profile:null);
@@ -61,6 +65,7 @@ const [isSubmitting,setIsSubmitting] = useState(false);
 const[currentInterest,setCurrentInterest] = useState('');
 const [error,setError] = useState(false);
 const [isUsernameValid,setIsUsernameValid] = useState(true);
+const [isNotValidURL,setIsNotValidURL] = useState(true);
 const [username,setUsername] = useState(userDetails.username);
 const handleSubmit = async(data:Zod.infer<typeof editProfileSchema>)=>{
 setIsSubmitting(true)
@@ -117,10 +122,63 @@ const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     }
   }
 };
+const handleAddLink =async ()=>{
+  if(isNotValidURL){
+    toast({
+      title:"Not a valid url",
+      variant:'destructive'
+    })
+    return;
+  }
+  
+    try {
+  
+     
+     const res = await axios.put(`/api/users/update`,{social_links:socialLink});
+    if(res.data.success){
+      toast({title:"Link added successfully"});
+    }
+    setUserDetails({...userDetails,socials:[...userDetails.socials,socialLink]})
+  setSocialLink('');
+  setIsNotValidURL(true)
+  
+    } catch (error) {
+      const axiosError  = error as AxiosError<any>;
+      if(axiosError.response?.data){
+        const message = axiosError.response.data.message;
+        toast({title:message,variant:'destructive'})
+      }
+  }
+}
+const icon = (link:string)=>{
+  try {
+    // Create a new URL object
+    const urlObj = new URL(link);
+
+    // Get the hostname (e.g., 'www.example.com')
+    let hostname = urlObj.hostname;
+
+    // Remove 'www.' if present
+    if (hostname.startsWith('www.')) {
+      hostname = hostname.slice(4);
+    }
+
+    // Split the hostname into parts by '.' and return the first part
+    const domainParts = hostname.split('.');
+    const brandName = domainParts[0];
+
+    return `/${brandName}.png`;
+  } catch (error) {
+    // Handle invalid URL or other errors
+    console.error('Invalid URL:', error);
+    return '';
+  }
+}
 const[isUsernameChecking,setIsUsernameChecking] = useState(false);
 const [usernameMessage,setUsernameMessage] = useState('');
   const {data:session,status} = useSession();
   const debounced = useDebounceCallback(setUsername,500);
+  const socialLinkDebounced = useDebounceCallback(setSocialLink,500);
   useEffect(()=>{
     axios.get(`/api/users/me`)
     .then(res=>{
@@ -175,7 +233,14 @@ useEffect(()=>{
    checkUsername();
   }
 ,[username])
-
+useEffect(()=>{
+  if(validateURL(socialLink)){
+setIsNotValidURL(false);
+  }
+  else{
+    setIsNotValidURL(true);
+  }
+},[socialLink])
   if (status==="authenticated") {
     return (
      <>
@@ -342,10 +407,28 @@ render={(field)=>(
            <p className='font-bold text-white md:text-2xl sm:text-lg'>{userDetails.name}</p>
            <p className='mt-3 md:text-lg sm:text-sm'>{userDetails.bio}</p>
            {/* socials */}
-           <div className="flex gap-x-3 mt-3">
-             <Link className='text-gray-700' href={"#"}><Instagram size={20}/></Link>
-             <Link className='text-gray-700' href={"#"}><Github size={20}/></Link>
-             <Link className='text-gray-700' href={"#"}><Linkedin size={20}/></Link>
+           <div className="flex gap-x-3 mt-3 items-center">
+             {userDetails.socials?.map((social,index)=>(
+              <Link href={social} key={social}>{<img alt='' src={icon(social)} className='max-w-8 max-h-8'></img>}</Link>
+             ))}
+        <Dialog>
+          <DialogTrigger>
+          <Button className='rounded-full hover:bg-gray-700 p-1 w-10 h-10 border-2 border-gray-500 border-dashed bg-transparent text-gray-500'>    <Plus /></Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>Add Social Link</DialogHeader>
+            <div className='flex flex-col gap-1'>
+              <div className='flex gap-2'>
+       {!isNotValidURL&&<div className='rounded-full w-10 h-10 bg-yellow-200 flex items-center justify-center'><img src={icon(socialLink)} className='max-w-10 max-h-10'/></div>}
+              <Input className='' placeholder='Please Enter the url'   onChange={(e)=>{socialLinkDebounced(e.target.value)}} type='url'/>
+
+              </div>
+          {isNotValidURL && <p className='text-red-500 text-xs'>Please enter a valid url</p>}
+          {!isNotValidURL && <Button onClick={handleAddLink} className='bg-yellow-300 hover:bg-yellow-400 text-black'>Add</Button>}
+            </div>
+           
+          </DialogContent>
+        </Dialog>
            </div>
            {userDetails.isClubAdmin && <Link className='bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black w-fit mt-4 justify-self-end' href={"/account/club"}>Your Club</Link>}   
          </div>
