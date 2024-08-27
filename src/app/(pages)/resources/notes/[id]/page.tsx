@@ -17,12 +17,13 @@ const page = ({params}:{params:{id:string}}) => {
     const router = useRouter();
     const {toast} = useToast();
     useEffect(()=>{
-        console.log("req");
+       
         if (id) {
-            axios.get(`/api/resources/notes/${id}`)
+            axios.get(`/api/resources/${id}`)
               .then((res) => {
                 const data = res.data;
-                setData(data.data);
+                console.log(data)
+                setData(data.resource);
               })
               .catch((error) => {
                 toast({

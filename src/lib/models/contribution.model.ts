@@ -7,8 +7,8 @@ const contributionSchema = new Schema({
     code:{type:String,required:true},
     collegeYear:{type:String,required:true,enum:['1','2','3','4']},
     file:{type:String,required:'true'},
-   university:{type:String,required:'true'},
-   contributor:{type:Schema.Types.ObjectId,ref:'User'}
+    university:{type:String,required:'true'},
+    contributor:{type:Schema.Types.ObjectId,ref:'User'}
 });
 
 const Contributions = mongoose.models.Contribution||mongoose.model("Contribution",contributionSchema);

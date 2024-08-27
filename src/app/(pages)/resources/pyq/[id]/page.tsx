@@ -1,6 +1,7 @@
 "use client"
 import NoResourceFound from '@/components/NoResourceFound';
 import { useToast } from '@/components/ui/use-toast';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Loader2Icon } from 'lucide-react';
 import Link from 'next/link';
@@ -17,32 +18,36 @@ const page = ({params}:{params:{id:string}}) => {
     const[pdfUrl,setPdfUrl] = useState<any>();
     const router = useRouter();
     const {toast} = useToast();
-    useEffect(()=>{
-const fetchData = async()=>{
-    setIsLoading(true);
-    try {
-        if(id){
-            const res = await axios.get(`/api/resources/pyq/${id}`);
-            const data = res.data;
-            setData(data.pyq);
-            
+    const fetchResources = async()=>{
+
+          
+          try {
+            setIsLoading(true);
+            const res = await axios.get(`/api/resources/${id}`);
+            setData(res.data.data)
+            return res.data.data;
+          } catch (error: any) {
+            console.log(error)
+            toast({
+              title: "Some error occured",
+              variant: "destructive",
+            });
+            return Promise.reject("Some error occured")
+          } finally {
+            setIsLoading(false);
+          }
+      }
+      
+      const {data:resourceData,isSuccess} = useQuery<any>(
+        {
+          queryKey:[id],
+          queryFn:fetchResources,
+          // refetchOnMount:false,
+          refetchOnWindowFocus:false,
+              retry:false
         }
-       else{
-        router.replace("/not-found");
-        
-       }
-    } catch (error) {
-        toast({
-            title:'Some error occured',
-            variant:'destructive'
-        })
-    }
-    finally{
-        setIsLoading(false);
-    }
-}
-fetchData();
-    },[])
+      )
+  
     const [totalPages,setTotalPages] = useState(null);
     const onDocumentLoadSuccess = ({numPages}:{numPages:any})=>{setTotalPages(numPages)}
   return (
@@ -56,17 +61,17 @@ fetchData();
         <>
       {data ? 
       (
-        <>
-          <p className='text-center text-2xl font-bold text-white'>{data?.label}</p>
-        <p className='mt-5 text-center font-bolf text-gray'>Contributed by : - <Link href={`/user/@${data.contributor.username}`}>{data.contributor.name}</Link></p>
+        <div className='py-12'>
+          <p className='text-center text-2xl font-bold text-white'>{data.resource?.label}</p>
+        <p className='mt-5 text-center font-bolf text-gray'>Contributed by : - <Link href={`/user/@${data.resource.contributor.username}`}>{data.resource.contributor.name}</Link></p>
 <div className='flex justify-around'>
-    <p className="text-gray-500 font-bold">Year : {data.sessionYear}</p>
+    <p className="text-gray-500 font-bold">Year : {data.resource.sessionYear}</p>
     {/* <p className="text-gray-500 font-bold">{data.sessionYear}</p> */}
 </div>
         <div className="mt-5 flex justify-center">
-{data?.file&&(<iframe src={data.file} width="640" height="640" allow="autoplay"></iframe>)}
+{data?.resource.file&&(<iframe src={data.resource.file} width="640" height="640" allow="autoplay"></iframe>)}
         </div>
-        </>
+        </div>
       ):
       (<NoResourceFound/>)}
         </>
