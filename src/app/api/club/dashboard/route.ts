@@ -64,6 +64,9 @@ if(!_user){
               }
         ]
     )
+    if(club.length==0){
+      return Response.json({success:false,message:"You have no registered club"},{status:404});
+    }
 const totalEvents = await Event.find({admin:user._id,dateTime:{$lt:new Date()}}).countDocuments();
 const upcomingEvents = await Event.find({admin:user._id,dateTime:{$gte:new Date()}}).countDocuments()
 return Response.json({success:true,clubDetails:{...club[0],totalEvents,upcomingEvents}},{status:200})

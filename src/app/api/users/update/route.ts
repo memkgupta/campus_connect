@@ -13,7 +13,7 @@ export const PUT = async(req:Request)=>{
    }
     await connect();
     try {
-        const {username,name,bio,profile} = await req.json();
+        const {username,name,bio,profile,social_links} = await req.json();
         const user = await User.findOne({email:_user.email});
        
         if(!user){
@@ -39,6 +39,16 @@ if(!user.verified){
         }
         if(profile){
             user.profile = profile;
+        }
+        if(social_links){
+       
+            // if(user.)
+         const socials:[string] = user.socials;
+        
+if(socials.find(link=>social_links===link)){
+return Response.json({success:false,message:"Link already exists"},{status:401})
+}
+             user.socials.push(social_links)
         }
         await user.save();
         return Response.json({

@@ -81,6 +81,7 @@ return data;
       title:axiosError.response.data.message,
       variant:"destructive"
     })
+    setLoading(false)
   return Promise.reject(axiosError.response.data.message);
 
   }
@@ -122,7 +123,7 @@ const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
     setIsSubmitting(false)
   }
 }
-    const {data:clubData,isSuccess}=useQuery({
+    const {data:clubData=undefined,isSuccess}=useQuery({
         queryKey:[clubContextData?._id],
         queryFn:fetchClubDashboardData,
         refetchOnWindowFocus:false,
@@ -131,6 +132,8 @@ const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
   return (
    <>
     {!loading?(
+    <div className='flex flex-col min-h-[90vh] items-center '>
+    {clubData ? (
       <div className={`bg-slate-950`}>
       <div className="min-h-screen bg-background-dark text-primary-yellow p-6">
         <header className="flex justify-between items-center py-4">
@@ -275,6 +278,13 @@ const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
           <div className='flex justify-center'><Link href={"/account/club/event"} className='bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black'>View All</Link></div>
         </main>
       </div>
+    </div>
+     ):(
+      <div className='bg-slate-800 rounded-md p-4 my-auto mx-auto w-2/4  flex flex-col items-center'>
+        <p className='text-center'>You have not registered your club yet</p>
+        <Link className={`text-yellow-400 text-xs antialiased text-center`} href={"/account/register-a-club"}>Register now</Link>
+      </div>
+     )}
     </div>
     ):(
       <Loader/>
