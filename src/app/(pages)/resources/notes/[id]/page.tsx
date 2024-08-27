@@ -16,29 +16,7 @@ const page = ({params}:{params:{id:string}}) => {
     const[pdfUrl,setPdfUrl] = useState<any>();
     const router = useRouter();
     const {toast} = useToast();
-    useEffect(()=>{
-       
-        if (id) {
-            axios.get(`/api/resources/${id}`)
-              .then((res) => {
-                const data = res.data;
-                console.log(data)
-                setData(data.resource);
-              })
-              .catch((error) => {
-                toast({
-                  title: 'Some error occurred',
-                  variant: 'destructive'
-                });
-              })
-              .finally(() => {
-                setIsLoading(false);
-              });
-          } else {
-            router.replace("/not-found");
-            setIsLoading(false);
-          }
-    },[])
+  
     
   
   return (
