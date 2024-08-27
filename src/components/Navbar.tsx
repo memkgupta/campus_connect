@@ -8,7 +8,7 @@ import { Cross, CrossIcon, HamIcon, MenuIcon, Search, User2, X } from 'lucide-re
 import Sidebar from './Sidebar';
 import Link from 'next/link';
 import { Button } from './ui/button';
-
+import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
 function Navbar() {
 
    
@@ -24,6 +24,7 @@ const handleInputChange = (e:any) => {
 
   
   return (
+  <>
     <div className='z-20 flex items-center justify-between w-full text-yellow-300 bg-slate-950 px-4'>
         <Image src={"/logo.png"} width={70} height={70} alt='logo'/>
         <div className='md:block hidden'>
@@ -72,7 +73,15 @@ const handleInputChange = (e:any) => {
    
 
         )}
+       
     </div>
+    <ProgressBar
+          height="4px"
+          color="#fffd00"
+          options={{ showSpinner: false }}
+          shallowRouting
+        />
+  </>
   )
 }
 
