@@ -104,7 +104,7 @@ const {data:subjectsFilterOptions} = useQuery<{value:string,label:string,id:stri
 
   const [selectedUniversity, setSelectedUniversity] = useState({
     label: "AKTU",
-    value: "AKTU (UP)",
+    value: "AKTU",
     id: "AKTU",
   });
   const [selectedPaperType, setSelectedPaperType] = useState({
@@ -151,7 +151,7 @@ const fetchResources = async()=>{
 
 const {data:resourceData,isSuccess} = useQuery<any>(
   {
-    queryKey:[year,selectedBranch,selectedUniversity,selectedSession],
+    queryKey:[year,selectedBranch,selectedSession],
     queryFn:fetchResources,
     // refetchOnMount:false,
     refetchOnWindowFocus:false,

@@ -9,11 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { FileX, Loader2 } from 'lucide-react'
+import { ArrowUp, FileX, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import NoResourceFound from '@/components/NoResourceFound'
-const page = ({params}:{params:{type:string,id:string}}) => {
+import Image from 'next/image'
+const Page = ({params}:{params:{type:string,id:string}}) => {
     const type = params.type||"pyq";
   const[isLoading,setIsLoading] = useState(true)
   const [subjects,setSubjects] = useState<{value:string,label:string,id:string}[]>([]);
@@ -31,15 +32,25 @@ const page = ({params}:{params:{type:string,id:string}}) => {
         data.length>0?(
           <div className='grid md:grid-cols-3 grid-cols-1 gap-4 justify-items-center mt-12'>
           {
-            data?.map((pyq)=>(
-              <Card>
+            data?.map((res)=>(
+              <Card className='min-w-[300px] '>
             <CardHeader>
-              <CardTitle>{pyq.data.label}</CardTitle>
-              <CardDescription>{pyq.data.sessionYear}</CardDescription>
+              <CardTitle>{res.data.label}</CardTitle>
+              <CardDescription>{res.data.sessionYear}</CardDescription>
             </CardHeader>
            
-            <CardFooter>
-              <Link href={`/resources/pyq/${pyq.data._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
+            <CardFooter className='flex justify-between'>
+              <Link href={`/resources/pyq/${res.data._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
+              <div className='flex gap-2'>
+                <div className='flex gap-1'>
+                    <Image alt='upvotes' src={"/upvote.svg"} width={20} height={20}/>
+                   <p className='text-gray-500'>{res.upvoteCount}</p>
+                </div>
+                <div className='flex gap-1'>
+                    <Image alt='downvotes' src={"/downvote.svg"} width={20} height={20}/>
+                   <p className='text-gray-500'>{res.upvoteCount}</p>
+                </div>
+              </div>
             </CardFooter>
           </Card>
             ))
@@ -55,4 +66,4 @@ const page = ({params}:{params:{type:string,id:string}}) => {
   )
 }
 
-export default page
+export default Page
