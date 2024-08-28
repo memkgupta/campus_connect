@@ -20,12 +20,23 @@ export const POST = async(req:Request)=>{
     if(!contribution){
         return Response.json({success:false,message:"No such contribution exists"},{status:401})
     }
+    console.log(type)
 try {
+    const isAlreadyVoted = await Vote.findOne({userId:user._id});
+    if(isAlreadyVoted&&isAlreadyVoted.voteType==type){
+        await Vote.findByIdAndDelete(isAlreadyVoted._id);
+        return Response.json({sucess:true,message:"Vote removed "},{status:201})
+    }
     const vote = new Vote({
         contributionId:contribution._id,
         userId:user._id,
-        type:type
+        voteType:type
     });
+     if(isAlreadyVoted&&isAlreadyVoted.voteType!=type){
+        await Vote.findByIdAndDelete(isAlreadyVoted._id);
+    }
+   
+    await vote.save();
     return Response.json({success:true,message:"Voted successfully"});
 } catch (error) {
     console.log(error);
