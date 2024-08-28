@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import {Document, Page,pdfjs} from 'react-pdf'
 
-const page = ({params}:{params:{id:string}}) => {
+const page = ({params}:{params:{id:string,type:string}}) => {
     // pdfjs.GlobalWorkerOptions.workerSrc =  
     // `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`; 
     const id = params.id;

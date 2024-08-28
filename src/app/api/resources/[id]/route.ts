@@ -20,12 +20,12 @@ export const GET = async(req:Request,{ params }: { params: { id: string } })=>{
                 _id: '$voteType', // Group by post ID
                 upvoteCount: {
                   $sum: {
-                    $cond: [{ $eq: ['$voteType', 'upvote'] }, 1, 0]
+                    $cond: [{ $eq: ['$voteType', 'up'] }, 1, 0]
                   }
                 },
                 downvoteCount: {
                   $sum: {
-                    $cond: [{ $eq: ['$voteType', 'downvote'] }, 1, 0]
+                    $cond: [{ $eq: ['$voteType', 'down'] }, 1, 0]
                   }
                 }
               }

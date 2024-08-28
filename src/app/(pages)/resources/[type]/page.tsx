@@ -9,17 +9,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { FileX, Folder, Loader2 } from 'lucide-react'
+import { FileX, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import NoResourceFound from '@/components/NoResourceFound'
-const page = () => {
+const page = ({params}:{params:{type:string,id:string}}) => {
+    const type = params.type||"pyq";
   const[isLoading,setIsLoading] = useState(true)
   const [subjects,setSubjects] = useState<{value:string,label:string,id:string}[]>([]);
   const [data,setData] = useState<any[]>([]);
   return (
     <div>
-        <FilterBox type='question-bank' filters={{year:true,subjects:true,branch:true,university:true}} subjectsState={setSubjects} loading={setIsLoading} url='/api/resources?type=question-bank' state={setData}/>
+        <FilterBox type={type} subjectsState={setSubjects} loading={setIsLoading} url='/api/resources' state={setData}/>
 
        {isLoading?(
         <>
@@ -30,15 +31,15 @@ const page = () => {
         data.length>0?(
           <div className='grid md:grid-cols-3 grid-cols-1 gap-4 justify-items-center mt-12'>
           {
-            data?.map((question_bank)=>(
+            data?.map((pyq)=>(
               <Card>
             <CardHeader>
-              <CardTitle>{subjects.filter((subject:any)=>(subject.value===question_bank.code))[0]?.label}</CardTitle>
-              <CardDescription>{question_bank.sessionYear}</CardDescription>
+              <CardTitle>{pyq.data.label}</CardTitle>
+              <CardDescription>{pyq.data.sessionYear}</CardDescription>
             </CardHeader>
            
             <CardFooter>
-              <Link href={`/resources/${question_bank._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
+              <Link href={`/resources/pyq/${pyq.data._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
             </CardFooter>
           </Card>
             ))
