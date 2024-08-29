@@ -48,7 +48,7 @@ const Page = ({params}:{params:{type:string,id:string}}) => {
                 </div>
                 <div className='flex gap-1'>
                     <Image alt='downvotes' src={"/downvote.svg"} width={20} height={20}/>
-                   <p className='text-gray-500'>{res.upvoteCount}</p>
+                   <p className='text-gray-500'>{res.downvoteCount}</p>
                 </div>
               </div>
             </CardFooter>

@@ -19,12 +19,13 @@ try{
         })
     }
 
-    const {label,branch,code,collegeYear,university,type,file} = await request.json();
+    const {label,branch,code,collegeYear,university,type,file,sessionYear} = await request.json();
     const contribution =await Contributions.create({
         label:label,
         branch:branch,
         file:file,
         type:type,
+        sessionYear:sessionYear,
         code:code,
         collegeYear:collegeYear,
         contributor:user._id,

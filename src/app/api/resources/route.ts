@@ -25,6 +25,7 @@ console.log(params)
   if (params.get("code")) {
     filters.code = params.get("code")?.toString();
   }
+  // if(params.get("sessionYear")){}
   if (params.get("type")) {
     console.log(params.get("type"))
     filters.type = params.get("type")!.toString();
@@ -55,12 +56,12 @@ console.log(params)
           data: { $first: '$$ROOT' },
           upvoteCount: {
             $sum: {
-              $cond: [{ $eq: ["$votes.voteType", "upvote"] }, 1, 0],
+              $cond: [{ $eq: ["$votes.voteType", "up"] }, 1, 0],
             },
           },
           downvoteCount: {
             $sum: {
-              $cond: [{ $eq: ["$votes.voteType", "downvote"] }, 1, 0],
+              $cond: [{ $eq: ["$votes.voteType", "down"] }, 1, 0],
             },
           },
         },
