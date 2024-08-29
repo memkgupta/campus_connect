@@ -37,7 +37,7 @@ const Page = () => {
     const [selectedUniversity,setSelectedUniversity] = useState({value:'AKTU',label:'AKTU',id:'AKTU'})
 
     const handleSubmit = async()=>{
-if(selectedBranch&&selectedSubject&&year&&fileUrl!=''&&resourceType){
+if(selectedBranch&&selectedSubject&&year&&fileUrl!=''&&resourceType&&sessionYear){
 const data = {
     label:label,
     type:resourceType.value,

@@ -32,6 +32,7 @@ export default function RootLayout({
       <Analytics/>
       <AuthProvider>
       <body className={inter.className}>
+        
         <Navbar/>
        
         <main>
