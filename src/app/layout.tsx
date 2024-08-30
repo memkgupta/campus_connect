@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 
 
 

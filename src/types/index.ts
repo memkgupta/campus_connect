@@ -20,10 +20,15 @@ logout: () => void;
 export type EventParticipantRequestResponse = {
       _id:string,
       user:{username:string,name:string,profile:string},
-    
+      
       links?:{_id:string,title:string,url:string}[],
       applicationNote:string,
       resume?:string,
       registrationType:string
       createdAt:Date,
+}
+
+export type YTLecture = {
+      _id: string | null | undefined; label: string | null | undefined; videoUrl: string; thumbnail:string|null|undefined
+
 }

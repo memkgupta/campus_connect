@@ -12,10 +12,14 @@ const _user = session?.user;
 try {
   
     if(!_user){
+        console.log("fff")
         return Response.json({success:false,message:"Invalid session"},{status:401});
     }
+  
+   
     const user = await User.findOne({email:_user.email});
     if(!user){
+        console.log("hhhh")
         return Response.json({success:false,message:"Invalid session"},{status:401});
     }
     const isClubAdmin = await Club.findOne({admin:user._id});
