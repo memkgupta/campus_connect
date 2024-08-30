@@ -5,7 +5,7 @@ import axios from "axios";
 
 export const extractLecturesFromYtPlaylist = async(url:string)=>{
 
-let videoUrlSuffix = `https://www.youtube.com/watch?v=`
+let videoUrlSuffix = `https://www.youtube.com/embed/`
     const playListId = url.slice(38);
 console.log(playListId)
 const res = await youtubeService.playlistItems.list({
