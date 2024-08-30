@@ -33,13 +33,13 @@ try{
         contributor:user._id,
         university:university,
     });
-playlist = playlist.map((i:YTLecture)=>({label:playlist.label,thumbnail:i.thumbnail,videoUrl:i.videoUrl}))
+playlist = playlist.map((i:YTLecture)=>({label:i.label,thumbnail:i.thumbnail,videoUrl:i.videoUrl}))
     if(type==='lectures'){
         const playlistDoc = await Playlist.create({
             contributionId:contribution._id,
             lectures:playlist
         });
-        contribution.playlist = playlistDoc;
+        contribution.playlist = playlistDoc._id;
         contribution.thumbnail = playlist[0].thumbnail;
     }
     await contribution.save();

@@ -36,7 +36,7 @@ const Page = ({params}:{params:{type:string,id:string}}) => {
             data?.map((res)=>(
               <Card className='min-w-[300px] '>
               <CardContent>  
-                {res.data.thumbnail && <img src={res.data.thumbnail} className='max-w-fit' />}
+                {res.data.thumbnail && <img src={res.data.thumbnail} className='max-w-fit w-[300px] h-[300px]' />}
                 {res.data.label}
                 
                 {res.data.sessionYear}

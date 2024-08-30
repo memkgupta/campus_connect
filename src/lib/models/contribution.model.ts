@@ -8,6 +8,7 @@ const contributionSchema = new Schema({
     code:{type:String,required:true},
     sessionYear:{type:String},
     thumbnail:{type:String,},
+    playlist:{type:mongoose.Schema.Types.ObjectId,ref:'Playlist'},
     collegeYear:{type:String,required:true,enum:['1','2','3','4']},
     file:{type:String},
     university:{type:String,required:'true'},

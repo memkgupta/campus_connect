@@ -13,7 +13,7 @@ export const GET = async(req:Request,{ params }: { params: { id: string } })=>{
     const session = await getServerSession();
     const _user = session?.user;
     try {
-        const resource = await Contributions.findById(id).populate('contributor');
+        let resource = await Contributions.findById(id).populate('contributor').populate('playlist');
         
         if(!resource){
           return Response.json({success:false,message:"Not found"},{status:404});
