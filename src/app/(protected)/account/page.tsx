@@ -180,37 +180,41 @@ const [usernameMessage,setUsernameMessage] = useState('');
   const debounced = useDebounceCallback(setUsername,500);
   const socialLinkDebounced = useDebounceCallback(setSocialLink,500);
   useEffect(()=>{
-    axios.get(`/api/users/me`)
-    .then(res=>{
-if(res.data.success){
-setUserDetails(res.data.data);
-setPreview(res.data.data.profile)
-console.log(res.data.data)
-form.reset(res.data.data);
-}
-
-    })
-    .catch((error:AxiosError<any>)=>{
-      setError(true);
-      if(error.response?.status!==500&&error.response){
-        toast({
-          title:error.response?.data.message||"Some error occured",
-          variant:'destructive'
-        })
+   
+  },[session])
+  const fetchUserData = async () => {
+    try {
+      const res = await axios.get(`/api/users/me`);
+  
+      if (res.data.success) {
+        setUserDetails(res.data.data);
+        setPreview(res.data.data.profile);
+        console.log(res.data.data);
+        form.reset(res.data.data);
+        return res.data;
       }
-    else{
-      toast({
-        title:'Some error occured',
-        variant:'destructive'
-      })
-    }
-router.replace("/auth/sign-in")
-    })
-    .finally(()=>{
+    } catch (error) {
+      setError(true);
+      const axiosError = error as AxiosError<any>;
+      if (axiosError.response?.status !== 500 && axiosError.response) {
+        toast({
+          title: axiosError.response?.data.message || "Some error occurred",
+          variant: 'destructive'
+        });
+        router.replace("/auth/sign-in");
+      } else {
+        toast({
+          title: 'Some error occurred',
+          variant: 'destructive'
+        });
+      }
+    
+    
+      return Promise.reject("Some error occured");
+    } finally {
       setIsLoading(false);
-
-    })
-  },[])
+    }
+  };
 useEffect(()=>{
   const checkUsername = async()=>{
     if(username!=""){
@@ -241,6 +245,12 @@ setIsNotValidURL(false);
     setIsNotValidURL(true);
   }
 },[socialLink])
+
+const {data} = useQuery({
+  queryKey:[session],
+  queryFn:fetchUserData
+})
+
   if (status==="authenticated") {
     return (
      <>

@@ -4,11 +4,12 @@ import mongoose,{Schema} from "mongoose"
 const contributionSchema = new Schema({
     branch:{type:String,required:true},
     label:{type:String,required:true},
-    type:{type:String,enum:['pyq','notes','question-bank']},
+    type:{type:String,enum:['pyq','notes','question-bank','lectures']},
     code:{type:String,required:true},
     sessionYear:{type:String},
+    thumbnail:{type:String,},
     collegeYear:{type:String,required:true,enum:['1','2','3','4']},
-    file:{type:String,required:'true'},
+    file:{type:String},
     university:{type:String,required:'true'},
     contributor:{type:Schema.Types.ObjectId,ref:'User'}
 });

@@ -74,6 +74,7 @@ console.log(params)
       }}
     ]);
     // const resources = await Contributions.find({...filters,type:params.get('type')||'notes'});
+    
     return Response.json({ success: true, resources: resources }, { status: 200 });
   } catch (error) {
     console.log(error);

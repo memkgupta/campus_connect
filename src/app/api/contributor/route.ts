@@ -5,6 +5,8 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 
 import User from "@/lib/models/user.model";
 import Contributions from "@/lib/models/contribution.model";
+import Playlist from "@/lib/models/playlist.model";
+import { YTLecture } from "@/types";
 
 export  const POST = async(request:Request)=>{
 await connect();
@@ -19,8 +21,8 @@ try{
         })
     }
 
-    const {label,branch,code,collegeYear,university,type,file,sessionYear} = await request.json();
-    const contribution =await Contributions.create({
+    let {label,branch,code,collegeYear,university,type,file,sessionYear,playlist} = await request.json();
+    const contribution =new Contributions({
         label:label,
         branch:branch,
         file:file,
@@ -31,7 +33,16 @@ try{
         contributor:user._id,
         university:university,
     });
-    
+playlist = playlist.map((i:YTLecture)=>({label:playlist.label,thumbnail:i.thumbnail,videoUrl:i.videoUrl}))
+    if(type==='lectures'){
+        const playlistDoc = await Playlist.create({
+            contributionId:contribution._id,
+            lectures:playlist
+        });
+        contribution.playlist = playlistDoc;
+        contribution.thumbnail = playlist[0].thumbnail;
+    }
+    await contribution.save();
     return Response.json({success:true,message:"File uploaded successfully"},{status:200});
 }
 catch(error:any){
