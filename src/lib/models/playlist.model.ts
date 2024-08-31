@@ -1,7 +1,6 @@
-import mongoose from "mongoose";
+import mongoose,{Schema} from "mongoose";
 
-const playlistSchema = new mongoose.Schema({
-    contributionId:{type:mongoose.Schema.Types.ObjectId,ref:'Contribution'},
+const playlistSchema = new Schema({
     lectures:[
         {
          label:{type:String},
@@ -11,5 +10,5 @@ const playlistSchema = new mongoose.Schema({
         }]
 });
 
-const Playlist = mongoose.models.Playlist||mongoose.model("Playlist",playlistSchema);
-export default Playlist;
+const Playlists = mongoose.models.Playlist||mongoose.model("Playlist",playlistSchema);
+export default Playlists;

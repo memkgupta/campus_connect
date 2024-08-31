@@ -31,7 +31,13 @@ console.log(isVoted)
         }
       
         const votes = await Vote.aggregate([
-        {
+          {
+            $match:{
+              contributionId:resource._id
+            }
+          }
+          ,
+        { 
             $group: {
                 _id: '$voteType', // Group by post ID
                 upvoteCount: {
