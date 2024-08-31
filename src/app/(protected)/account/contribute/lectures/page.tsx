@@ -57,6 +57,7 @@ try {
   const res = await extractLecturesFromYtPlaylist(playListUrl);
   setPlayList(res);
 } catch (error:any) {
+  
   toast({
     title:error.message
   })
