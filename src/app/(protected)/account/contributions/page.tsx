@@ -51,9 +51,10 @@ const {
 })
 
   const contributionItems:contributionItem[] = [
-{label:"PYQs",link:"/account/contribute/pyq"},
-{label:"Notes",link:"/account/contribute/notes"},
-{label:"Question Banks",link:"/account/contribute/question-banks"}
+{label:"PYQs",link:"/account/contribute"},
+{label:"Notes",link:"/account/contribute"},
+{label:"Question Banks",link:"/account/contribute"},
+{label:"Lectures",link:"/account/contribute/lectures"}
   ]
  
   return (
@@ -81,7 +82,7 @@ const {
         (
       <>
 <div className='px-12 mt-12 flex justify-center'>
-        <div className='grid justify-items-center grid-cols-2 md:grid-cols-4 gap-4'>
+        <div className='grid justify-items-center grid-cols-2 md:grid-cols-4 gap-4 mb-4'>
           {
 contributionItems.map((item)=>(
 <Link key={item.label} href={item.link} className='bg-slate-900 text-xl font-bold rounded-md p-3 w-fit border text-center  border-white'>
@@ -95,16 +96,14 @@ contributionItems.map((item)=>(
         
         </div>
        {/* Your contributions */}
-       <p className="text-center font-bold text-xl">Your Contributions</p>
+       <p className="text-center font-bold text-xl mt-12">Your Contributions</p>
      <DataTable  onPaginationChange={onPaginationChange} pagination={pagination} loading={loading}  count={count} data={contributionData?contributionData:[]} columns={columns}/>
       </>  
       ) 
         
         }
       </main>
-      <footer className="w-full text-center p-4  bottom-1 ">
-        <p>&copy; 2024 Campus Connect</p>
-      </footer>
+     
     </div>
     </div>
   )

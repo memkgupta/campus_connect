@@ -24,6 +24,7 @@ const Page = ({params}:{params:{id:string,type:string}}) => {
     const router = useRouter();
     const {toast} = useToast();
     const [isVoting,setIsVoting] = useState(false);
+    
     const fetchResources = async()=>{
     
           

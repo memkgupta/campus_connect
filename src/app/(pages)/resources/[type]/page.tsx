@@ -18,6 +18,7 @@ const Page = ({params}:{params:{type:string,id:string}}) => {
     const type = params.type||"pyq";
   const[isLoading,setIsLoading] = useState(true)
   const [subjects,setSubjects] = useState<{value:string,label:string,id:string}[]>([]);
+  
   const [data,setData] = useState<any[]>([]);
   return (
     <div>
@@ -34,13 +35,17 @@ const Page = ({params}:{params:{type:string,id:string}}) => {
           {
             data?.map((res)=>(
               <Card className='min-w-[300px] '>
-            <CardHeader>
-              <CardTitle>{res.data.label}</CardTitle>
-              <CardDescription>{res.data.sessionYear}</CardDescription>
-            </CardHeader>
-           
+              <CardContent className='flex flex-col justify-center items-center'>  
+                {res.data.thumbnail && <img src={res.data.thumbnail} className='max-w-fit w-[200px] h-[200px]' />}
+                {res.data.label}
+                
+                {res.data.sessionYear}
+                </CardContent>
+            
             <CardFooter className='flex justify-between'>
-              <Link href={`/resources/pyq/${res.data._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
+              <Link href={res.data.type==='lectures'?
+                `/lectures/${res.data._id}`
+                :`/resources/${res.data.type}/${res.data._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
               <div className='flex gap-2'>
                 <div className='flex gap-1'>
                     <Image alt='upvotes' src={"/upvote.svg"} width={20} height={20}/>
