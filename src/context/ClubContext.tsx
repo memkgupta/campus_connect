@@ -21,7 +21,9 @@ export const ClubContextProvider = ({children}:{children:React.ReactNode})=>{
     const {data:session,status} = useSession();
     const {toast} = useToast();
     useEffect(()=>{
+       
 if(session){
+    
 if(status==="authenticated"){
 if(session.user){
     axios.get(`/api/club/get-club-details`)

@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 
 
 export const POST = async(req:Request)=>{
-    let {category,title,description,banner,images,openForCollab,start,end,currently_working,tags,live,github_repos,contributors} = await req.json();
+    let {category,title,description,banner,images,openForCollab,start,end,currently_working,tags,live,github_repos,contributors,lead} = await req.json();
     try {
         await connect();
         const session = await getServerSession();
@@ -22,10 +22,20 @@ export const POST = async(req:Request)=>{
         if(!contributors){
             contributors = []
         }
-        contributors.push({user_id:user._id,role:"lead"})
+        contributors.push(
+            {
+                username:user.username,
+                name:user.name,
+                role:'lead'
+            }
+        )
+       if(!lead){
+        lead = user.username;
+       }
         const project = await Project.create({
 user:user._id,
-title,description,banner,images,openForCollab,start,end,currently_working,tags,live,github_repos,contributors
+category,
+title,description,banner,images,openForCollab,start,end,currently_working,tags,live,github_repos,contributors,lead
         });
         return Response.json({success:true,message:"Project Created Successfully",id:project._id},{status:200});
     } catch (error) {

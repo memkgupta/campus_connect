@@ -55,7 +55,7 @@ const components: { title: string; href: string; description: string }[] = [
 const projects:{title: string; href: string; description: string }[]=[
     {
         title: "Showcase your project",
-        href: "/projects/submit",
+        href: "/projects/add-a-project",
         description:
           "Showcase your project to the community",
       },
