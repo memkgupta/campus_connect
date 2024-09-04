@@ -15,7 +15,7 @@ export const GET = async (req: Request) => {
     university: "AKTU",
     type: "notes",
   };
-console.log(params)
+
   if (params.get("collegeYear")) {
     filters.collegeYear = params.get("collegeYear")?.toString()!!;
   }

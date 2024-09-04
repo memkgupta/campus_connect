@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const projectCategoriesEnum = projectCategories.map(categ=>categ.value);
 const projectSchema = new mongoose.Schema({
     user:{type:mongoose.Schema.Types.ObjectId,ref:'User'},
-    // category:{type:String,enum:projectCategoriesEnum,},
+    category:{type:String,enum:projectCategoriesEnum,},
     title:{type:String,required:true},
     description:{type:String,required:true},
     banner:{type:String},
@@ -11,13 +11,20 @@ const projectSchema = new mongoose.Schema({
     openForCollab:{type:Boolean,default:false},
     start:{type:Date,required:true},
     end:{type:Date},
+    documentation:String,
+    demo:String,
     currently_working:{type:Boolean,default:true},
     tags:[String],
+    status:String,
+    technologiesUsed:[String],
+    lead:String,
     live_link:{type:String},
-    github:[{id:Number,title:String,link:String}],
-    demo:{type:String},
-    contributors:[{user_id:mongoose.Schema.Types.ObjectId,
-        role:{type:String,enum:["lead","contributor"],required:true}}]
+    github:{type:String},
+    
+    contributors:[{username:String,
+        name:String,
+        linkedin:String,
+        role:{type:String,required:true}}]
 },{timestamps:true});
 
 const projectLogsSchema = new mongoose.Schema({

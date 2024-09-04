@@ -19,7 +19,7 @@ const fetchData = async () => {
       return;
     }
   
-    console.log(session);
+
   
     if (session?.user) {
       try {

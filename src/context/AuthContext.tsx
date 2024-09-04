@@ -7,11 +7,7 @@ import axios, { AxiosError } from "axios";
 import {SessionProvider} from "next-auth/react"
 import { HOST_URL } from "@/constants";
 import { ToastContainer, toast } from "react-toastify";
-const AuthContext = createContext<AuthContextProps>({
-    user: null,
-    authStatus:false,
-    logout: () => {},
-  });
+
 
   export const AuthProvider= ({children}:{children:ReactNode})=>{
 

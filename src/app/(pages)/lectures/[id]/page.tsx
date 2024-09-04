@@ -32,7 +32,12 @@ try {
     setVideos(res.data.data.resource.playlist.lectures);
     setSelectedVideo(res.data.data.resource.playlist.lectures[0]);
     setIsVoted(res.data.data.isVoted)
-    setData(res.data.data);
+    const _data = res.data.data;
+    if(_data.votes.length==0){
+    _data.votes = [{upvoteCount:0,downvoteCount:0}]
+    }
+    setData(_data)
+ 
     return res.data
 } catch (error) {
     const axiosError = error as AxiosError<any>;

@@ -55,13 +55,13 @@ const components: { title: string; href: string; description: string }[] = [
 const projects:{title: string; href: string; description: string }[]=[
     {
         title: "Showcase your project",
-        href: "/projects/submit",
+        href: "/account/projects/add-a-project",
         description:
           "Showcase your project to the community",
       },
       {
         title: "Take inspiration",
-        href: "/projects/view",
+        href: "/projects",
         description:
           "Not getting an idea for your next project ? Take inspirations from others",
       },
