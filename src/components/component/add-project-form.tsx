@@ -17,48 +17,13 @@ import { toast } from "../ui/use-toast"
 import axios, { AxiosError } from "axios"
 import { UploadButton } from "@/utils/uploadthing"
 import { useRouter } from "next/navigation"
-interface TeamMember{
-  name:string,
-  username:string,
-  linkedin:string,
-  role:string
-}
-interface FormData {
-  projectTitle: string;
-  projectDescription: string;
-  projectCategory: string;
-  tags: string;
-  projectImage: string | null;
-  problemStatement: string;
-  objectives: string;
-  features: string;
-  technologiesUsed: string;
-  status: string;
-  teamMembers: TeamMember[];
-  projectLead: string;
-  projectURL: string;
-  githubRepoLink: string;
-  documentation: string | null;
-  presentation: string | null;
-  openForCollaboration: boolean;
-  contactInformation: string;
-  feedbackComments: string;
-  startDate: string;
-  endDate: string;
-  license: string;
-  challengesFaced: string;
-  futureScope: string;
-  gallery: string[ ];
-  demoVideo: string;
-  privacySettings: string;
-  approvalStatus: string;
-}
+import { ProjectFormData, TeamMember } from "@/types"
 
 
 
 export function AddProjectForm() {
   const router = useRouter()
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<ProjectFormData>({
     projectTitle: '',
     projectDescription: '',
     projectCategory: '',
@@ -73,8 +38,8 @@ export function AddProjectForm() {
     projectLead: '',
     projectURL: '',
     githubRepoLink: '',
-    documentation: null,
-    presentation: null,
+    documentation: '',
+    presentation: '',
     openForCollaboration: false,
     contactInformation: '',
     feedbackComments: '',
@@ -149,6 +114,8 @@ const handleSubmit = async()=>{
   .githubRepoLink;
   data.contributors = formData.teamMembers;
   data.lead = formData.projectLead;
+  data.documentationLink = formData.documentation,
+  data.demoLink = formData.demoVideo
   
   try{
     const res = await axios.post(`/api/projects/create`,data);

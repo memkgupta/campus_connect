@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 
 
 export const POST = async(req:Request)=>{
-    let {category,title,description,banner,images,openForCollab,start,end,currently_working,tags,live,github_repos,contributors,lead} = await req.json();
+    let {category,title,projectUrl,description,banner,images,openForCollab,start,end,currently_working,tags,live,github_repos,contributors,lead,documentationLink,demoLink} = await req.json();
     try {
         await connect();
         const session = await getServerSession();
@@ -19,23 +19,26 @@ export const POST = async(req:Request)=>{
         if(!user){
             return Response.json({success:false,message:"Invalid session"},{status:403});
         }
-        if(!contributors){
-            contributors = []
+        if(contributors.length==0){
+            contributors.push(
+                {
+                    username:user.username,
+                    name:user.name,
+                    role:'lead'
+                }
+            )
         }
-        contributors.push(
-            {
-                username:user.username,
-                name:user.name,
-                role:'lead'
-            }
-        )
+      
        if(!lead){
         lead = user.username;
        }
         const project = await Project.create({
 user:user._id,
 category,
-title,description,banner,images,openForCollab,start,end,currently_working,tags,live,github_repos,contributors,lead
+live_link:projectUrl,
+demo:demoLink,
+documentation:documentationLink,
+title,description,banner,images,openForCollab,start,end,currently_working,tags,live,github:github_repos,contributors,lead
         });
         return Response.json({success:true,message:"Project Created Successfully",id:project._id},{status:200});
     } catch (error) {
