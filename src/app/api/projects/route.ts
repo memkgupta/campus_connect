@@ -26,8 +26,10 @@ export const GET = async(req:Request)=>{
       }
       const page = parseInt(params.get("page")?.toString()||'1');
       const skip = (page-1)*10;
+      console.log(filters);
       try {
         await connect();
+       const total = await Project.countDocuments(filters);
         const projects = await Project.aggregate([
             {
                 $match:filters
@@ -56,7 +58,7 @@ export const GET = async(req:Request)=>{
         ]);
 
         return Response.json({
-            success:true,projects:projects
+            success:true,projects:projects,total:total
         });
       } catch (error) {
         console.log(error)
