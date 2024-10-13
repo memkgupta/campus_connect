@@ -10,5 +10,5 @@ const playlistSchema = new Schema({
         }]
 });
 
-const Playlists = mongoose.models.Playlist||mongoose.model("Playlist",playlistSchema);
+const Playlists = mongoose.models.Playlists||mongoose.model("Playlists",playlistSchema);
 export default Playlists;

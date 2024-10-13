@@ -1,5 +1,6 @@
 import connect from "@/lib/db";
 import Contributions from "@/lib/models/contribution.model";
+import { Progress } from "@/lib/models/progress.model";
 import User from "@/lib/models/user.model";
 import Vote from "@/lib/models/vote.model";
 import mongoose from "mongoose";
@@ -39,6 +40,7 @@ export const GET = async(req:Request,{ params }: { params: { id: string } })=>{
     localField:'playlist'
   }
 },
+
 {$unwind:"$playlist"},
 {
   $project:{
@@ -72,9 +74,12 @@ playlist:{
         //     username:resource.contributor.username
         // }
         let isVoted = null;
+      let tracker = null;
+
         if(_user){
           const user = await User.findOne({email:_user.email})
 isVoted = await Vote.findOne({userId:user._id});
+tracker = await Progress.findOne({user_id:user._id,resource_id:params.id});
 
         }
       
@@ -110,8 +115,30 @@ isVoted = await Vote.findOne({userId:user._id});
           }}
         
         ])
-      
-   
+        // console.log(resource[0])
+        if (tracker) {
+          let i = 0;
+          let j = 0;
+        
+         
+          while (i < resource[0].playlist.lectures.length && j < tracker.taken.length) {
+            // Compare lecture id with the taken lecture id
+            if (resource[0].playlist.lectures[i]._id.equals(tracker.taken[j])) {
+              resource[0].playlist.lectures[i].taken = true;
+              j++;  // Move to the next taken lecture in tracker
+            } else {
+              resource[0].playlist.lectures[i].taken = false;
+            }
+            i++;  // Move to the next lecture in playlist
+          }
+        
+          // Mark remaining lectures as not taken
+          while (i < resource[0].playlist.lectures.length) {
+            resource[0].playlist.lectures[i].taken = false;
+            i++;
+          }
+        }
+ 
         return Response.json({success:true,data:{resource:resource[0],votes,isVoted:isVoted?.voteType}},{status:200});
     } catch (error) {
         console.log(error);
