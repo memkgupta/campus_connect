@@ -8,7 +8,7 @@ const contributionSchema = new Schema({
     code:{type:String,required:true},
     sessionYear:{type:String},
     thumbnail:{type:String,},
-    playlist:{type:Schema.Types.ObjectId,ref:'Playlist'},
+    playlist:{type:Schema.Types.ObjectId,ref:'Playlists'},
     collegeYear:{type:String,required:true,enum:['1','2','3','4']},
     file:{type:String},
     university:{type:String,required:'true'},

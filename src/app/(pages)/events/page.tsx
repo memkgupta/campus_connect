@@ -19,6 +19,7 @@ import {
     PaginationNext,
     PaginationPrevious,
   } from "@/components/ui/pagination"
+import Link from 'next/link';
 const Page = () => {
 const [events,setEvents] = useState([]);
 const [happening,setHappening] = useState({value:"this-week",label:'This Week',id:"this-week"});
@@ -133,6 +134,10 @@ finally{
 </Pagination>
    </div>
    )}
+   <div className='w-full flex justify-center mt-12'>
+   <Link className='text-center text-indigo-700' href={"/account/register-a-club"}>Register your club</Link>
+
+   </div>
    </>
   )
 }

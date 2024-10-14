@@ -22,6 +22,7 @@ import { validateURL } from '@/utils/validator';
 import Image from 'next/image';
 import EditDialog from '@/components/account/EditDialog';
 import SocialLinkDialog from '@/components/account/SocialLinkDialog';
+import dynamic from 'next/dynamic';
 function Page( ) {
 const [userDetails,setUserDetails] = useState({
   profile:'',
@@ -34,6 +35,11 @@ const [userDetails,setUserDetails] = useState({
    events:[],
    isClubAdmin:false,
 })
+// const LazyActiveCourse = dynamic(()=>import('@/components/ActiveCourse'),{
+//   ssr:false,
+
+//   loading:()=><p>Loading...</p>
+// })
 // const clubContextData = useContext(Cl)
 const [isLoading,setIsLoading] = useState(true);
  
@@ -137,9 +143,7 @@ const {data} = useQuery({
           
           <div className='col-span-2 flex md:flex-col flex-row gap-4 bg-slate-900 rounded-md justify-center items-center'>
            <h2>Active courses</h2>
-           {userDetails.courses.map((course:any)=>(
-            <ActiveCourse data={course} key={course._id}/>
-           ))}
+          <ActiveCourse/>
           </div>
           
           {/* Upcoming events */}

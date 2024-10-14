@@ -10,6 +10,8 @@ import Link from 'next/link'
 import { Select, SelectValue,SelectTrigger, SelectContent, SelectItem } from '@/components/ui/select'
 import { projectCategories } from '@/constants'
 import { Input } from '@/components/ui/input'
+import { useDebounceCallback } from 'usehooks-ts'
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 
 interface ProjectRes {
 title:string,
@@ -24,6 +26,7 @@ description:string
 const Page = () => {
   const [projects,setProjects] = useState<ProjectRes[]>([])
   const [isLoading,setIsLoading]=useState(false);
+  const [total,setTotal] = useState(0);
   const [params,setParams] = useState<
   {
    
@@ -37,6 +40,7 @@ const Page = () => {
     categ:'',
     page:1
   })
+  const debounced  = useDebounceCallback(setParams,500);
   const fetchData = async()=>{
     try {
       const reqParams:any = {
@@ -49,14 +53,10 @@ const Page = () => {
         reqParams.title = params.title.trim();
       }
 
-      // if(params.tags!=''){
-      //   if(params.tags.endsWith(',')){
-      //     setParams({...params,tags:params.tags.substring(0,params.tags.length-1)})
-      //   }
-      //   reqParams.tags = 
-      // }
+
       const res = await axios.get(`/api/projects`,{params:reqParams});
       setProjects(res.data.projects)
+      setTotal(res.data.total);
       return res.data.projects;
     } catch (error) {
       const axiosError = error as AxiosError<any>
@@ -83,15 +83,15 @@ toast({
     queryKey:[params.title,params.categ,params.page],
     queryFn:fetchData
    })
-  
+
   return (
     <div>
       {isLoading?(
         <Loader/>
       ):(
         <>
-       <div className='flex gap-2 justify-center'>
-       <Select onValueChange={(e)=>{setParams({...params,categ:e})}}>
+       <div className='flex gap-2 justify-center mx-auto max-w-3xl'>
+       <Select onValueChange={(e)=>{debounced({...params,categ:e})}}>
 <SelectTrigger>
   <SelectValue placeholder="Select Category"/>
 </SelectTrigger>
@@ -104,9 +104,10 @@ toast({
                     }
                   </SelectContent>
         </Select>
-        <Input type='text' onChange={(e)=>{setParams({...params,title:e.target.value})}}/>
+        <Input type='text' placeholder='Search By title' onChange={(e)=>{debounced({...params,title:e.target.value})}}/>
        </div>
-        {
+       <div className='grid grid-cols-3 gap-3 mt-12 px-12'>
+       {
  projects.map(project=>(
   <Card>
     <CardHeader>
@@ -117,15 +118,45 @@ toast({
     <CardContent>
       {project.description}
     </CardContent>
-    <CardFooter>
-      {<div className='flex gap-2 items-center'>
+    <CardFooter className='justify-between'>
+      {
+     <>
+        <div className='flex gap-2 items-center'>
         <img src={project.lead.profile} className='w-12 h-12 rounded-full'></img>
         <Link href={`/user/${project.lead.username}`}>{project.lead.name}</Link>
-        </div>}
+        </div>
+        <Link href={`/projects/${project._id}`} className='bg-yellow-300 hover:bg-yellow-400 text-black p-2  rounded-md'>View</Link>
+     </>
+        }
     </CardFooter>
   </Card>
  ))
         }
+
+
+       </div>
+       <div className='mt-5'>
+       <Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious onClick={()=>{setParams({...params,page:params.page-1})}} disabled={params.page===1}  />
+    </PaginationItem>
+   {Math.floor(total/10)>=0 && <PaginationItem>
+      <PaginationLink onClick={()=>{setParams({...params,page:1})}} >1</PaginationLink>
+    </PaginationItem>}
+   {Math.floor(total/10)>1 && <PaginationItem>
+      <PaginationLink onClick={()=>{setParams({...params,page:2})}}>2</PaginationLink>
+    </PaginationItem>}
+    <PaginationItem>
+      <PaginationEllipsis />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext onClick={()=>{setParams({...params,page:params.page+1})}} disabled={Math.floor(total/10)<params.page} />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+       </div>
+  
         </>
       )
      

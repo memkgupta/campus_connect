@@ -67,7 +67,7 @@ const projects:{title: string; href: string; description: string }[]=[
       },
       {
         title: "Find a project partner",
-        href: "/projects/partners",
+        href: "/find-project-partners",
         description:
           "Find a project partner for your next big thing",
       },
