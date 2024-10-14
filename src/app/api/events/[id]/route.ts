@@ -1,5 +1,5 @@
 import connect from "@/lib/db"
-import Club from "@/lib/models/club.model";
+import Club from "@/lib/models/club/club.model";
 import { Event, EventRegistration } from "@/lib/models/event.model";
 import User from "@/lib/models/user.model";
 import mongoose from "mongoose";

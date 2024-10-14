@@ -1,5 +1,5 @@
 import connect from "@/lib/db"
-import Club from "@/lib/models/club.model";
+import Club from "@/lib/models/club/club.model";
 import { Event } from "@/lib/models/event.model";
 import User from "@/lib/models/user.model";
 import { getServerSession } from "next-auth/next";
@@ -8,7 +8,7 @@ export const PUT = async(req:Request)=>{
     const queryParams = {
       id: searchParams.get('id'),
     };
-    const {clubId,name,description,dateTime,location,category,banner,isAcceptingVolunteerRegistrations,isTeamEvent,maxTeamSize,maxCapacity} = await req.json();
+    const {clubId,name,description,dateTime,forms,location,category,banner,isAcceptingVolunteerRegistrations,isTeamEvent,maxTeamSize,maxCapacity,registrationForm} = await req.json();
     const session = await getServerSession();
     if(!session){
         return Response.redirect('/auth/sign-in');
@@ -60,6 +60,12 @@ export const PUT = async(req:Request)=>{
         }
         if(maxTeamSize){
             event.maxTeamSize = maxTeamSize
+        }
+        if(registrationForm){
+            event.registrationForm = registrationForm
+        }
+        if(forms){
+            event.forms = event.forms.concat(forms)
         }
         await event.save();
 return Response.json({success:true,message:"Event updated successfully"});

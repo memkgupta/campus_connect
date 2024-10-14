@@ -1,5 +1,5 @@
 import connect from "@/lib/db"
-import Club from "@/lib/models/club.model";
+import Club from "@/lib/models/club/club.model";
 import User from "@/lib/models/user.model";
 import { getServerSession } from "next-auth";
 

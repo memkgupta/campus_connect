@@ -35,6 +35,7 @@ import { editClubSchema } from '@/schema/editClubSchema';
 import { Textarea } from '@/components/ui/textarea';
 import EventCard from '@/components/events/EventCard';
 import Link from 'next/link';
+import ClubDashboard from '@/components/club/dashboard/Dashboard';
 
 const Page = () => {
   const {toast} = useToast();
@@ -260,22 +261,7 @@ const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
             <p className='text-white font-bold'>{clubData.clubDescription}</p>
 
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-background-dark p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Total Events</h2>
-              <p className="text-2xl">{clubData.totalEvents}</p>
-            </div>
-            
-            <div className="bg-background-dark p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
-              <p className="text-2xl">{clubData.upcomingEvents}</p>
-            </div>
-          </div>
-
-          <div className='grid md:grid-cols-3 gap-5'>
-            {clubData.events.map((event:any)=>(<EventCard isAdmin={true} data={event} key={event._id}/>))}
-          </div>
-          <div className='flex justify-center'><Link href={"/account/club/event"} className='bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black'>View All</Link></div>
+         {/* <ClubDashboard/> */}
         </main>
       </div>
     </div>
