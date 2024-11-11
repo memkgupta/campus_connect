@@ -39,12 +39,28 @@ import ClubDashboard from '@/components/club/dashboard/Dashboard';
 
 const Page = () => {
   const {toast} = useToast();
-    const clubContextData = useContext(ClubContext);
-    const [clubDetails,setClubDetails] = useState({
+    // const clubContextData = useContext(ClubContext);
+    const [clubDetails,setClubDetails] = useState<{
+      _id:string,
+      clubDescription:string,
+      clubName:string,
+      clubLogo:string,
+      contactPhone:string,
+      events:any[],
+      members:any[],
+      recruitmentStats?:any,
+      messages:any[]
+
+
+    }>({
+      _id:'',
       clubDescription:'',
       clubName:'',
       clubLogo:'',
       contactPhone:'',
+      events:[],
+      members:[],
+      messages:[],
     });
     const[loading,setLoading] = useState(true);
     const[isSubmitting,setIsSubmitting] = useState(false);
@@ -68,8 +84,9 @@ const fetchClubDashboardData = async ()=>{
 try {
   const res = await axios.get(`/api/club/dashboard`);
 const data = res.data.clubDetails;
+console.log(data)
 setPreview(data.clubLogo);
-setClubDetails({clubDescription:data.clubDescription,clubName:data.clubName,clubLogo:data.clubLogo,contactPhone:data.contactPhone})
+setClubDetails({_id:data._id,clubDescription:data.clubDescription,clubName:data.clubName,clubLogo:data.clubLogo,contactPhone:data.contactPhone,events:data.events,members:data.members,messages:data.messages})
 form.setValue("clubDescription",data.clubDescription);
 form.setValue("clubName",data.clubName);
 form.setValue("contactPhone",data.contactPhone);
@@ -125,7 +142,7 @@ const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
   }
 }
     const {data:clubData=undefined,isSuccess}=useQuery({
-        queryKey:[clubContextData?._id],
+        queryKey:[],
         queryFn:fetchClubDashboardData,
         refetchOnWindowFocus:false,
         retry:false
@@ -261,7 +278,7 @@ const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
             <p className='text-white font-bold'>{clubData.clubDescription}</p>
 
           </div>
-         {/* <ClubDashboard/> */}
+         <ClubDashboard events={clubDetails.events} id={clubDetails._id} members={clubDetails.members} messages={clubDetails.messages} recruitmentStats={clubDetails.recruitmentStats}/>
         </main>
       </div>
     </div>

@@ -1,50 +1,32 @@
-"use client"
-import { DataTable } from './data-table'
-import { useToast } from '@/components/ui/use-toast';
-import usePagination from '@/hooks/usePagination';
-import axios from 'axios';
-import React, { useState } from 'react'
-// import { columns } from '../event/[id]/columns';
-import { useQuery } from '@tanstack/react-query';
-import { columns } from './columns';
+import AllEventsPage from '@/components/club/AllEventsPage'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { PlusIcon, SearchIcon } from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
 
-const page = () => {
-    const [loading,setLoading] = useState(true);
-    const [error,setError] = useState<any>(null);
-   const [events,setEvents] = useState([]);
-   const {toast} = useToast();
-   const { limit, onPaginationChange, skip, pagination } = usePagination();
-   const [count,setCount] = useState(0);
-   const fetchEvents = async()=>{
-        try {
-            const res = await axios.get(`/api/club/events`);
-            const data = res.data;
-       setEvents(data.events);
-       setCount(Math.ceil(data.totalResults/10))
-            return {events:data.events,total:data.totalResults}
-        } catch (error) {
-            toast({
-                title:"Some error occured",
-                variant:"destructive"
-              })
-    return Promise.reject("Some error occured")
-
-        }
-        finally{
-            setLoading(false);
-        }
-    }
-    const {data:eventData} = useQuery({
-      queryKey:[],
-        queryFn:fetchEvents,
-        refetchOnWindowFocus:false,
-        retry:false
-    })
+const Events = () => {
   return (
-    <div>
-        <DataTable columns={columns} count={count} loading={loading} onPaginationChange={onPaginationChange} pagination={pagination} data={events} />
-    </div>
+    <div className="flex h-screen flex-col">
+    <header className="flex h-16 items-center justify-between border-b px-6">
+      <h1 className="text-2xl font-bold">Club Event Dashboard</h1>
+      <div className="flex items-center space-x-4">
+        <Input
+          type="search"
+          placeholder="Search..."
+          className="w-64"
+       
+        />
+        <Link href={"/account/club/create-event"} className='bg-yellow-400 text-black rounded-md p-4 flex justify-between'>
+          <PlusIcon className="mr-2 h-4 w-4" /> New Event
+        </Link>
+      </div>
+    </header>
+    <main className="flex-1 overflow-auto p-6">
+      <AllEventsPage />
+    </main>
+  </div>
   )
 }
 
-export default page
+export default Events

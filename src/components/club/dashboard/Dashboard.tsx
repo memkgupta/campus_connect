@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { CalendarDays, Users, UserPlus, MessageSquare } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
+import Link from "next/link"
 
  type Props = {
     id:string,
@@ -40,7 +41,7 @@ export default function ClubDashboard({id,events,members,recruitmentStats,messag
                 </li>
               ))}
             </ul>
-            <Button className="w-full mt-4 bg-yellow-500 text-slate-900 hover:bg-yellow-600">View All Events</Button>
+            <Link href={"/account/clubs/events"} className="p-2 rounded-md w-full mt-4 bg-yellow-500 text-slate-900 hover:bg-yellow-600">View All Events</Link>
           </CardContent>
         </Card>
 
@@ -70,7 +71,7 @@ export default function ClubDashboard({id,events,members,recruitmentStats,messag
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-800 border-yellow-500">
+       {recruitmentStats && <Card className="bg-slate-800 border-yellow-500">
           <CardHeader>
             <CardTitle className="flex items-center text-yellow-300">
               <UserPlus className="mr-2 text-yellow-500" /> Recruitment
@@ -95,7 +96,7 @@ export default function ClubDashboard({id,events,members,recruitmentStats,messag
             <Button className="w-full mt-6 bg-yellow-500 text-slate-900 hover:bg-yellow-600">View Applications</Button>
           </CardContent>
         </Card>
-
+}
         <Card className="bg-slate-800 border-yellow-500">
           <CardHeader>
             <CardTitle className="flex items-center text-yellow-300">
