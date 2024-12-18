@@ -33,15 +33,19 @@ try{
         contributor:user._id,
         university:university,
     });
-playlist = playlist.map((i:YTLecture)=>({label:i.label,thumbnail:i.thumbnail,videoUrl:i.videoUrl}))
-    if(type==='lectures'){
-        const playlistDoc = await Playlist.create({
-            contributionId:contribution._id,
-            lectures:playlist
-        });
-        contribution.playlist = playlistDoc._id;
-        contribution.thumbnail = playlist[0].thumbnail;
+
+    if(playlist){
+        playlist = playlist.map((i:YTLecture)=>({label:i.label,thumbnail:i.thumbnail,videoUrl:i.videoUrl}))
+        if(type==='lectures'){
+            const playlistDoc = await Playlist.create({
+                contributionId:contribution._id,
+                lectures:playlist
+            });
+            contribution.playlist = playlistDoc._id;
+            contribution.thumbnail = playlist[0].thumbnail;
+        }
     }
+
     await contribution.save();
     return Response.json({success:true,message:"File uploaded successfully"},{status:200});
 }

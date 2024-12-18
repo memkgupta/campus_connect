@@ -6,9 +6,11 @@ export default function ClubLayout({children}:Readonly<{
     children:React.ReactNode
 }>){
     return(
-        <ClubContextProvider>
+      <ClubContextProvider>
 {children}
-        </ClubContextProvider>
+      
+      </ClubContextProvider>
+
         
     )
 }

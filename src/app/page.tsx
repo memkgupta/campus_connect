@@ -5,8 +5,10 @@ import { Bug, GithubIcon, LinkedinIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Loader from "@/components/Loader";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter()
   const about = [
     {
       id: 1,
@@ -35,6 +37,8 @@ const [isLoading,setIsLoading] = useState(true);
   useEffect(()=>{
 if(session?.user){
   setIsLoading(false);
+  router.replace("/home");  
+  
 }
 if(status==="unauthenticated"){
   setIsLoading(false);

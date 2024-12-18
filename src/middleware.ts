@@ -13,6 +13,9 @@ export async function middleware(request: NextRequest) {
     if(!token&&(url.pathname.startsWith("/register-a-club"))){
       return NextResponse.redirect(new URL("/auth/sign-in",request.url))
     }
+    if(!token&&(url.pathname.startsWith("/api/discussion"))){
+      return NextResponse.redirect(new URL("/auth/sign-in",request.url))
+    }
     if(!token&&(url.pathname.startsWith('/users/me'))){
       return NextResponse.redirect(new URL("/auth/sign-in",request.url))
     }
@@ -25,5 +28,5 @@ export async function middleware(request: NextRequest) {
  
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/sign-in','/sign-up','/projects/dashboard/:path*','/verif/:path*','/register-a-club','/contributor/:path','/users/me','/club/:path']
+  matcher: ['/sign-in','/sign-up','/projects/dashboard/:path*','/verif/:path*','/register-a-club','/contributor/:path','/users/me','/club/:path','/api/discussion']
 }

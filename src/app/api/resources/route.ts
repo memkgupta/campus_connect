@@ -1,9 +1,10 @@
 import connect from "@/lib/db";
 import Contributions from "@/lib/models/contribution.model";
 import NOTES from "@/lib/models/notes.model";
+import { NextRequest } from "next/server";
 
-export const GET = async (req: Request) => {
-  const params = new URLSearchParams(req.url);
+export const GET = async (req: NextRequest) => {
+  const params = req.nextUrl.searchParams;
   const filters: {
     collegeYear: string;
     branch?: string;
@@ -27,11 +28,12 @@ export const GET = async (req: Request) => {
   }
   // if(params.get("sessionYear")){}
   if (params.get("type")) {
-    console.log(params.get("type"))
+    // console.log(params.get("type"))
     filters.type = params.get("type")!.toString();
   }
+  console.log(filters)
   try {
-    console.log(filters)
+
     await connect();
     const resources = await Contributions.aggregate([
       { $match: filters },

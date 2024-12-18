@@ -7,9 +7,8 @@ import React, { createContext, useEffect, useState } from "react";
 
 type ClubContextProps = {
     _id:string,
-    isVerified:boolean,
-    name:string,
-    logo:string
+    admin:string,
+    name:string
 }
 
 export const ClubContext = createContext<ClubContextProps|null>(null);
@@ -26,14 +25,14 @@ if(session){
     
 if(status==="authenticated"){
 if(session.user){
-    axios.get(`/api/club/get-club-details`)
+    axios.get(`/api/club/my-club`)
     .then((res)=>{
         const data = res.data;
         if(!data.success){
             setState(null)
         }
         else{
-            setState(data.data);
+            setState(data.clubs);
         }
     })
     .catch((error)=>{

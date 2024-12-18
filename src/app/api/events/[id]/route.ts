@@ -1,5 +1,5 @@
 import connect from "@/lib/db"
-import Club from "@/lib/models/club.model";
+import Club from "@/lib/models/club/club.model";
 import { Event, EventRegistration } from "@/lib/models/event.model";
 import User from "@/lib/models/user.model";
 import mongoose from "mongoose";
@@ -56,10 +56,9 @@ $lookup:{
             location:1,
             category:1,
             banner:1,
-            totalRegistrations:{$size:'$registrations'},
-            isFull:{
-                $cond:{if:{$gte:['$totalRegistrations','$maxCapacity']},then:true,else:false}
-            },
+            forms:1,
+            
+            
             
             maxCapacity:1,
             clubDetails:{

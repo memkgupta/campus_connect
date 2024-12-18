@@ -43,7 +43,7 @@ isUserAlreadyExistsByEmail.otpExpiry = expiryDate;
         expiryDate.setHours(expiryDate.getHours()+1)
 
         const user = new User({
-            name:name,email,username,password:hashed,otp,otpExpiry:expiryDate,colleg:college._id
+            name:name,email,username,password:hashed,otp,otpExpiry:expiryDate,college:college._id
         });
         await user.save()
       }

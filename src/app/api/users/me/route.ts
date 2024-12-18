@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import connect from '@/lib/db';
 import User from '@/lib/models/user.model';
-import Club from '@/lib/models/club.model';
+import Club from '@/lib/models/club/club.model';
 
 export const GET = async(req:Request)=>{
 await connect();
