@@ -50,7 +50,9 @@ export const eventCategories = [
         export const resourceTypes = [
             {value:'pyq',label:'PYQ',id:'pyq'},
             {value:'notes',label:'NOTES',id:'notes'},
-            {value:'question-bank',label:'Question Bank',id:'question-bank'}
+            {value:'question-bank',label:'Question Bank',id:'question-bank'},
+            {value:'quantum',label:'Quantum',id:'quantum'},
+            {value:'short-notes',label:'Short Notes',id:'short-notes'}
         ]
 
         export const projectCategories = [

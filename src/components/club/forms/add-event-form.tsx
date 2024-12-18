@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useFieldArray, useForm } from "react-hook-form"
 import * as z from "zod"
 import { CalendarIcon, PlusIcon } from "lucide-react"
 
@@ -34,7 +34,13 @@ import {
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import axios from "axios"
-import { toast } from "react-toastify"
+// import { toast } from "react-toastify"
+import FileUpload from "@/components/utils/FileUpload"
+import { ClubContext } from "@/context/ClubContext"
+import { eventCategories } from "@/constants"
+import { useToast } from "@/components/ui/use-toast"
+import { title } from "process"
+import { useRouter } from "next/navigation"
 
 // Mock event categories enum
 const eventCategoriesEnum = [
@@ -44,7 +50,7 @@ const eventCategoriesEnum = [
   "Networking",
   "Other",
 ]
-const[isSubmitting,setIsSubmitting] = React.useState(false);
+
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Event name must be at least 2 characters.",
@@ -61,12 +67,10 @@ const formSchema = z.object({
   venue: z.string().min(2, {
     message: "Venue is required.",
   }),
-  category: z.enum(eventCategoriesEnum as [string, ...string[]], {
+  category: z.enum(eventCategories.map(e=>e.value) as [string, ...string[]], {
     required_error: "Please select an event category.",
   }),
-  banner: z.instanceof(File, {
-    message: "Banner image is required.",
-  }),
+  
   isTeamEvent: z.boolean().default(false),
   participantsFromOutsideAllowed: z.boolean().default(false),
   isAcceptingVolunteerRegistrations: z.boolean().default(false),
@@ -76,12 +80,18 @@ const formSchema = z.object({
   forms: z.array(
     z.object({
       label: z.string().min(1, "Label is required"),
-      link: z.string().url("Must be a valid URL"),
+      form: z.string().optional(),
+      link: z.string().url("Link must be a valid URL").optional(),
     })
-  ).optional(),
+  ),
 })
 
 export default function AddEventForm() {
+  const toast = useToast()
+  const[isSubmitting,setIsSubmitting] = React.useState(false);
+  const [bannerUrl,setBannerUrl] = React.useState<string|null>(null)
+  const clubContext = React.useContext(ClubContext)
+  // clubContext
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -92,16 +102,31 @@ export default function AddEventForm() {
       forms: [],
     },
   })
-
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "forms",
+  })
+  const router = useRouter()
  async function onSubmit(values: z.infer<typeof formSchema>) {
     // In a real application, you would send this data to your backend
  try {
-  const res = await axios.post(`/api/club/dashboard/events/add`,values);
+  if(bannerUrl==null) {
+    toast.toast({
+      title:"Banner is required"
+    })
+    return;
+  }
+  const res = await axios.post(`/api/club/dashboard/events/add`,{...values,banner:bannerUrl,clubId:clubContext?._id});
   if(res.data.success){
-    toast.success("Event created successfully");
+    toast.toast({
+      title:"Event Created Successfully"
+    })
+    router.push(`/club/events/${res.data._id}`)
   }
  } catch (error) {
-  toast.error("Some error occured");
+  toast.toast({
+    title:"Some error occured"
+  })
  }
 
   }
@@ -109,6 +134,7 @@ export default function AddEventForm() {
   return (
     <div
      className="p-24">
+      <FileUpload fileType="img"  fileUrl={bannerUrl} setFileUrl={(v)=>{setBannerUrl(v)}} />
         <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
@@ -229,9 +255,9 @@ export default function AddEventForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {eventCategoriesEnum.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                  {eventCategories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -240,24 +266,7 @@ export default function AddEventForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="banner"
-          render={({ field: { onChange, value, ...rest } }) => (
-            <FormItem>
-              <FormLabel>Banner Image</FormLabel>
-              <FormControl>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => onChange(e.target.files?.[0])}
-                  {...rest}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <FormField
           control={form.control}
           name="isTeamEvent"
@@ -318,6 +327,50 @@ export default function AddEventForm() {
             </FormItem>
           )}
         />
+         <div>
+          <h3 className="mb-4 text-lg font-medium">Additional Forms</h3>
+          {fields.map((field, index) => (
+            <div key={field.id} className="mb-4 space-y-4">
+              <FormField
+                control={form.control}
+                name={`forms.${index}.label`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Form Label</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`forms.${index}.link`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Form Link</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="button" variant="destructive" onClick={() => remove(index)}>
+                Remove Form
+              </Button>
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => append({ label: "", link: "" })}
+          >
+            Add Form
+          </Button>
+        </div>
+
         <FormField
           control={form.control}
           name="maxCapacity"

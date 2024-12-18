@@ -6,6 +6,7 @@ import Link from 'next/link'
 import React from 'react'
 
 const Events = () => {
+  
   return (
     <div className="flex h-screen flex-col">
     <header className="flex h-16 items-center justify-between border-b px-6">

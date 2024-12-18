@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useState } from 'react'
 import ProgressComponent from '@/components/component/progress'
+import Voting from '@/components/utils/Voting';
 const Page = ({params}:{params:{id:string}}) => {
 
 
@@ -16,8 +17,6 @@ const Page = ({params}:{params:{id:string}}) => {
     const [videos,setVideos] = useState<any[]>([]);
     const [data,setData] = useState<any>(null);
     const [tracker,setTracker] = useState<{_id:string,taken:string[],recent:[],user_id:string}|null>(null);
-      const {data:session} = useSession();
-      const [isVoting,setIsVoting] = useState(false);
       const {toast} = useToast();
       const [isLoading,setIsLoading] = useState(true);
     const [selectedVideo, setSelectedVideo] = useState<{_id:string,label:string,videoUrl:string,thumbnail:string}|null>(null);
@@ -55,58 +54,7 @@ try {
   
     
 }
-const handleVote = async (voteType:string) => {
-  setIsVoting(true);
 
-  if (!session?.user) {
-    toast({
-      title: "Login first",
-      className: "bg-yellow-300 text-black"
-    });
-    setIsVoting(false);
-    return;
-  }
-
-  // Create a copy of votes to update
-  const votes = data.votes;
-  const currentVote = isVoted;
-
-  if (currentVote === voteType) {
-    // User is undoing their vote
-    setIsVoted(null);
-   
-    votes[0][`${voteType}voteCount`] = Math.max(votes[0][`${voteType}voteCount`] - 1, 0);
-  } else {
-    // Update votes based on the current and new vote types
-    if (currentVote) {
-      votes[0][`${currentVote}voteCount`] = Math.max(votes[0][`${currentVote}voteCount`] - 1, 0);
-    }
-    setIsVoted(voteType);
-    votes[0][`${voteType}voteCount`] = (votes[0][`${voteType}voteCount`] || 0) + 1;
-  }
-
-  // Update state with the new votes
-  setData({ ...data, votes:votes });
-
-  try {
-    const res = await axios.post(`/api/resources/vote`, { c_id: params.id, type: voteType });
-    if (res.data.success) {
-      toast({
-        title: `${voteType.charAt(0).toUpperCase() + voteType.slice(1)}d the contribution`,
-        className: 'bg-yellow-300 text-black'
-      });
-    }
-  } catch (error) {
-    const axiosError = error as AxiosError<any>;
-    toast({
-      title: "Error",
-      description: axiosError.response?.data?.message,
-      variant: "destructive"
-    });
-  } finally {
-    setIsVoting(false);
-  }
-};
 const handleStartTracker = async()=>{
   try {
     const res = await axios.post(`/api/resources/tracker/start`,{},{params:{rid:params.id}});
@@ -129,8 +77,7 @@ const handleStartTracker = async()=>{
 
 }
 // Call handleVote with 'up' or 'down' based on the action
-const handleUpVote = () => handleVote('up');
-const handleDownVote = () => handleVote('down');
+
    
     const fetchTracker = async()=>{
   
@@ -231,22 +178,8 @@ if(tracker){
         ></iframe>
      
       </div>
-      <div className='w-full flex justify-between mt-4 '>
-      <div className='flex gap-2'>
-                <div className='flex gap-1'>
-                    <Button disabled={isVoting} onClick={handleUpVote} className='bg-neutral-800 border hover:bg-black border-white rounded-md'>
-                    <Image   alt='upvotes' src={`/upvote${isVoted&&isVoted=='up'?'-filled':''}.svg`} width={20} height={20}/>
-                    <p className='text-gray-500'>{data.votes[0]?.upvoteCount}</p>
-                    </Button>
-                </div>
-                <div className='flex gap-1'>
-                 <Button disabled={isVoting} onClick={handleDownVote} className='bg-neutral-800 border hover:bg-black border-white rounded-md'>
-                 <Image  alt='downvotes' src={`/downvote${isVoted&&isVoted=='down'?'-filled':''}.svg`} width={20} height={20}/>
-                 <p className='text-gray-500'>{data.votes[0]?.downvoteCount}</p>
-                 </Button>
-                </div>
-              </div>
-      </div>
+     
+      <Voting setIsVoted={setIsVoted} votes={data.votes} setVotes={(v)=>{setData({...data,votes:v})}} c_id={params.id} currentVote={isVoted?isVoted:null}/>
       {/* Progress */}
 
     </div>

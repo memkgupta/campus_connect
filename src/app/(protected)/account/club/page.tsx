@@ -66,6 +66,8 @@ const Page = () => {
     const[isSubmitting,setIsSubmitting] = useState(false);
     const [isHovered,setIsHovered] = useState(false);
     const [preview,setPreview] = useState<string|null>('');
+    const clubContext = useContext(ClubContext)
+    
     const handleProfileSelect = ()=>{
       if(preview){
     setPreview(null);
@@ -86,6 +88,7 @@ try {
 const data = res.data.clubDetails;
 console.log(data)
 setPreview(data.clubLogo);
+// clubContext?.setState(clubDetails)
 setClubDetails({_id:data._id,clubDescription:data.clubDescription,clubName:data.clubName,clubLogo:data.clubLogo,contactPhone:data.contactPhone,events:data.events,members:data.members,messages:data.messages})
 form.setValue("clubDescription",data.clubDescription);
 form.setValue("clubName",data.clubName);

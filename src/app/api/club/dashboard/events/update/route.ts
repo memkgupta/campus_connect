@@ -3,12 +3,13 @@ import Club from "@/lib/models/club/club.model";
 import { Event } from "@/lib/models/event.model";
 import User from "@/lib/models/user.model";
 import { getServerSession } from "next-auth/next";
-export const PUT = async(req:Request)=>{
-    const { searchParams } = new URL(req.url);
+import { NextRequest } from "next/server";
+export const PUT = async(req:NextRequest)=>{
+    const { searchParams } =req.nextUrl;
     const queryParams = {
       id: searchParams.get('id'),
     };
-    const {clubId,name,description,dateTime,forms,location,category,banner,isAcceptingVolunteerRegistrations,isTeamEvent,maxTeamSize,maxCapacity,registrationForm} = await req.json();
+    const {name,description,dateTime,forms,location,category,banner,isAcceptingVolunteerRegistrations,isTeamEvent,maxTeamSize,maxCapacity,registrationForm} = await req.json();
     const session = await getServerSession();
     if(!session){
         return Response.redirect('/auth/sign-in');
@@ -51,7 +52,7 @@ export const PUT = async(req:Request)=>{
         if(category){
             event.category = category;
         }
-        // isAcceptingVolunteerRegistrations,isTeamEvent,maxTeamSize,maxCapacity
+       
         if(isAcceptingVolunteerRegistrations){
             event.isAcceptingVolunteerRegistrations = isAcceptingVolunteerRegistrations
         }
@@ -65,7 +66,7 @@ export const PUT = async(req:Request)=>{
             event.registrationForm = registrationForm
         }
         if(forms){
-            event.forms = event.forms.concat(forms)
+            event.forms = forms
         }
         await event.save();
 return Response.json({success:true,message:"Event updated successfully"});

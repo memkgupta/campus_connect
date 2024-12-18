@@ -41,25 +41,7 @@ try {
         as:'clubDetails'
     }},
     {$unwind:"$clubDetails"},
-    {
-$lookup:{
-    from:'event_registrations',
-    let:{eventId:"$_id"},
-    pipeline:[
-        {
-            $match:{
-                $expr:{
-                   $and:[
-                    {$eq:['$event','$_id']},
-                    {$eq:['$isAccepted',true]}
-                   ] 
-                }
-            }
-        }
-    ],
-    as:'registrations'
-}
-    },
+
     {
         $project:{
             name:1,
@@ -68,11 +50,8 @@ $lookup:{
             location:1,
             category:1,
             banner:1,
-            totalRegistrations:{$size:'$registrations'},
-            isFull:{
-                $cond:{if:{$gte:['$totalRegistrations','$maxCapacity']},then:true,else:false}
-            },
-            
+            venue:1,
+            forms:1,
             maxCapacity:1,
             clubDetails:{
 clubLogo:1,

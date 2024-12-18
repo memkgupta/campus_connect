@@ -4,9 +4,10 @@ import { Event } from "@/lib/models/event.model";
 import User from "@/lib/models/user.model";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
+import { NextRequest } from "next/server";
 
-export const GET = async(req:Request)=>{
-    const {searchParams} = new URL(req.url);
+export const GET = async(req:NextRequest)=>{
+    const {searchParams} = req.nextUrl;
     try {
         await connect();
         const session = await getServerSession();
@@ -47,11 +48,9 @@ export const GET = async(req:Request)=>{
                 participantsFromOutsideAllowed:1,
                 maxCapacity:1,
               
-                totalRegistrations:{$size:"$registrations"}
+               
             }},
-            {
-                $sort:{'totalRegistrations':-1}
-            },
+          
             {$skip:skip},
             {$limit:10}
         ])

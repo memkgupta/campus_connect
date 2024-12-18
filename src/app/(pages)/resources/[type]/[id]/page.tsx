@@ -2,6 +2,7 @@
 import NoResourceFound from '@/components/NoResourceFound';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
+import Voting from '@/components/utils/Voting';
 import { useQuery } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { Loader2Icon } from 'lucide-react';
@@ -129,23 +130,14 @@ setIsVoted(res.data.data.isVoted);
       (
         <div className='py-12'>
           <p className='text-center text-2xl font-bold text-white'>{data.resource?.label}</p>
-        <p className='mt-5 text-center font-bolf text-gray'>Contributed by : - <Link href={`/user/@${data.resource.contributor.username}`}>{data.resource.contributor.name}</Link></p>
+        <p className='mt-5 text-center font-bolf text-gray'>Contributed by : - <Link href={`/user/${data.resource.contributor.username}`}>{data.resource.contributor.name}</Link></p>
 <div className='flex justify-around'>
     <p className="text-gray-500 font-bold">Year : {data.resource.sessionYear}</p>
     {/* <p className="text-gray-500 font-bold">{data.sessionYear}</p> */}
-    <div className='flex gap-2'>
-                <div className='flex gap-1'>
-                    <Button disabled={isVoting} onClick={handleUpVote} className='bg-neutral-800 border hover:bg-black border-white rounded-md'>
-                    <Image   alt='upvotes' src={`/upvote${isVoted&&isVoted=='up'?'-filled':''}.svg`} width={20} height={20}/>
-                    <p className='text-gray-500'>{data.votes[0]?.upvoteCount}</p>
-                    </Button>
-                </div>
-                <div className='flex gap-1'>
-                 <Button disabled={isVoting} onClick={handleDownVote} className='bg-neutral-800 border hover:bg-black border-white rounded-md'>
-                 <Image  alt='downvotes' src={`/downvote${isVoted&&isVoted=='down'?'-filled':''}.svg`} width={20} height={20}/>
-                 <p className='text-gray-500'>{data.votes[0]?.downvoteCount}</p>
-                 </Button>
-                </div>
+    <div className='flex gap-2 w-200'>
+
+      <Voting setIsVoted={setIsVoted} votes={data.votes} setVotes={(v)=>{setData({...data,votes:v})}} c_id={params.id} currentVote={isVoted?isVoted:null}/>
+          
               </div>
 </div>
         <div className="mt-5 flex justify-center">

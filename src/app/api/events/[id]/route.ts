@@ -56,10 +56,9 @@ $lookup:{
             location:1,
             category:1,
             banner:1,
-            totalRegistrations:{$size:'$registrations'},
-            isFull:{
-                $cond:{if:{$gte:['$totalRegistrations','$maxCapacity']},then:true,else:false}
-            },
+            forms:1,
+            
+            
             
             maxCapacity:1,
             clubDetails:{

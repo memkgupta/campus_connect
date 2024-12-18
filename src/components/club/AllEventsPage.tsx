@@ -36,51 +36,24 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { ChevronDownIcon, MoreHorizontal, SortAscIcon } from "lucide-react"
+import axios from "axios"
+import { useToast } from "../ui/use-toast"
+import { useQuery } from "@tanstack/react-query"
+import Link from "next/link"
 
-const data: Event[] = [
-  {
-    id: "1",
-    name: "Annual Gala",
-    date: "2024-05-15",
-    location: "Grand Ballroom",
-    status: "Upcoming",
-  },
-  {
-    id: "2",
-    name: "Summer Picnic",
-    date: "2024-07-04",
-    location: "Central Park",
-    status: "Planning",
-  },
-  {
-    id: "3",
-    name: "Charity Run",
-    date: "2024-09-10",
-    location: "City Center",
-    status: "Upcoming",
-  },
-  {
-    id: "4",
-    name: "Holiday Party",
-    date: "2024-12-20",
-    location: "Club House",
-    status: "Planning",
-  },
-  {
-    id: "5",
-    name: "New Year's Eve Bash",
-    date: "2024-12-31",
-    location: "Rooftop Lounge",
-    status: "Planning",
-  },
-]
+
 
 export type Event = {
-  id: string
-  name: string
-  date: string
-  location: string
-  status: "Upcoming" | "Planning" | "Completed" | "Cancelled"
+
+  // status: "Upcoming" | "Planning" | "Completed" | "Cancelled"
+_id	:string,
+name:	string
+dateTime:Date
+location:string
+category:string
+participantsFromOutsideAllowed:boolean
+maxCapacity:number
+brief_description:string
 }
 
 export const columns: ColumnDef<Event>[] = [
@@ -112,7 +85,7 @@ export const columns: ColumnDef<Event>[] = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "date",
+    accessorKey: "dateTime",
     header: ({ column }) => {
       return (
         <Button
@@ -124,7 +97,7 @@ export const columns: ColumnDef<Event>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue("date")}</div>,
+    cell: ({ row }) => <div>{new Date(row.getValue("dateTime")).toLocaleDateString()}</div>,
   },
   {
     accessorKey: "location",
@@ -155,14 +128,13 @@ export const columns: ColumnDef<Event>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(event.id)}
+              onClick={() => navigator.clipboard.writeText(event._id)}
             >
               Copy event ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View details</DropdownMenuItem>
-            <DropdownMenuItem>Edit event</DropdownMenuItem>
-            <DropdownMenuItem>Delete event</DropdownMenuItem>
+            <DropdownMenuItem><Link href={`/account/club/events/${event._id}`}>View Details</Link></DropdownMenuItem>
+          
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -171,21 +143,24 @@ export const columns: ColumnDef<Event>[] = [
 ]
 
 export default function AllEventsPage() {
+  const {toast} = useToast() 
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [totalResults,setTotalResults] = React.useState(0);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
-
+const [data,setData] = React.useState([])
+const [page,setPage] = React.useState(1);
   const table = useReactTable({
     data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: ()=>{},
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -197,7 +172,45 @@ export default function AllEventsPage() {
       rowSelection,
     },
   })
+  const [filters,setFilters] = React.useState({
 
+  })
+const fetchEvents = async()=>{
+try {
+  const res = await axios.get(`/api/club/dashboard/events`,{params:{page}});
+  if(res.data.success){
+setData(res.data.events);
+setTotalResults(res.data.totalResults);
+return res.data.events
+  }
+  else{
+    toast({
+      title:res.data.message,
+      variant:'destructive'
+    })
+    return new Error("Some error occured")
+  }
+} catch (error) {
+  toast({
+    title:"Some error occured",
+    variant:"destructive"
+  })
+  return new Error("Some error occured")
+
+}
+}
+const previousPage = ()=>{
+setPage(Math.max(1,page-1))
+}
+const nextPage = ()=>{
+setPage(Math.min(Math.ceil(totalResults/10),page+1))
+}
+const _d = useQuery({
+  queryKey:[page,filters],
+  queryFn:fetchEvents,
+  retry:false,
+  refetchOnWindowFocus:false
+})
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -295,16 +308,16 @@ export default function AllEventsPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => previousPage()}
+            disabled={(page==1)}
           >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => nextPage()}
+            disabled={(page==(Math.ceil(totalResults/10)))}
           >
             Next
           </Button>

@@ -41,7 +41,7 @@ export default function ClubDashboard({id,events,members,recruitmentStats,messag
                 </li>
               ))}
             </ul>
-            <Link href={"/account/clubs/events"} className="p-2 rounded-md w-full mt-4 bg-yellow-500 text-slate-900 hover:bg-yellow-600">View All Events</Link>
+            <Link href={"/account/club/events"} className="p-2 rounded-md w-full mt-4 bg-yellow-500 text-slate-900 hover:bg-yellow-600">View All Events</Link>
           </CardContent>
         </Card>
 

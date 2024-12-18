@@ -8,140 +8,181 @@ import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 
-export const GET = async(req:Request,{ params }: { params: { id: string } })=>{
-    const {id} = params;
-   
+export const GET = async (
+  req: Request,
+  { params }: { params: { id: string } }
+) => {
+  const { id } = params;
+
+  try {
+    // Establish database connection
     await connect();
+
+    // Retrieve session and user information
     const session = await getServerSession();
-    const _user = session?.user;
-    try {
-        // let resource = await Contributions.findById(id).populate('contributor');
-        let resource = await Contributions.aggregate([
-{
-  $match:{
-    _id:new mongoose.Types.ObjectId(id)
-  },
-  
-},
-{
-  $lookup:{
-    from:'users',
-    as:'contributor',
-    localField:'contributor',
-    foreignField:'_id'
-  }
-},
-{$unwind:"$contributor"},
-{
-  $lookup:{
-    from:'playlists',
-    as:'playlist',
-    foreignField:'_id',
-    localField:'playlist'
-  }
-},
+    const userEmail = session?.user?.email;
 
-{$unwind:"$playlist"},
-{
-  $project:{
-    branch:1,
-    label:1,
-    type:1,
-    code:1,
-    sessionYear:1,
-    thumbnail:1,
-   
-    collegeYear:1,
+    // Fetch the contribution resource
+    const resource = await Contributions.findById(id).populate("contributor");
 
-    university:1,
-
-    contributor:{
-      username:1,
-      name:1,
-      profile:1,
-    },
-playlist:{
-  lectures:1
-}
-  }
-}
-        ])
-        if(!resource||resource.length==0){
-          return Response.json({success:false,message:"Not found"},{status:404});
-      }
-        // resource[0].contributor = {
-        //     name:resource.contributor.name,
-        //     username:resource.contributor.username
-        // }
-        let isVoted = null;
-      let tracker = null;
-
-        if(_user){
-          const user = await User.findOne({email:_user.email})
-isVoted = await Vote.findOne({userId:user._id});
-tracker = await Progress.findOne({user_id:user._id,resource_id:params.id});
-
-        }
-      
-        const votes = await Vote.aggregate([
-          {
-            $match:{
-              contributionId:resource[0]._id
-            }
-          }
-          ,
-        { 
-            $group: {
-                _id: '$voteType', // Group by post ID
-                upvoteCount: {
-                  $sum: {
-                    $cond: [{ $eq: ['$voteType', 'up'] }, 1, 0]
-                  }
-                },
-                downvoteCount: {
-                  $sum: {
-                    $cond: [{ $eq: ['$voteType', 'down'] }, 1, 0]
-                  }
-                },
-                
-              },
-              
-        },
-        
-          {$project:{
-            _id:0,
-            upvoteCount: { $ifNull: ['$upvoteCount', 0] },
-            downvoteCount: { $ifNull: ['$downvoteCount', 0] }
-          }}
-        
-        ])
-        // console.log(resource[0])
-        if (tracker) {
-          let i = 0;
-          let j = 0;
-        
-         
-          while (i < resource[0].playlist.lectures.length && j < tracker.taken.length) {
-            // Compare lecture id with the taken lecture id
-            if (resource[0].playlist.lectures[i]._id.equals(tracker.taken[j])) {
-              resource[0].playlist.lectures[i].taken = true;
-              j++;  // Move to the next taken lecture in tracker
-            } else {
-              resource[0].playlist.lectures[i].taken = false;
-            }
-            i++;  // Move to the next lecture in playlist
-          }
-        
-          // Mark remaining lectures as not taken
-          while (i < resource[0].playlist.lectures.length) {
-            resource[0].playlist.lectures[i].taken = false;
-            i++;
-          }
-        }
- 
-        return Response.json({success:true,data:{resource:resource[0],votes,isVoted:isVoted?.voteType}},{status:200});
-    } catch (error) {
-        console.log(error);
-        return Response.json({success:false,message:"Something went wrong"},{status:500});
+    if (!resource) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Not found" }),
+        { status: 404, headers: { "Content-Type": "application/json" } }
+      );
     }
-}
+
+    // Build aggregation pipeline
+    const aggregationPipeline = buildAggregationPipeline(id, resource.type);
+    const aggregatedResource = await Contributions.aggregate(aggregationPipeline);
+
+    // Fetch user-specific data if the user is authenticated
+    const userData = userEmail ? await getUserData(userEmail, id) : { isVoted: null, tracker: null };
+
+    // Aggregate votes
+    const votes = await aggregateVotes(resource._id);
+
+    // Update resource based on user progress
+    if (userData.tracker && resource.type === "lectures") {
+      markTakenLectures(aggregatedResource[0], userData.tracker);
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: {
+          resource: aggregatedResource[0],
+          votes,
+          isVoted: userData.isVoted?.voteType || null,
+        },
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("GET /api/contribution:", error);
+    return new Response(
+      JSON.stringify({ success: false, message: "Something went wrong" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+};
+
+/**
+ * Builds the aggregation pipeline based on resource type.
+ */
+const buildAggregationPipeline = (id: string, type: string) => {
+  const pipeline: any[] = [
+    {
+      $match: { _id: new mongoose.Types.ObjectId(id) },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "contributor",
+        foreignField: "_id",
+        as: "contributor",
+      },
+    },
+    { $unwind: "$contributor" },
+  ];
+
+  if (type === "lectures") {
+    pipeline.push(
+      {
+        $lookup: {
+          from: "playlists",
+          localField: "playlist",
+          foreignField: "_id",
+          as: "playlist",
+        },
+      },
+      { $unwind: "$playlist" }
+    );
+  }
+
+  pipeline.push({
+    $project: {
+      branch: 1,
+      label: 1,
+      type: 1,
+      code: 1,
+      sessionYear: 1,
+      thumbnail: 1,
+      file: 1,
+      collegeYear: 1,
+      university: 1,
+      contributor: {
+        username: 1,
+        name: 1,
+        profile: 1,
+      },
+      playlist: type === "lectures" ? { lectures: 1 } : undefined,
+    },
+  });
+
+  return pipeline;
+};
+
+/**
+ * Retrieves user-specific data such as vote status and progress tracker.
+ */
+const getUserData = async (email: string, resourceId: string) => {
+  const user = await User.findOne({ email });
+
+  if (!user) return { isVoted: null, tracker: null };
+
+  const [isVoted, tracker] = await Promise.all([
+    Vote.findOne({ userId: user._id, contributionId: resourceId }),
+    Progress.findOne({ user_id: user._id, resource_id: resourceId }),
+  ]);
+
+  return { isVoted, tracker };
+};
+
+/**
+ * Aggregates votes for a specific contribution.
+ */
+const aggregateVotes = async (contributionId: mongoose.Types.ObjectId) => {
+  const voteAggregation = await Vote.aggregate([
+    { $match: { contributionId } },
+    {
+      $group: {
+        _id: "$voteType",
+        upvoteCount: {
+          $sum: { $cond: [{ $eq: ["$voteType", "up"] }, 1, 0] },
+        },
+        downvoteCount: {
+          $sum: { $cond: [{ $eq: ["$voteType", "down"] }, 1, 0] },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        upvoteCount: { $ifNull: ["$upvoteCount", 0] },
+        downvoteCount: { $ifNull: ["$downvoteCount", 0] },
+      },
+    },
+  ]);
+
+  // Ensure both upvoteCount and downvoteCount are present
+  const votes = { upvoteCount: 0, downvoteCount: 0 };
+  voteAggregation.forEach((vote) => {
+    if (vote.upvoteCount !== undefined) votes.upvoteCount = vote.upvoteCount;
+    if (vote.downvoteCount !== undefined) votes.downvoteCount = vote.downvoteCount;
+  });
+
+  return votes;
+};
+
+/**
+ * Marks lectures as taken based on user progress.
+ */
+const markTakenLectures = (resource: any, tracker: any) => {
+  const takenSet = new Set(tracker.taken.map((id: mongoose.Types.ObjectId) => id.toString()));
+
+  resource.playlist.lectures = resource.playlist.lectures.map((lecture: any) => ({
+    ...lecture,
+    taken: takenSet.has(lecture._id.toString()),
+  }));
+};

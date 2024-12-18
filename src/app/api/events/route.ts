@@ -3,9 +3,10 @@ import { Event } from "@/lib/models/event.model";
 import User from "@/lib/models/user.model";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
+import { NextRequest } from "next/server";
 
-export const GET = async(req:Request)=>{
-    const {searchParams} = new URL(req.url);
+export const GET = async(req:NextRequest)=>{
+    const {searchParams} = req.nextUrl;
     let matchStage:any = {
         
     };
@@ -24,9 +25,7 @@ if(queryParams.location){
 if(queryParams.category && queryParams.category!="all"){
     matchStage.category = queryParams.category
 }
-if(queryParams.college){
-    matchStage.college=new mongoose.Types.ObjectId(queryParams.college)
-}
+
 if(queryParams.keyword){
     matchStage.name = {$regex:queryParams.keyword,$options:'i'}
 }
@@ -41,12 +40,8 @@ if(queryParams.happening){
     if(h==="this-week"){
       
        endDate = getWeekEnd(endDate);
-      console.log(startDate);
-      console.log(endDate)
+     
     }
-    // if(h==="next-7-days"){
-    //     startDate = 
-    // }
     if(h==="this-month"){
         startDate = getMonthStart(startDate);
         endDate = getMonthEnd(endDate);
@@ -59,7 +54,7 @@ if(queryParams.happening){
     }
     matchStage.dateTime={
         $gte:startDate,
-        $lt:endDate
+        $lte:endDate
     }
 }
 const session =await getServerSession();
@@ -69,10 +64,8 @@ const skip = (queryParams.page - 1) * 10;
 await connect();
 
 try {
-    if(!queryParams.college && _user){
-        const user = await User.findOne({email:_user.email});
-        matchStage.college = new mongoose.Types.ObjectId(user.college)
-    }
+  
+    console.log(matchStage)
     const events = await Event.aggregate([
       
         {$match:matchStage},

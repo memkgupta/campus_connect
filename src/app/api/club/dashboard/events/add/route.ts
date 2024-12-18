@@ -4,7 +4,7 @@ import { Event } from "@/lib/models/event.model";
 import User from "@/lib/models/user.model";
 import { getServerSession } from "next-auth/next";
 export const POST = async(req:Request)=>{
-    const {clubId,name,description,dateTime,location,category,creationTimestamp,banner,participantsFromOutsideAllowed,maxCapacity,venueAddress,isTeamEvent,maxTeamSize,isAcceptingVolunteerRegistrations} = await req.json();
+    const {clubId,name,description,dateTime,location,category,creationTimestamp,forms,banner,participantsFromOutsideAllowed,maxCapacity,venue,isTeamEvent,maxTeamSize,isAcceptingVolunteerRegistrations} = await req.json();
     const session = await getServerSession();
     if(!session){
         return Response.redirect('/auth/sign-in');
@@ -17,6 +17,7 @@ export const POST = async(req:Request)=>{
         if(!user){
             return Response.json({success:false,message:"Session Invalid Please login again"},{status:401});
         }
+        console.log(clubId)
         const club = await Club.findById(clubId);
         if(!club.admin.equals(user._id)){
             return Response.json({
@@ -29,10 +30,11 @@ export const POST = async(req:Request)=>{
                 admin:club.admin,
                 banner:banner,
                 description,
-                venue:venueAddress,
+                venue:venue,
                 dateTime,
                 maxCapacity:maxCapacity,
                 location,
+                forms:forms,
                 creationTimestamp,
                 category,
                 club:club._id,
