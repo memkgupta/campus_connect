@@ -12,26 +12,25 @@ import React, { useEffect, useState } from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { BACKEND_URL } from '@/constants'
+import Link from 'next/link'
 
 
 const Page = ({params}:{params:{id:string}}) => {
   const router = useRouter()
-    const [isLoading,setIsLoading]=useState(true)
-    const [note,setNote] = useState('')
-    const[isDialogOpen,setIsDialogOpen]=useState(false);
-    const [isRegistered,setIsRegistered] = useState(false)
-    const [isSubmitting,setIsSubmitting] = useState(false)
+    // const [isLoading,setIsLoading]=useState(true)
+const [isRegistered,setIsRegistered] = useState(null);
     const [data,setData] = useState<any>()
     const {toast} = useToast();
     const {id} = params
 const fetchEvent = async()=>{
     try {
-        setIsLoading(true)
-        const res = await axios.get(`/api/events/${id}`);
-        const data = res.data;
-        setData(data.event)
-        // setIsRegistered(data.registered)
-        return {data:data}
+        // setIsLoading(true)
+        const res = await axios.get(`${BACKEND_URL}/events/${id}`);
+        const reqData = res.data;
+        setData(reqData.data)
+        setIsRegistered(data.registered)
+        return reqData.data
     } catch (error) {
         const axiosError = error as AxiosError<any>
         if(axiosError.response){
@@ -49,70 +48,37 @@ const fetchEvent = async()=>{
         }
         }
         
-          return Promise.reject("Some error occured")
+          return Promise.reject(error)
     }
-    finally{
-        setIsLoading(false)
-    }
+    
 }
-// const handleParticipantRegister = async()=>{
-// setIsSubmitting(true)
-// try {
-//     const res = await axios.post(`/api/events/register-for-event`,{
-// note:note,eventId:id,registrationType:"participant"
-//     });
-//     const data = res.data;
-//     if(!data.success){
-//       toast({
-//         title:data.message,
-//         variant:'destructive'
-//       })
-//     }
-//     else{
-//       toast({
-//         title:"Registered successfully waiting for approval",
-        
-//       });
-//       setIsDialogOpen(false);
-//       router.replace(`/account/events/${data.id}`);
 
-//       // return {data:data.event,isRegistered:data.registered}
-//     }
-// } catch (error) {
-//     const axiosError = error as AxiosError<any>
-//     if(axiosError.response?.status!=500){
-//       toast({
-//         title:axiosError.response?.data.message,
-//         variant:"destructive"
-        
-//       });
-//     }else{
-//       toast({
-//         title:"Some error occured",
-//         variant:"destructive"
-        
-//       });
-//     }
-// }
-// finally{
-// setIsSubmitting(false);
-// }
-// }
-    const {data:_data,isSuccess} = useQuery<any>({
+    const {data:_data,isSuccess,isFetching} = useQuery<any>({
         queryKey:[id],
         queryFn:fetchEvent,
         refetchOnWindowFocus:false,
-        retry:false,
+        retry:(count,error)=>{
+          const axiosError = error as AxiosError<any>;
+          if(axiosError.status===500 || axiosError.status===401 || axiosError.status === 404){
+            return false;
+          }
+          if(count>3){
+            return false;
+          }
+          else{
+            return true
+          }
+        },
     })
 //    useEffect(()=>{},[id])
     return (
    <>
     {
-        isLoading || !data ? <Loader/>
+        isFetching ? <Loader/>
         :(<div className="max-w-4xl mx-auto p-6">
           <div className="relative w-full h-64 mb-6">
             <Image
-              src={data.banner}
+              src={_data.banner}
               alt={data.name}
               layout="fill"
               objectFit="cover"
@@ -123,6 +89,7 @@ const fetchEvent = async()=>{
           <div className="space-y-6">
             <div className="flex justify-between items-start">
               <h1 className="text-3xl font-bold">{data.name}</h1>
+          
               <div className="space-x-2">
                 {data.isTeamEvent && (
                   <Badge variant="secondary">Team Event</Badge>
@@ -130,7 +97,12 @@ const fetchEvent = async()=>{
             
               </div>
             </div>
-    
+    <div>
+    { !isRegistered ? <Link href={`/events/register/${id}`} className='bg-yellow-300 p-2 rounded-md text-black'>Register Now</Link>
+            : <Link href={`/events/registeration/${isRegistered}`} className='bg-yellow-300 p-2 rounded-md text-black'>View Registration</Link>
+            }
+
+    </div>
             <Card>
               <CardHeader>
                 <CardTitle>Event Details</CardTitle>

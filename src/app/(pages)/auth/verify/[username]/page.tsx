@@ -22,6 +22,7 @@ import {
 import { Button } from '@/components/ui/button';
 import axios, { AxiosError } from 'axios';
 import { Loader2 } from 'lucide-react';
+import { BACKEND_URL } from '@/constants';
 function page() {
     const router = useRouter();
     const params = useParams<{username:string}>();
@@ -47,7 +48,7 @@ function page() {
       console.log(data.code)
 if(data.code&&data.code!=""){
   try {
-  const res = await axios.post(`/api/users/verify`,{username:username,otp:data.code});
+  const res = await axios.post(`${BACKEND_URL}/auth/verify`,{username:username,otp:data.code});
   if(res.data.success){
     toast({
       title:"Success",

@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import NoResourceFound from '@/components/NoResourceFound'
 import Image from 'next/image'
+import { BACKEND_URL } from '@/constants'
 const Page = ({params}:{params:{type:string,id:string}}) => {
     const type = params.type||"pyq";
   const[isLoading,setIsLoading] = useState(true)
@@ -22,7 +23,7 @@ const Page = ({params}:{params:{type:string,id:string}}) => {
   const [data,setData] = useState<any[]>([]);
   return (
     <div>
-        <FilterBox type={type} subjectsState={setSubjects} loading={setIsLoading} url='/api/resources' state={setData}/>
+        <FilterBox type={type} subjectsState={setSubjects} loading={setIsLoading} url={`${BACKEND_URL}/resources`} state={setData}/>
 
        {isLoading?(
         <>

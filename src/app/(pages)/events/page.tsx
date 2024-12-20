@@ -4,7 +4,7 @@ import EventCard from '@/components/events/EventCard';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
-import { eventCategories } from '@/constants';
+import { BACKEND_URL, eventCategories } from '@/constants';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
@@ -21,7 +21,7 @@ import {
   } from "@/components/ui/pagination"
 import Link from 'next/link';
 const Page = () => {
-const [events,setEvents] = useState([]);
+// const [events,setEvents] = useState([]);
 const [happening,setHappening] = useState({value:"this-week",label:'This Week',id:"this-week"});
 const [location,setLocation] = useState(null)   
 const [college,setCollege] = useState(null);
@@ -55,9 +55,9 @@ const fetchEvents = async()=>{
   
 try {
     setLoading(true)
-    const res = await axios.get(`/api/events`,{params:params});
-    
-   return {events:res.data.events,totalResults:res.data.totalResults};
+    const res = await axios.get(`${BACKEND_URL}/events`,{params:params});
+    setTotalResults(res.data.total);
+   return res.data.events;
 } catch (error) {
     toast({
         title: "Some error occured",
@@ -69,24 +69,16 @@ finally{
     setLoading(false);
 }
     }
-    const {data:eventsData,isSuccess} = useQuery<any>(
+    const {data:events,isSuccess,isFetching} = useQuery<any>(
         {
-          queryKey:[happening,keyword,category,page],
+          queryKey:[happening,keyword,category,page,"events"],
           queryFn:fetchEvents,
-          // refetchOnMount:false,
           refetchOnWindowFocus:false,
           retry:false,
         }
       )
       
-      useEffect(()=>{
-        if(isSuccess){
-          setEvents(eventsData.events);
-          setTotalResults(eventsData.totalResults)
-          console.log(eventsData)
-        }
-       
-      },[eventsData])
+  
   return (
    <>
    <div className='mb-12 gap-y-3 grid grid-cols-1 md:grid-cols-3 justify-items-center content-center'>
@@ -102,7 +94,7 @@ finally{
          <Input placeholder='Search by name' type='text' onChange={(e)=>{debounced(e.target.value)}} className='max-w-56 text-white border-2 border-white'/>
          </div>
     </div>
-   {loading?(
+   {!events ||isFetching?(
     <div className='w-full min-h-screen flex justify-center items-center'>
         <Loader2 className='text-gray-500 animate-spin'/>
     </div>
@@ -115,7 +107,7 @@ finally{
    events.map((event:any)=>(<EventCard key={event._id} data={event}/>))
    }
    </div>
-   <Pagination>
+   <Pagination className='mt-12'>
   <PaginationContent>
     <PaginationItem>
       <PaginationPrevious disabled={page==1}  onClick={(e)=>{page>1&&setPage(page-1)}} />

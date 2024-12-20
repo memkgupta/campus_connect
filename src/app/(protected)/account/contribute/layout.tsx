@@ -11,9 +11,9 @@ export default function ContributorsLayout({
   }>) {
 
     return (
-        <ContributorContextProvider>
+        <div>
  {children}
-        </ContributorContextProvider>
+        </div>
     
     );
   }

@@ -1,4 +1,4 @@
-export const HOST_URL = "http://localhost:3000/api"
+export const BACKEND_URL = "http://localhost:8080/api/v1"
 export const universities = [
     { "value": "AKTU", "label": "AKTU", "id": "AKTU" },
    

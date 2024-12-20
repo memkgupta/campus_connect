@@ -3,6 +3,7 @@ import NoResourceFound from '@/components/NoResourceFound';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import Voting from '@/components/utils/Voting';
+import { BACKEND_URL } from '@/constants';
 import { useQuery } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { Loader2Icon } from 'lucide-react';
@@ -31,7 +32,7 @@ const Page = ({params}:{params:{id:string,type:string}}) => {
           
           try {
             setIsLoading(true);
-            const res = await axios.get(`/api/resources/${id}`);
+            const res = await axios.get(`${BACKEND_URL}/resources/${id}`);
             const _data = res.data.data;
             if(_data.votes.length==0){
             _data.votes = [{upvoteCount:0,downvoteCount:0}]
@@ -111,7 +112,7 @@ setIsVoted(res.data.data.isVoted);
         {
           queryKey:[id],
           queryFn:fetchResources,
-          // refetchOnMount:false,
+      
           refetchOnWindowFocus:false,
               retry:false
         }

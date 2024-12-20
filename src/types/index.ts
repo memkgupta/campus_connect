@@ -1,14 +1,25 @@
 export type User ={
-id:string,
+id?:string,
+email:string,
+name:string,
 username:string,
 verified:boolean
 }
-export type AuthContextProps = {
- user: User | null;
-authStatus:boolean;
-logout: () => void;
-}
 
+    
+    export interface AuthState {
+      user: User | null;
+      isAuthenticated: boolean;
+      isLoading: boolean;
+    }
+    export interface LoginCredentials {
+      email: string;
+      password: string;
+    }
+    
+    export interface RegisterCredentials extends LoginCredentials {
+      name: string;
+    }
 // export type UserDetails = {
 //     username:string,
 //     name:string,

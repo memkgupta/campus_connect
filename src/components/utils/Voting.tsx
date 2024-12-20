@@ -2,25 +2,24 @@
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import Image from 'next/image'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@/hooks/useSession'
 import { toast } from '../ui/use-toast'
 import axios, { AxiosError } from 'axios'
 
 const Voting = ({currentVote,votes,c_id,setVotes,setIsVoted}:{currentVote:string|null,votes:any,c_id:string,setVotes:(val:any)=>void,setIsVoted:(v:string|null)=>void}) => {
     // const [isVoted,setIsVoted] = useState<string|null>(null);
-      const {data:session} = useSession();
+      const {isAuthenticated} = useSession();
       const [isVoting,setIsVoting] = useState(false);
     const handleVote = async (voteType:string) => {
-        setIsVoting(true);
+      if(!isAuthenticated){
+        toast({
+          title:"Please login first",
+          color:"yellow"
+        })
+        return;
+      }
+      setIsVoting(true);
       
-        if (!session?.user) {
-          toast({
-            title: "Login first",
-            className: "bg-yellow-300 text-black"
-          });
-          setIsVoting(false);
-          return;
-        }
       
         // Create a copy of votes to update
         // const votes = data.votes;

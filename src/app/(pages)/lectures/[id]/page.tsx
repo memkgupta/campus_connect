@@ -5,14 +5,16 @@ import { useToast } from '@/components/ui/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/hooks/useSession';
 import Image from 'next/image';
 import React, { useState } from 'react'
 import ProgressComponent from '@/components/component/progress'
 import Voting from '@/components/utils/Voting';
+import { BACKEND_URL } from '@/constants';
+import Cookies from 'js-cookie';
 const Page = ({params}:{params:{id:string}}) => {
 
-
+const auth = useSession();
 
     const [videos,setVideos] = useState<any[]>([]);
     const [data,setData] = useState<any>(null);
@@ -27,7 +29,7 @@ const Page = ({params}:{params:{id:string}}) => {
     const fetchResource = async()=>{
         setIsLoading(true);
 try {
-    const res = await axios.get(`/api/resources/${params.id}`);
+    const res = await axios.get(`${BACKEND_URL}/resources/view/${params.id}`);
     setData(res.data.data);
     setVideos(res.data.data.resource.playlist.lectures);
     setSelectedVideo(res.data.data.resource.playlist.lectures[0]);
@@ -77,13 +79,13 @@ const handleStartTracker = async()=>{
 
 }
 // Call handleVote with 'up' or 'down' based on the action
-
-   
     const fetchTracker = async()=>{
   
       try {
-        if(data!=null){
-          const res = await axios.get(`/api/resources/tracker?rid=${params.id}`);
+        if(data!=null && auth.isAuthenticated){
+          const res = await axios.get(`${BACKEND_URL}/tracker?rid=${params.id}`,{headers:{
+            "Authorization":`Bearer ${Cookies.get('access-token')}`
+          }});
           if(res.data.success && res.data.tracker){
             setTracker(res.data.tracker);
             const index = videos.findIndex((_v:any)=>_v._id===res.data.tracker.recent);
@@ -91,11 +93,12 @@ const handleStartTracker = async()=>{
               setSelectedVideo(videos[index])
             }else{
               setSelectedVideo(videos[index+1])
-
             }
-
           }
           return res.data.tracker;
+        }
+        else{
+          setIsLoading(false);
         }
        
       } catch (error) {
@@ -107,24 +110,21 @@ const handleStartTracker = async()=>{
         setIsLoading(false)
       }
     }
-    const _d = useQueries({
-      queries:[
-        {
-          queryKey:[],
-          queryFn:fetchResource,
-          retry:false,
-          refetchOnWindowFocus:false,
-          staleTime:Infinity
-      },
+    const {data:_data} = useQuery({
+      queryKey:['resource',params.id],
+      retry:false,
+      refetchOnWindowFocus:false,
+      queryFn:fetchResource
+    })  
+    const {data:_tracker} = useQuery(
+   
       {
-        queryKey:[data],
+       queryKey:['tracker',params.id],
         queryFn:fetchTracker,
         retry:false,
         refetchOnWindowFocus:false,
-        staleTime:Infinity
-      }
-      ]
-    });
+        staleTime:Infinity,
+        enabled:_data?.resource    });
     const handleProgressUpdate =async(index:number,status:boolean,id:string)=>{
       let videosCopy = [...videos];
 if(tracker){
