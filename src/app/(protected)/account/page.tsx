@@ -160,9 +160,9 @@ function Page() {
                       <div className="w-full col-span-2 md:col-span-1 flex p-2 md:flex-col flex-row gap-x-4 gap-y-3 justify-center  bg-slate-900 rounded-md">
                         <Link
                           className="sm:w-1/3 md:w-full text-center py-2 text-black rounded-md bg-yellow-300 hover:bg-yellow-400 text-xs"
-                          href={"/account/projects/add-a-project"}
+                          href={"/account/projects/my-projects"}
                         >
-                          Add a project
+                          Projects
                         </Link>
                         <Link
                           className="sm:w-1/3 md:w-full text-center py-2 text-black rounded-md bg-yellow-300 hover:bg-yellow-400 text-xs"

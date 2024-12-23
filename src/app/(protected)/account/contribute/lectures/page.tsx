@@ -15,16 +15,18 @@ import { useToast } from '@/components/ui/use-toast';
 import { yearTillNow } from '@/helpers/yearUtility';
 import { useDebounceCallback } from 'usehooks-ts';
 import Link from 'next/link';
-import { branches, resourceTypes, universities } from '@/constants';
+import { BACKEND_URL, branches, resourceTypes, universities } from '@/constants';
 import { Label } from '@/components/ui/label';
 import { YTLecture } from '@/types';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { extractLecturesFromYtPlaylist } from '@/utils/yt';
 import { useQuery } from '@tanstack/react-query';
+import Cookies from 'js-cookie';
+import { useSession } from '@/hooks/useSession';
 const Page = () => {
    
     const date = new Date();
-    const isContributor = useContext(ContributorContext);
+    // const isContributor = useContext(ContributorContext);
   const [isSubmitting,setIsSubmitting] = useState(false);
     const {toast} = useToast();
         const [year,setYear] = useState({
@@ -37,7 +39,7 @@ const [sessionYear,setSessionYear] = useState({value:(date.getFullYear()-1).toSt
 const [selectedSubject,setSelectedSubject] = useState<{value:string,label:string,id:string}|null>(null);
 const [selectedBranch,setSelectedBranch] = useState<{value:string,label:string,id:string}|null>({value:'first-year',label:'First Year',id:'first-year'});
 // const [resourceType,setResourceType] = useState<{value:string,label:string,id:string}|null>();
-   
+   const {isAuthenticated} = useSession()
     const [subjects,setSubjects] = useState([]);
     const [label,setLabel] = useState("");
     const [selectedUniversity,setSelectedUniversity] = useState({value:'AKTU',label:'AKTU',id:'AKTU'})
@@ -93,6 +95,9 @@ const fetchSubjects = async()=>{
    }
 }
     const handleSubmit = async()=>{
+      if(!isAuthenticated){
+        return;
+      }
 if(selectedBranch&&selectedSubject&&year&&playList.length!=0&&sessionYear){
 const data = {
     label:label,
@@ -107,7 +112,11 @@ const data = {
 }
 try {
   setIsSubmitting(true);
-  const res = await axios.post(`/api/contributor`,data);
+  const res = await axios.post(`${BACKEND_URL}/resources/upload-resource`,data,{
+    headers:{
+      "Authorization":`Bearer ${Cookies.get('access-token')}`
+    }
+  });
   if(res.status===200){
     toast({
       title:'Your contribution was added thank you',
@@ -153,9 +162,7 @@ finally{
   queryFn:fetchSubjects
  }) 
   return (
-  <>
-  {
-    isContributor?(<>
+<>
   <div className='flex justify-center max-w-2/3'>
   <div className="grid md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 ">
     
@@ -232,21 +239,7 @@ finally{
    </div>
   </div>
  
-       </>):
-       (
-        <>
-          <div className="flex items-center justify-center mt-20 bg-slate-950 text-white">
-      <div className="bg-slate-800/30 p-6 rounded-lg shadow-lg max-w-md text-center">
-        <h2 className="text-2xl font-bold mb-4">Not a Contributor Yet?</h2>
-        <p className="mb-6">You are not currently a contributor. Click the link below to fill out the form and become a contributor.</p>
-       <Link href='https://forms.gle/5pyeVcoRk68FbE9v8' className='text-blue-900'>Become a contributor</Link>
-      </div>
-    </div>
-        </>
-       )
-  }
-  </>
-  
+       </>
 
 
 

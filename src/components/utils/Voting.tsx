@@ -5,7 +5,8 @@ import Image from 'next/image'
 import { useSession } from '@/hooks/useSession'
 import { toast } from '../ui/use-toast'
 import axios, { AxiosError } from 'axios'
-
+import { BACKEND_URL } from '@/constants'
+import Cookies from 'js-cookie'
 const Voting = ({currentVote,votes,c_id,setVotes,setIsVoted}:{currentVote:string|null,votes:any,c_id:string,setVotes:(val:any)=>void,setIsVoted:(v:string|null)=>void}) => {
     // const [isVoted,setIsVoted] = useState<string|null>(null);
       const {isAuthenticated} = useSession();
@@ -41,10 +42,10 @@ const Voting = ({currentVote,votes,c_id,setVotes,setIsVoted}:{currentVote:string
 
       setVotes(votes);
         try {
-          const res = await axios.post(`/api/resources/vote`, { c_id: c_id, type: voteType });
+          const res = await axios.post(`${BACKEND_URL}/resources/vote`, { r_id: c_id, type: voteType },{headers:{"Authorization":`Bearer ${Cookies.get('access-token')}`}});
           if (res.data.success) {
             toast({
-              title: `${voteType.charAt(0).toUpperCase() + voteType.slice(1)}d the contribution`,
+              title: `Vote recorded`,
               className: 'bg-yellow-300 text-black'
             });
           }

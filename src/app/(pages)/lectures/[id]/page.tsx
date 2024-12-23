@@ -20,16 +20,23 @@ const auth = useSession();
     const [data,setData] = useState<any>(null);
     const [tracker,setTracker] = useState<{_id:string,taken:string[],recent:[],user_id:string}|null>(null);
       const {toast} = useToast();
-      const [isLoading,setIsLoading] = useState(true);
+      const {isAuthenticated,isLoading} = useSession()
+      // const [isLoading,setIsLoading] = useState(true);
     const [selectedVideo, setSelectedVideo] = useState<{_id:string,label:string,videoUrl:string,thumbnail:string}|null>(null);
     const [isVoted,setIsVoted] = useState<string|null>(null);
     const handleVideoClick = (index:number) => {
       setSelectedVideo(videos[index]);
     };
     const fetchResource = async()=>{
-        setIsLoading(true);
+        // setIsLoading(true);
+        const headers:any = {}
+        if(isAuthenticated){
+          headers.Authorization = `Bearer ${Cookies.get('access-token')}`
+        }
 try {
-    const res = await axios.get(`${BACKEND_URL}/resources/view/${params.id}`);
+    const res = await axios.get(`${BACKEND_URL}/resources/view/${params.id}`,{
+      headers:headers
+    });
     setData(res.data.data);
     setVideos(res.data.data.resource.playlist.lectures);
     setSelectedVideo(res.data.data.resource.playlist.lectures[0]);
@@ -59,7 +66,9 @@ try {
 
 const handleStartTracker = async()=>{
   try {
-    const res = await axios.post(`/api/resources/tracker/start`,{},{params:{rid:params.id}});
+    const res = await axios.post(`${BACKEND_URL}/tracker`,{},{params:{rid:params.id},headers:{
+      "Authorization":`Bearer ${Cookies.get('access-token')}`
+    }});
     if(res.data.success){
       toast({
         title:'Tracker started',
@@ -82,10 +91,12 @@ const handleStartTracker = async()=>{
     const fetchTracker = async()=>{
   
       try {
+        const headers:any = {}
+        if(isAuthenticated){
+          headers.Authorization = `Bearer ${Cookies.get('access-token')}`
+        }
         if(data!=null && auth.isAuthenticated){
-          const res = await axios.get(`${BACKEND_URL}/tracker?rid=${params.id}`,{headers:{
-            "Authorization":`Bearer ${Cookies.get('access-token')}`
-          }});
+          const res = await axios.get(`${BACKEND_URL}/tracker?rid=${params.id}`,{headers:headers});
           if(res.data.success && res.data.tracker){
             setTracker(res.data.tracker);
             const index = videos.findIndex((_v:any)=>_v._id===res.data.tracker.recent);
@@ -98,7 +109,7 @@ const handleStartTracker = async()=>{
           return res.data.tracker;
         }
         else{
-          setIsLoading(false);
+          // setIsLoading(false);
         }
        
       } catch (error) {
@@ -107,29 +118,33 @@ const handleStartTracker = async()=>{
         return new Error(message)
       }
       finally{
-        setIsLoading(false)
+        // setIsLoading(false)
       }
     }
-    const {data:_data} = useQuery({
-      queryKey:['resource',params.id],
+    const {data:_data,isLoading:isResourceLoading} = useQuery({
+      queryKey:['resource',params.id,isAuthenticated],
       retry:false,
       refetchOnWindowFocus:false,
       queryFn:fetchResource
     })  
-    const {data:_tracker} = useQuery(
+    const {data:_tracker,isLoading:isTrackerLoading} = useQuery(
    
       {
-       queryKey:['tracker',params.id],
+       queryKey:['tracker',params.id,isAuthenticated],
         queryFn:fetchTracker,
         retry:false,
         refetchOnWindowFocus:false,
         staleTime:Infinity,
-        enabled:_data?.resource    });
+        enabled:!!_data });
     const handleProgressUpdate =async(index:number,status:boolean,id:string)=>{
       let videosCopy = [...videos];
 if(tracker){
   try {
-    const res = await axios.put(`/api/resources/tracker/update`,{tracker_id:tracker._id,lectureId:id,taken:status})
+    const res = await axios.put(`${BACKEND_URL}/tracker/`,{tracker_id:tracker._id,lectureId:id,taken:status},{
+      headers:{
+        "Authorization":`Bearer ${Cookies.get('access-token')}`
+      }
+    })
       if(res.data.success){
         videosCopy[index].taken = status;
         setVideos(videosCopy)
@@ -156,8 +171,8 @@ if(tracker){
   return (
 <>
 
-{  isLoading?(<Loader/>): ( <div className=''>
-  {!tracker &&!isLoading && (<div className='bg-black/50 flex justify-center items-center p-2 w-full'>
+{  isResourceLoading || isTrackerLoading || isLoading?(<Loader/>): ( <div className=''>
+  {!tracker &&!isResourceLoading && (<div className='bg-black/50 flex justify-center items-center p-2 w-full'>
 <Button onClick={handleStartTracker} className='bg-purple-600 text-white hover:bg-purple-900'>Start Tracker </Button>
 </div>)}
 {data && <div className="grid gap-5 md:flex justify-center   bg-slate-950 p-4">

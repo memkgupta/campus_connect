@@ -1,6 +1,6 @@
 'use client'
 import FilterBox from '@/components/study-materials/FilterBox'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -21,6 +21,9 @@ const Page = ({params}:{params:{type:string,id:string}}) => {
   const [subjects,setSubjects] = useState<{value:string,label:string,id:string}[]>([]);
   
   const [data,setData] = useState<any[]>([]);
+  useEffect(()=>{
+console.log(data)
+  },[data])
   return (
     <div>
         <FilterBox type={type} subjectsState={setSubjects} loading={setIsLoading} url={`${BACKEND_URL}/resources`} state={setData}/>

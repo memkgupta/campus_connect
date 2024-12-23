@@ -2,7 +2,7 @@ export default function HorizontalProjectCard({data}:{data:{details:{
     banner:string,title:string,openForCollab:boolean,category:string,tags:string[],updatedAt:Date
 },upvoteCount:number,downvoteCount:number,}}) {
     return (
-      <div className="max-w-md mx-auto">
+      <div className="min-w-[500px] mx-auto">
         <div className="flex bg-blue-900 text-white shadow-md rounded-lg overflow-hidden">
           {/* Banner */}
           <div className="w-24">
@@ -16,17 +16,17 @@ export default function HorizontalProjectCard({data}:{data:{details:{
           {/* Content */}
           <div className="flex-1 p-3">
             {/* Title */}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center gap-3">
               <h2 className="text-lg font-medium truncate">
                 {data.details.title || "No Title"}
               </h2>
               {data.details.openForCollab ? (
                 <span className="bg-green-500 text-xs px-2 py-1 rounded">
-                  Open
+                  Public
                 </span>
               ) : (
                 <span className="bg-red-500 text-xs px-2 py-1 rounded">
-                  Closed
+                  Private
                 </span>
               )}
             </div>

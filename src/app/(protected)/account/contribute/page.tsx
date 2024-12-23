@@ -22,9 +22,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { yearTillNow } from "@/helpers/yearUtility";
 import { useDebounceCallback } from "usehooks-ts";
 import Link from "next/link";
-import { branches, resourceTypes, universities } from "@/constants";
+import { BACKEND_URL, branches, resourceTypes, universities } from "@/constants";
 import { Label } from "@/components/ui/label";
 import FileUpload from "@/components/utils/FileUpload";
+import { headers } from "next/headers";
+import Cookies from "js-cookie";
 const Page = () => {
   const date = new Date();
   const isContributor = useContext(ContributorContext);
@@ -86,7 +88,9 @@ const Page = () => {
       };
       try {
         setIsSubmitting(true);
-        const res = await axios.post(`/api/contributor`, data);
+        const res = await axios.post(`${BACKEND_URL}/resources/upload-resource`,data,{headers:{
+          "Authorization":`Bearer ${Cookies.get('access-token')}`
+        }});
         if (res.status === 200) {
           toast({
             title: "Your contribution was added thank you",
@@ -133,7 +137,7 @@ const Page = () => {
     }
     const fetchSubjects = async () => {
       try {
-        const res = await axios.get(`/api/subjects`, { params: params });
+        const res = await axios.get(`${BACKEND_URL}/utils/subjects`, { params: params });
         const data = res.data;
         if (data.success) {
           setSubjects(data.subjects);
@@ -146,7 +150,7 @@ const Page = () => {
   }, [year, selectedBranch]);
   return (
     <>
-      {isContributor ? (
+   
         <>
           <div className="flex justify-center ">
             <div className="grid md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 ">
@@ -251,27 +255,7 @@ const Page = () => {
             </div>
           </div>
         </>
-      ) : (
-        <>
-          <div className="flex items-center justify-center mt-20 bg-slate-950 text-white">
-            <div className="bg-slate-800/30 p-6 rounded-lg shadow-lg max-w-md text-center">
-              <h2 className="text-2xl font-bold mb-4">
-                Not a Contributor Yet?
-              </h2>
-              <p className="mb-6">
-                You are not currently a contributor. Click the link below to
-                fill out the form and become a contributor.
-              </p>
-              <Link
-                href="https://forms.gle/5pyeVcoRk68FbE9v8"
-                className="text-blue-900"
-              >
-                Become a contributor
-              </Link>
-            </div>
-          </div>
-        </>
-      )}
+      
     </>
   );
 };

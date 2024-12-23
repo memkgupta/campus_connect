@@ -57,12 +57,11 @@ export interface ProjectFormData {
       tags: string;
       projectImage: string | null;
       problemStatement: string;
-      objectives: string;
-      features: string;
+    
       technologiesUsed: string;
       status: string;
-      teamMembers: TeamMember[];
-      projectLead: string;
+      // teamMembers: TeamMember[];
+      // projectLead: string;
       projectURL: string;
       githubRepoLink: string;
       documentation: string | null;
@@ -80,7 +79,39 @@ export interface ProjectFormData {
       privacySettings: string;
       approvalStatus: string;
     }
- 
+    export interface User {
+      _id: string;
+      name: string;
+      email: string;
+    }
+    
+    export interface Contributor {
+      user: User;
+      role: string;
+    }
+    
+    export interface Project {
+      _id: string;
+      user: User;
+      category: string;
+      title: string;
+      description: string;
+      banner: string;
+      images: string[];
+      openForCollab: boolean;
+      start: string;
+      end?: string;
+      documentation?: string;
+      demo?: string;
+      currently_working: boolean;
+      tags: string[];
+      status: string;
+      technologiesUsed: string[];
+      lead?: string;
+      live_link?: string;
+      github?: string;
+      contributors: Contributor[];
+    }
     export interface ProjectResponseData{
       
       category:string,

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ComboBox from "../ComboBox";
 import axios from "axios";
 import { useToast } from "../ui/use-toast";
-import { BACKEND_URL, paperType, universities } from "@/constants";
+import { BACKEND_URL, branches, paperType, universities } from "@/constants";
 import { yearTillNow } from "@/helpers/yearUtility";
 import {
   useQuery,
@@ -131,7 +131,7 @@ const fetchResources = async()=>{
       params.sessionYear = selectedSession.value;
     }
     if(subject){
-      params.subject = subject.value;
+      params.code = subject.value;
     }
     if(selectedPaperType){
       params.paperType = selectedPaperType.value
@@ -211,6 +211,10 @@ const {data:resourceData,isSuccess} = useQuery<any>(
           stateSetter={setSubject}
         />
       )}
+      {
+     ( parseInt(year.value)>1) && <ComboBox label="Select Branch"
+      options={branches} stateSetter={setSelectedBranch}/>
+      }
       {filters.university && (
         <ComboBox
           label="Select university"
