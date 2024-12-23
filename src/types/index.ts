@@ -79,11 +79,7 @@ export interface ProjectFormData {
       privacySettings: string;
       approvalStatus: string;
     }
-    export interface User {
-      _id: string;
-      name: string;
-      email: string;
-    }
+   
     
     export interface Contributor {
       user: User;
