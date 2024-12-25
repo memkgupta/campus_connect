@@ -15,63 +15,38 @@ import { useToast } from '@/components/ui/use-toast';
 import { yearTillNow } from '@/helpers/yearUtility';
 import { useDebounceCallback } from 'usehooks-ts';
 import Link from 'next/link';
-import { branches, resourceTypes, universities } from '@/constants';
+import { BACKEND_URL, branches, resourceTypes, universities } from '@/constants';
 import { Label } from '@/components/ui/label';
 import { YTLecture } from '@/types';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { extractLecturesFromYtPlaylist } from '@/utils/yt';
+
 import { useQuery } from '@tanstack/react-query';
+import Cookies from 'js-cookie';
+import { useSession } from '@/hooks/useSession';
+import { PlaylistManager } from '@/components/resources/lectures/playlist-manager';
 const Page = () => {
    
     const date = new Date();
-    const isContributor = useContext(ContributorContext);
+    // const isContributor = useContext(ContributorContext);
   const [isSubmitting,setIsSubmitting] = useState(false);
     const {toast} = useToast();
         const [year,setYear] = useState({
         value:'1',label:"1st year",id:'1'
         })
-const [playListUrl,setPlayListUrl] = useState<string>('')
-const [loading,setLoading] = useState(false);
-const [playList,setPlayList] = useState<YTLecture[]>([]);        
+
+       
 const [sessionYear,setSessionYear] = useState({value:(date.getFullYear()-1).toString(),label:(date.getFullYear()-1).toString(),id:(date.getFullYear()-1).toString()});
 const [selectedSubject,setSelectedSubject] = useState<{value:string,label:string,id:string}|null>(null);
 const [selectedBranch,setSelectedBranch] = useState<{value:string,label:string,id:string}|null>({value:'first-year',label:'First Year',id:'first-year'});
 // const [resourceType,setResourceType] = useState<{value:string,label:string,id:string}|null>();
-   
+   const {isAuthenticated} = useSession()
     const [subjects,setSubjects] = useState([]);
     const [label,setLabel] = useState("");
     const [selectedUniversity,setSelectedUniversity] = useState({value:'AKTU',label:'AKTU',id:'AKTU'})
-    // const[tempPlaylist,setTempPlaylist] = useSt
-  
-    function validateYouTubePlaylistUrl(url:string) {
-      // Regular expression to match YouTube playlist URL formats
-      const regex = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/|youtu\.be\/)(?:playlist\?list=)([A-Za-z0-9_-]+)$/;
-  
-      // Test the URL against the regular expression
-      return regex.test(url);
-  }
-const checkPlayList = async()=>{
-  setLoading(true);
-  if(validateYouTubePlaylistUrl(playListUrl)){
-try {
-  const res = await extractLecturesFromYtPlaylist(playListUrl);
-  setPlayList(res);
-} catch (error:any) {
-  
-  toast({
-    title:error.message
-  })
-}
-finally{
-  setLoading(false);
-}
-  }
-  else{
-    setLoading(false);
-  
-    toast({title:"Invalid url",variant:"destructive"})
-  }
-}
+    const [videos, setVideos] = useState<YTLecture[]>([]);
+
+ 
+
 const fetchSubjects = async()=>{
   let params:any = {}
   if(year){
@@ -93,12 +68,15 @@ const fetchSubjects = async()=>{
    }
 }
     const handleSubmit = async()=>{
-if(selectedBranch&&selectedSubject&&year&&playList.length!=0&&sessionYear){
+      if(!isAuthenticated){
+        return;
+      }
+if(selectedBranch&&selectedSubject&&year&&videos.length!=0&&sessionYear){
 const data = {
     label:label,
     type:'lectures',
   branch:selectedBranch.value,
-  playlist:playList,
+  playlist:videos,
   code:selectedSubject.value,
   collegeYear:year.value,
   sessionYear:sessionYear.value,
@@ -107,7 +85,11 @@ const data = {
 }
 try {
   setIsSubmitting(true);
-  const res = await axios.post(`/api/contributor`,data);
+  const res = await axios.post(`${BACKEND_URL}/resources/upload-resource`,data,{
+    headers:{
+      "Authorization":`Bearer ${Cookies.get('access-token')}`
+    }
+  });
   if(res.status===200){
     toast({
       title:'Your contribution was added thank you',
@@ -153,9 +135,7 @@ finally{
   queryFn:fetchSubjects
  }) 
   return (
-  <>
-  {
-    isContributor?(<>
+<>
   <div className='flex justify-center max-w-2/3'>
   <div className="grid md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 ">
     
@@ -197,16 +177,14 @@ finally{
     <ComboBox options={yearTillNow()} stateSetter={setSessionYear} label='Session Year'/>
    <ComboBox options={subjects} label='Select Subject' stateSetter={setSelectedSubject}/>
    <ComboBox options={universities} label='Select University' stateSetter={setSelectedUniversity}/>
-   <div className='flex gap-2 justify-center col-span-2'>
-<Input type='url' placeholder='Link of yt playlist' className='min-w-[500px]' onChange={(e)=>{setPlayListUrl(e.target.value)}} />
-<Button onClick={checkPlayList}>{loading?(<Loader2 className='animate-spin'/>):'Check'}</Button>
-      </div>   
+   <Button onClick={handleSubmit}  disabled={isSubmitting} className='bg-yellow-300 w-32 hover:bg-yellow-400  text-black'>{!isSubmitting?'Upload':(<>
+    <p>Uploading</p><Loader2 className='animate-spin'/></>)}</Button>
     </div>
 
   
   
   </div>
-  <div className='flex justify-center'>
+  {/* <div className='flex justify-center'>
   <div className="mt-12 flex justify-center gap-5  w-3/4">
   {playListUrl &&  <Card className='min-h-[500px] px-3'>
 <CardHeader >Preview</CardHeader>
@@ -225,28 +203,17 @@ finally{
     </Card>}
     <div className='flex flex-col gap-4'>
       
-    <Button onClick={handleSubmit}  disabled={isSubmitting} className='bg-yellow-300 w-32 hover:bg-yellow-400 text-black'>{!isSubmitting?'Upload':(<>
-      <p>Uploading</p><Loader2 className='animate-spin'/></>)}</Button>
-    </div>
+   
 
    </div>
-  </div>
+  </div> */}
+ <PlaylistManager videos={videos} setVideos={setVideos}/>
+ <div className='w-full justify-center mt-12 flex'>
  
-       </>):
-       (
-        <>
-          <div className="flex items-center justify-center mt-20 bg-slate-950 text-white">
-      <div className="bg-slate-800/30 p-6 rounded-lg shadow-lg max-w-md text-center">
-        <h2 className="text-2xl font-bold mb-4">Not a Contributor Yet?</h2>
-        <p className="mb-6">You are not currently a contributor. Click the link below to fill out the form and become a contributor.</p>
-       <Link href='https://forms.gle/5pyeVcoRk68FbE9v8' className='text-blue-900'>Become a contributor</Link>
-      </div>
-    </div>
-        </>
-       )
-  }
-  </>
-  
+ </div>
+ 
+    
+       </>
 
 
 

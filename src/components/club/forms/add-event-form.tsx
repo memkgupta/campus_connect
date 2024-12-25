@@ -37,11 +37,11 @@ import axios from "axios"
 // import { toast } from "react-toastify"
 import FileUpload from "@/components/utils/FileUpload"
 import { ClubContext } from "@/context/ClubContext"
-import { eventCategories } from "@/constants"
+import { BACKEND_URL, eventCategories } from "@/constants"
 import { useToast } from "@/components/ui/use-toast"
 import { title } from "process"
 import { useRouter } from "next/navigation"
-
+import Cookies from "js-cookie"
 // Mock event categories enum
 const eventCategoriesEnum = [
   "Conference",
@@ -77,7 +77,7 @@ const formSchema = z.object({
   maxCapacity: z.number().min(1, {
     message: "Max capacity must be at least 1.",
   }),
-  forms: z.array(
+  external_forms: z.array(
     z.object({
       label: z.string().min(1, "Label is required"),
       form: z.string().optional(),
@@ -99,12 +99,12 @@ export default function AddEventForm() {
       participantsFromOutsideAllowed: false,
       isAcceptingVolunteerRegistrations: false,
       maxCapacity: 100,
-      forms: [],
+      external_forms: [],
     },
   })
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "forms",
+    name: "external_forms",
   })
   const router = useRouter()
  async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -116,7 +116,9 @@ export default function AddEventForm() {
     })
     return;
   }
-  const res = await axios.post(`/api/club/dashboard/events/add`,{...values,banner:bannerUrl,clubId:clubContext?._id});
+  const res = await axios.post(`${BACKEND_URL}/events/add-event`,{...values,banner:bannerUrl,clubId:clubContext?._id},{headers:{
+    "Authorization":`Bearer ${Cookies.get('access-token')}`
+  }});
   if(res.data.success){
     toast.toast({
       title:"Event Created Successfully"
@@ -333,7 +335,7 @@ export default function AddEventForm() {
             <div key={field.id} className="mb-4 space-y-4">
               <FormField
                 control={form.control}
-                name={`forms.${index}.label`}
+                name={`external_forms.${index}.label`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Form Label</FormLabel>
@@ -346,7 +348,7 @@ export default function AddEventForm() {
               />
               <FormField
                 control={form.control}
-                name={`forms.${index}.link`}
+                name={`external_forms.${index}.link`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Form Link</FormLabel>

@@ -1,5 +1,5 @@
 "use client"
-import { useSession } from 'next-auth/react'
+import { useSession } from '@/hooks/useSession'
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -24,20 +24,20 @@ const [collegeId,setCollegeId] = useState(null);
   const [preview, setPreview] = useState<any>(null);
     const[isSubmitting,setIsSubmitting] = useState(false);
     const [logoUrl,setLogoUrl] = useState<any>(null)
-    const {data:session,status} = useSession();
+    const {isAuthenticated} = useSession();
     const router = useRouter();
 const profileRef = useRef<HTMLInputElement | null>(null);
   
     
     
     useEffect(()=>{
-        if(status=="unauthenticated"){
+        if(!isAuthenticated){
 router.replace(`/sign-in?next=${encodeURIComponent("/account/register-a-club")}`);
         }
-        if(status=="authenticated"){
+        if(isAuthenticated){
           setIsLoading(false)
         }
-    },[status])
+    },[isAuthenticated])
     const {toast} = useToast()
  
    

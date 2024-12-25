@@ -8,18 +8,22 @@ const ComboBox = ({options,stateSetter,label,defaultNull}:{options:{id:string,va
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState<{ id:string,value: string; label: string; }|null>(defaultNull?null:options[0])
     const [query,setQuery] = useState('');
-    const filteredData =
-    query === ''
+    const [filteredData,setFilteredData] =useState(
+      query === ''
       ? options
       : options.filter((option) => {
           return option.label.toLowerCase().includes(query.toLowerCase())
         })
+    )
+  
    useEffect(()=>{
 stateSetter(value);
    },[value])
-   const handleSubmit= async()=>{
-    
-   }
+   useEffect(()=>{
+setFilteredData(options);
+ 
+   },[options])
+  
     return (
         <div className="  w-52 ">
             <p className="text-sm text-slate-700">{label}</p>

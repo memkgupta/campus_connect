@@ -1,13 +1,16 @@
+import { BACKEND_URL } from '@/constants'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Link from 'next/link'
 import React, { useState } from 'react'
-
+import Cookies from 'js-cookie'
 const ActiveCourse = () => {
   const [courses,setCourses] = useState([])
   const fetchActiveCourses = async()=>{
     try {
-      const res = await axios.get(`/api/resources/tracker/my-courses?limit=3&page=1`);
+      const res = await axios.get(`${BACKEND_URL}/tracker/courses?limit=3&page=1`,{headers:{
+        "Authorization":`Bearer ${Cookies.get('access-token')}`
+      }});
       if(res.data.success){
         setCourses(res.data.courses)
         return res.data.courses; 
@@ -20,7 +23,8 @@ const ActiveCourse = () => {
 
 const _d = useQuery({
   queryKey:[],
-  queryFn:fetchActiveCourses
+  queryFn:fetchActiveCourses,
+  refetchOnWindowFocus:false
 })
   return (
 <>
