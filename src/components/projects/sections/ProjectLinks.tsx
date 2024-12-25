@@ -48,6 +48,7 @@ export default function ProjectLinks({ project }: { project: Project }) {
 
       <EditDialog
         isOpen={isEditing}
+        pid={project._id}
         onClose={() => setIsEditing(false)}
         title="Edit Project Links"
         fields={fields}
