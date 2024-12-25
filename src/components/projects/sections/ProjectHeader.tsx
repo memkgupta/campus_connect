@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import EditDialog from '../dialogs/EditDialog';
 import { Project } from '@/types/index';
+import { projectCategories } from '@/constants';
 
 export default function ProjectHeader({ project }: { project: Project }) {
   const [isEditing, setIsEditing] = useState(false);
 
   const fields = [
     { name: 'title', label: 'Title', type: 'text' },
-    { name: 'category', label: 'Category', type: 'select', options: ['Web Development', 'Mobile App', 'Machine Learning', 'Data Science', 'DevOps', 'Other'] },
+    { name: 'category', label: 'Category', type: 'select', options: projectCategories },
     { name: 'banner', label: 'Banner Image', type: 'image' }
   ];
 
@@ -27,11 +28,12 @@ export default function ProjectHeader({ project }: { project: Project }) {
       </span>
 
       <EditDialog
+      pid={project._id}
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
         title="Edit Project Header"
         fields={fields}
-        initialData={project}
+        initialData={{title:project.title,category:project.category,banner:project.banner}}
         onSave={async (data) => {
           console.log('Saving:', data);
           // Implement save logic

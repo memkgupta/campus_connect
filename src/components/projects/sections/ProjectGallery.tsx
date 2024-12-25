@@ -30,6 +30,7 @@ export default function ProjectGallery({ project }: { project: Project }) {
 
       <EditDialog
         isOpen={isEditing}
+        pid={project._id}
         onClose={() => setIsEditing(false)}
         title="Edit Project Gallery"
         fields={fields}

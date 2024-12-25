@@ -39,29 +39,20 @@ export function DataTable<TData, TValue>({
     pageSize: number;
 }>>}) {
     const [sorting, setSorting] = React.useState<SortingState>([])
-   
-      
-  
-     
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel:getPaginationRowModel(),
     manualPagination:true,
     autoResetPageIndex:false,
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-   
     pageCount:count,
     onPaginationChange:onPaginationChange,
-    
-   
     state: {
       sorting,pagination
     },
   })
-//  console.log(table.getColumn("user_name"))
   return (
  <div>
        <div className="flex items-center py-4">

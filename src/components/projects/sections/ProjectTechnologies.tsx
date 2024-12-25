@@ -24,7 +24,7 @@ export default function ProjectTechnologies({ project }: { project: Project }) {
       <div className="mb-4">
         <h3 className="text-lg text-yellow-400 mb-2">Technologies</h3>
         <div className="flex flex-wrap gap-2">
-          {project.technologiesUsed.map((tech) => (
+          {project.technologiesUsed.split(',').map((tech) => (
             <span key={tech} className="bg-blue-900 text-white px-3 py-1 rounded-full text-sm">
               {tech}
             </span>
@@ -35,7 +35,7 @@ export default function ProjectTechnologies({ project }: { project: Project }) {
       <div>
         <h3 className="text-lg text-yellow-400 mb-2">Tags</h3>
         <div className="flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
+          {project.tags.split(',').map((tag) => (
             <span key={tag} className="bg-blue-900 text-white px-3 py-1 rounded-full text-sm">
               {tag}
             </span>
@@ -45,13 +45,14 @@ export default function ProjectTechnologies({ project }: { project: Project }) {
 
       <EditDialog
         isOpen={isEditing}
+        pid={project._id}
         onClose={() => setIsEditing(false)}
         title="Edit Technologies & Tags"
         fields={fields}
         initialData={project}
         onSave={async (data) => {
-          console.log('Saving:', data);
-          // Implement save logic
+          
+          
           setIsEditing(false);
         }}
       />

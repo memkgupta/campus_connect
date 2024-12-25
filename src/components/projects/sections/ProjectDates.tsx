@@ -32,13 +32,14 @@ export default function ProjectDates({ project }: { project: Project }) {
       </div>
 
       <EditDialog
+      pid={project._id}
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
         title="Edit Project Timeline"
         fields={fields}
         initialData={project}
         onSave={async (data) => {
-          console.log('Saving:', data);
+          
           // Implement save logic
           setIsEditing(false);
         }}

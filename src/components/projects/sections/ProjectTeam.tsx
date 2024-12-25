@@ -21,12 +21,7 @@ export default function ProjectTeam({ project }: { project: Project }) {
 
   return (
     <div className="bg-gray-900 p-6 rounded-lg relative">
-      <button
-        onClick={() => setIsEditing(true)}
-        className="absolute top-4 right-4 text-yellow-400 hover:text-yellow-300"
-      >
-        Edit
-      </button>
+    
 
       <h2 className="text-xl font-semibold text-yellow-400 mb-4">Team</h2>
       
@@ -60,18 +55,7 @@ export default function ProjectTeam({ project }: { project: Project }) {
         </div>
       )}
 
-      <EditDialog
-        isOpen={isEditing}
-        onClose={() => setIsEditing(false)}
-        title="Edit Team Information"
-        fields={fields}
-        initialData={project}
-        onSave={async (data) => {
-          console.log('Saving:', data);
-          // Implement save logic
-          setIsEditing(false);
-        }}
-      />
+  
     </div>
   );
 }

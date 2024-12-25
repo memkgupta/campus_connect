@@ -41,6 +41,7 @@ export default function ProjectDescription({ project }: { project: Project }) {
 
       <EditDialog
         isOpen={isEditing}
+        pid={project._id}
         onClose={() => setIsEditing(false)}
         title="Edit Project Description"
         fields={fields}

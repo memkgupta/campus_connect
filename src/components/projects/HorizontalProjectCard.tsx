@@ -1,5 +1,5 @@
 export default function HorizontalProjectCard({data}:{data:{details:{
-    banner:string,title:string,openForCollab:boolean,category:string,tags:string[],updatedAt:Date
+    banner:string,title:string,openForCollab:boolean,category:string,tags:string,updatedAt:Date
 },upvoteCount:number,downvoteCount:number,}}) {
     return (
       <div className="min-w-[500px] mx-auto">
@@ -38,7 +38,7 @@ export default function HorizontalProjectCard({data}:{data:{details:{
   
             {/* Tags */}
             <div className="mt-2 flex flex-wrap gap-1">
-              {data.details.tags.slice(0, 3).map((tag, index) => (
+              {data.details.tags.split(',').slice(0, 3).map((tag, index) => (
                 <span
                   key={index}
                   className="bg-blue-700 text-xs px-2 py-1 rounded"

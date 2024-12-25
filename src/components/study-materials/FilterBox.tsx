@@ -84,6 +84,9 @@ try {
    const res  = await axios.get(`${BACKEND_URL}/utils/subjects/${params}`);
    const data = res.data;
    subjectsState(data.subjects);
+   res.data.subjects.unshift({
+    value:'',label:'All',id:'All'
+   })
    return res.data.subjects;
   
 } catch (error) {
@@ -166,10 +169,7 @@ const {data:resourceData,isSuccess} = useQuery<any>(
         retry:false
   }
 )
-// const {data:sources,isFetching} = useQuery<any>({
-//   queryKey:['sources'],
-//   queryFn:
-// })
+
 
  
   return (

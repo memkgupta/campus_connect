@@ -7,25 +7,44 @@ import axios, { AxiosError } from 'axios'
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, BuildingIcon, FlagIcon, UserPlusIcon, ClipboardIcon } from 'lucide-react'
+import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, BuildingIcon, FlagIcon, UserPlusIcon, ClipboardIcon, ExternalLink, Trash2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import Image from 'next/image'
-import { useQueries, useQuery } from '@tanstack/react-query'
+import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import UpdateEventForm from '@/components/component/update-event-form'
+import { BACKEND_URL } from '@/constants'
+import Cookies from 'js-cookie'
+import { FormsDialog } from '@/components/events/external-form-dialog'
+interface Form {
+  _id: string;
+  label: string;
+  link: string;
+  form: string;
+}
+
+
 const EventPage = ({params}:{params:{id:string}}) => {
     const [data,setData] = useState<any>(null);
     const {toast} = useToast();
+    const queryClient = useQueryClient()
     const [isLoading,setIsLoading] = useState<boolean>(true);
+  const[external_forms,setExternalForms] = useState<Form[]>([]);
     const fetchEvent = async()=>{
         try {
             setIsLoading(true)
-            const res = await axios.get(`/api/club/dashboard/events/${params.id}`);
+            const res = await axios.get(`${BACKEND_URL}/events/dashboard/${params.id}`,{headers:{
+              "Authorization":`Bearer ${Cookies.get('access-token')}`
+            }});
             const data = res.data;
             setData(data.data)
             // setIsRegistered(data.registered)
+            if(data.data.external_forms){
+              setExternalForms(data.data.external_forms)
+
+            }
             return {data:data}
         } catch (error) {
           console.log(error)
@@ -51,12 +70,69 @@ const EventPage = ({params}:{params:{id:string}}) => {
             setIsLoading(false)
         }
     }
+    const handleAdd = async(edata: Omit<Form, '_id'>) => {
+      const newForm = {
+        ...edata,
+        _id: crypto.randomUUID()
+      };
+   
+      try {
+        const res = await axios.put(`${BACKEND_URL}/events/${data._id}`,{external_forms:[...external_forms,newForm]},{headers:{
+          "Authorization":`Bearer ${Cookies.get('access-token')}`
+        }});
+        // queryClient.invalidateQueries()
+      } catch (error) {
+        toast({
+          title:"Some error occured",
+          variant:"destructive"
+        })
+      }
+      setExternalForms((prev:Form[]) => [...prev, newForm]);
+
+    };
+  
+    const handleEdit = (_id: string) => async(edata: Omit<Form, '_id'>) => {
+      setExternalForms(prev => prev.map(form => 
+        form._id === _id ? { ...edata, _id } : form
+      ));
+      const ex = external_forms.map(form => 
+        form._id === _id ? { ...edata, _id } : form)
+      try {
+        const res = await axios.put(`${BACKEND_URL}/events/${data._id}`,{external_forms:ex},{headers:{
+          "Authorization":`Bearer ${Cookies.get('access-token')}`
+        }});
+        // queryClient.invalidateQueries()
+      } catch (error) {
+        toast({
+          title:"Some error occured",
+          variant:"destructive"
+        })
+      }
+     
+    };
+  
+    const handleDelete = async(id: string) => {
+      const ex = external_forms.filter(form => form._id !== id)
+      try {
+        const res = await axios.put(`${BACKEND_URL}/events/${data._id}`,{external_forms:ex},{headers:{
+          "Authorization":`Bearer ${Cookies.get('access-token')}`
+        }});
+        // queryClient.invalidateQueries()
+      } catch (error) {
+        toast({
+          title:"Some error occured",
+          variant:"destructive"
+        })
+      }
+      setExternalForms(prev => prev.filter(form => form._id !== id));
+    };
     useQuery({
       queryKey:[params],
       queryFn:fetchEvent,
       retry:false,
       refetchOnWindowFocus:false
     })
+
   return (
   <>
    {isLoading ? (
@@ -153,23 +229,57 @@ const EventPage = ({params}:{params:{id:string}}) => {
             </CardContent>
           </Card>
   
-          {data.forms.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Additional Forms</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-disc pl-5 space-y-2">
-                  {data.forms.map((form:any, index:number) => (
-                    <li key={index}>
-                      <a href={form.link} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                        {form.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
+          {(
+             <div className="space-y-6">
+             <div className="flex justify-end">
+               <FormsDialog mode="add" onSubmit={handleAdd} />
+             </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+               {external_forms&&external_forms.map((form:any) => (
+                 <Card key={form._id} className="bg-slate-900 border-slate-800">
+                   <CardContent className="p-6">
+                     <div className="space-y-4">
+                       <div className="flex justify-between items-start">
+                         <h3 className="text-lg font-semibold text-white">{form.label}</h3>
+                         <div className="flex gap-2">
+                           <FormsDialog
+                             mode="edit"
+                             initialData={form}
+                             onSubmit={handleEdit(form.id)}
+                           />
+                           <Button
+                             variant="outline"
+                             size="sm"
+                             className="border-red-400 text-red-400 hover:bg-red-400 hover:text-slate-950"
+                             onClick={() => handleDelete(form.id)}
+                           >
+                             <Trash2 className="w-4 h-4" />
+                           </Button>
+                         </div>
+                       </div>
+                       <div className="space-y-2">
+                         <div className="text-sm text-slate-400">Form ID: {form.form}</div>
+                         <a 
+                           href={form.link} 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           className="inline-flex items-center text-yellow-400 hover:text-yellow-300 text-sm"
+                         >
+                           View Form
+                           <ExternalLink className="w-4 h-4 ml-1" />
+                         </a>
+                       </div>
+                     </div>
+                   </CardContent>
+                 </Card>
+               ))}
+             </div>
+             {external_forms&&external_forms.length === 0 && (
+               <div className="text-center py-12">
+                 <p className="text-slate-400">No forms available. Add your first form to get started.</p>
+               </div>
+             )}
+           </div>
           )}
   
          

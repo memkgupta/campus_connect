@@ -40,7 +40,7 @@ export type EventParticipantRequestResponse = {
 }
 
 export type YTLecture = {
-      _id: string | null | undefined; label: string | null | undefined; videoUrl: string; thumbnail:string|null|undefined
+      _id: string | null | undefined; label: string | null | undefined; videoUrl: string; thumbnail:string|null|undefined,description:string|null|undefined
 
 }
 export interface TeamMember{
@@ -69,8 +69,8 @@ export interface ProjectFormData {
       openForCollaboration: boolean;
       contactInformation: string;
       feedbackComments: string;
-      startDate: string;
-      endDate: string;
+      startDate: Date;
+      endDate: Date | undefined;
       license: string;
       challengesFaced: string;
       futureScope: string;
@@ -100,9 +100,9 @@ export interface ProjectFormData {
       documentation?: string;
       demo?: string;
       currently_working: boolean;
-      tags: string[];
+      tags: string;
       status: string;
-      technologiesUsed: string[];
+      technologiesUsed: string;
       lead?: string;
       live_link?: string;
       github?: string;

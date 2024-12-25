@@ -24,6 +24,7 @@ import { useForm } from 'react-hook-form';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { format } from "date-fns"
 
 export function AddProjectForm() {
   const router = useRouter()
@@ -47,8 +48,8 @@ export function AddProjectForm() {
     openForCollaboration: false,
     contactInformation: '',
     feedbackComments: '',
-    startDate: '',
-    endDate: '',
+    startDate: new Date(),
+    endDate: undefined,
     license: '',
     challengesFaced: '',
     futureScope: '',
@@ -70,7 +71,7 @@ const [isLoading,setIsLoading] = useState(false);
 const handleSubmit = async()=>{
   setIsLoading(true)
   console.log(formData)
-  if(formData.projectCategory==''||formData.projectTitle==''||formData.projectDescription==''||formData.projectImage== null||formData.githubRepoLink==''||formData.contactInformation==''||formData.startDate==''
+  if(formData.projectCategory==''||formData.projectTitle==''||formData.projectDescription==''||formData.projectImage== null||formData.githubRepoLink==''||formData.contactInformation==''||formData.startDate==undefined
   ){
     toast({
       title:'Please fill all the fields',
@@ -87,9 +88,10 @@ const handleSubmit = async()=>{
   data.banner = formData.projectImage;
   data.openForCollab = formData.openForCollaboration;
   data.start = formData.startDate;
+  data.technologiesUsed = formData.technologiesUsed.replace(', ',',').replace(' ,',',');
   data.end = formData.endDate;
-  data.currently_working = formData.endDate!=''||formData.status!="completed"
-  data.tags = formData.tags.trim().replace(' ','').split(',');
+  data.currently_working = formData.endDate!=undefined||formData.status!="completed"
+  data.tags = formData.tags.trim().replace(', ',',').replace(' ,',',');
   data.live = formData.projectURL;
   data.github_repos = formData
   .githubRepoLink;
@@ -253,12 +255,12 @@ setIsLoading(false);
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button variant="outline" className="w-full justify-start font-normal">
-                        {formData.startDate!=''?formData.startDate:'Pick a date '}
+                        {formData.startDate!=undefined?format(formData.startDate,'dd/MM/yyyy'):'Pick a date '}
                         <div className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar selected={formData.startDate!=''?parseDDMMYYYYToDate(formData.startDate):undefined}  onSelect={(day)=>day&&setFormData({...formData,startDate:formatDateToDDMMYYYY(day)})} mode="single" />
+                      <Calendar selected={formData.startDate!=undefined?formData.startDate:undefined}  onSelect={(day)=>day&&setFormData({...formData,startDate:day})} mode="single" />
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -267,12 +269,12 @@ setIsLoading(false);
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button variant="outline" className="w-full justify-start font-normal">
-                      {formData.endDate!=''?formData.endDate:'Pick a date '}
+                      {formData.endDate!=undefined?format(formData.endDate,'dd/MM/YYYY'):'Pick a date '}
                         <div className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar selected={formData.endDate!=''?parseDDMMYYYYToDate(formData.endDate):undefined} onSelect={(day)=>{day&&setFormData({...formData,endDate:formatDateToDDMMYYYY(day)}); console.log(day)}} mode="single" />
+                      <Calendar selected={formData.endDate!=undefined?(formData.endDate):undefined} onSelect={(day)=>{day&&setFormData({...formData,endDate:day})}} mode="single" />
                     </PopoverContent>
                   </Popover>
                 </div>

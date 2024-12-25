@@ -66,7 +66,10 @@ const Page = () => {
        </div>
          <div className='grid grid-cols-3 gap-3 mt-4'>
        {projects.map((project:any)=>(
-         <HorizontalProjectCard data={project}/>
+        <Link key={project._id} href={`/account/projects/my-projects/${project._id}`}>
+ <HorizontalProjectCard data={project}/>
+        </Link>
+        
        ))}
         </div>
         </>
