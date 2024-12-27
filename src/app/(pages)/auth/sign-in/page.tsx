@@ -66,7 +66,7 @@ function Signin() {
 
     
     useEffect(()=>{
-      if(authContext?.user){
+      if(authContext?.isAuthenticated){
         router.replace("/account")
       }
     },[authContext])
@@ -139,13 +139,5 @@ function Signin() {
       
     )
   }
-function page(){
-  return(
-   
-          <Suspense fallback={<div><Loader2 size={40} className='animate-spin text-gray-800'/></div>}>
-<Signin/>
-</Suspense>
-   
-  )
-}
-export default page
+
+export default Signin

@@ -39,29 +39,9 @@ Cookies.set('refreshToken',refreshToken,{expires:30});
     }
   }, []);
 
-  // const register = useCallback(async (credentials: RegisterCredentials) => {
-  //   try {
-  //     dispatch({ type: 'VERIFICATION_START' });
-  //     // Simulate API call
-  //     const response = await new Promise<User>((resolve) =>
-  //       setTimeout(() => resolve({
-  //         id: '1',
-  //         email: credentials.email,
-  //         name: 'John Doe',
-  //         verified:true,
-  //         username:'ff'
-  //       }), 1000)
-  //     );
-  //     dispatch({ type: 'REGISTER_SUCCESS', payload: response });
-  //     localStorage.setItem('user', JSON.stringify(response));
-  //   } catch (error) {
-  //     dispatch({ type: 'AUTH_ERROR', payload: 'Registration failed' });
-  //     throw error;
-  //   }
-  // }, []);
 const fetchSession = async()=>{
 const token = Cookies.get('access-token');
-// const refreshToken = Cookies.get('refresh-token')
+
 if(token){
 try {
   const request = await axios.get(`http://localhost:8080/api/v1/auth/session`,{headers:{
@@ -79,6 +59,7 @@ dispatch({type:'SET_SESSION',payload:user})
         fetchSession();
       }
     } catch (error) {
+      dispatch({type:'AUTH_ERROR',payload:""})
       console.log(error);
     }
   }
@@ -94,6 +75,7 @@ else{
         fetchSession();
       }
     } catch (error) {
+      dispatch({type:'AUTH_ERROR',payload:""})
       console.log(error);
     }
   }

@@ -137,3 +137,11 @@ projectData:ProjectResponseData
 
 }
 
+export type Field = {
+  _id: number;
+  fieldType: 'text' | 'textarea' | 'number' | 'date' | 'select' | 'radio' | 'checkbox' | 'image';
+ fieldLabel: string;
+  placeholder: string;
+isRequired: boolean;
+  options?: string[];
+};

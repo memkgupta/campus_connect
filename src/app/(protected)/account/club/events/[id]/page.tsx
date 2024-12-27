@@ -18,6 +18,7 @@ import UpdateEventForm from '@/components/component/update-event-form'
 import { BACKEND_URL } from '@/constants'
 import Cookies from 'js-cookie'
 import { FormsDialog } from '@/components/events/external-form-dialog'
+import Link from 'next/link'
 interface Form {
   _id: string;
   label: string;
@@ -26,7 +27,7 @@ interface Form {
 }
 
 
-const EventPage = ({params}:{params:{id:string}}) => {
+const Page = ({params}:{params:{id:string}}) => {
     const [data,setData] = useState<any>(null);
     const {toast} = useToast();
     const queryClient = useQueryClient()
@@ -228,7 +229,43 @@ const EventPage = ({params}:{params:{id:string}}) => {
               <p>{data.description}</p>
             </CardContent>
           </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      Forms
+                    </CardTitle>
+                  </CardHeader>
+<CardContent>
+{
+  data.registrationForm ?(
+<Card>
+    <CardHeader>
+      <CardTitle>
+      {data.registrationForm.formName}
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+    <Link href={`/account/club/events/forms/${data.registrationForm._id}`} className='bg-yellow-300 p-2 rounded-md text-black'>View</Link>
+    </CardContent>
+  </Card>
+  )
+  :(<Card>
+    <CardHeader>
+      <CardTitle>
+      Registration form
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className='grid gap-2'>
+        <p>No Registration form added</p>
+        <Link href={`/account/club/events/add-form?eid=${params.id}`} className='bg-yellow-300 p-2 rounded-md text-black mt-2 max-w-[100px] text-center'>Add</Link>
+      </div>
+    </CardContent>
+  </Card>)
+}
   
+</CardContent>
+                </Card>
           {(
              <div className="space-y-6">
              <div className="flex justify-end">
@@ -293,4 +330,4 @@ const EventPage = ({params}:{params:{id:string}}) => {
   )
 }
 
-export default EventPage
+export default Page
