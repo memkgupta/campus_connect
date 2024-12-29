@@ -145,3 +145,20 @@ export type Field = {
 isRequired: boolean;
   options?: string[];
 };
+export interface Registration {
+  _id: string;
+  user: {
+    username: string;
+    name: string;
+    email: string;
+  };
+  updatedAt: Date;
+}
+
+export interface FilterOptions {
+  search: string;
+  sortBy: string;
+  sortOrder: "asc" | "desc";
+  page: number;
+  onPageChange?: (page: number) => void;
+}

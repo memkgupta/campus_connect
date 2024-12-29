@@ -23,7 +23,11 @@ export const eventCategories = [
    
     
   ];
-
+export const eventFormTypes = [
+    {value:'registration',label:"Registration",id:'registration'},
+    {value:'feedback',label:'Feedback',id:'feedback'},
+    {value:'other',label:"Other",id:'other'}
+]
  export const branches = [
     { value: 'CSE CORE', label: 'Computer Science and Engineering (CORE)', id: 'cse-core' },
       { value: 'CSE AI', label: 'Computer Science and Engineering (Artificial Intelligence)', id: 'cse-ai' },

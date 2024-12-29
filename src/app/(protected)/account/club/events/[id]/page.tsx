@@ -7,7 +7,7 @@ import axios, { AxiosError } from 'axios'
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, BuildingIcon, FlagIcon, UserPlusIcon, ClipboardIcon, ExternalLink, Trash2 } from 'lucide-react'
+import { CalendarIcon, MapPinIcon,LineChart, UsersIcon, ClockIcon, BuildingIcon, FlagIcon, UserPlusIcon, ClipboardIcon, ExternalLink, Trash2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import Image from 'next/image'
@@ -167,6 +167,7 @@ const Page = ({params}:{params:{id:string}}) => {
           <Card>
             <CardHeader className='flex justify-between flex-row items-center'>
               <CardTitle>Event Details</CardTitle>
+              <Link href={`/account/club/events/analytics?eid=${params.id}`} className='flex gap-2 items-center bg-yellow-300 p-2 rounded-md text-black'>Analytics <LineChart/> </Link>
               <div className=''>
               <Dialog >
   <DialogTrigger className="bg-yellow-400 text-black p-2 rounded-md">Edit</DialogTrigger>
@@ -237,17 +238,19 @@ const Page = ({params}:{params:{id:string}}) => {
                   </CardHeader>
 <CardContent>
 {
-  data.registrationForm ?(
-<Card>
+  data.forms?.length>0 ?(
+data.forms.map((_form:{_id:string,formName:string})=>{
+  return(<Card>
     <CardHeader>
       <CardTitle>
-      {data.registrationForm.formName}
+      {_form.formName}
       </CardTitle>
     </CardHeader>
     <CardContent>
-    <Link href={`/account/club/events/forms/${data.registrationForm._id}`} className='bg-yellow-300 p-2 rounded-md text-black'>View</Link>
+    <Link href={`/account/club/events/forms/${_form._id}`} className='bg-yellow-300 p-2 rounded-md text-black'>View</Link>
     </CardContent>
-  </Card>
+  </Card>)
+})
   )
   :(<Card>
     <CardHeader>
@@ -257,7 +260,7 @@ const Page = ({params}:{params:{id:string}}) => {
     </CardHeader>
     <CardContent>
       <div className='grid gap-2'>
-        <p>No Registration form added</p>
+        <p>No Form added</p>
         <Link href={`/account/club/events/add-form?eid=${params.id}`} className='bg-yellow-300 p-2 rounded-md text-black mt-2 max-w-[100px] text-center'>Add</Link>
       </div>
     </CardContent>

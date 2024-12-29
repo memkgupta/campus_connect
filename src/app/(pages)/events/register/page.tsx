@@ -35,7 +35,9 @@ const Page = ({params}:{params:{id:string}}) => {
     }
     const {data:form } = useQuery({
         queryKey:[params.id,'form-data'],
-        queryFn:fetchForm
+        queryFn:fetchForm,
+        retry:false,
+        refetchOnWindowFocus:false
      })
      const router = useRouter();
      const [formData, setFormData] = useState<Record<number, any>>({});
