@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { BACKEND_URL } from "@/constants"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { BookOpen, Calendar, CheckCircle, Clock } from "lucide-react"
@@ -11,7 +12,7 @@ export default function Component({tracker}:{tracker:any}) {
   const fetchProgress = async()=>{
     try {
         if(tracker!=null){
-            const res = await axios.get(`/api/resources/tracker/progress?tid=${tracker._id}`)
+            const res = await axios.get(`${BACKEND_URL}/tracker/progress?tid=${tracker._id}`)
             if(res.data.success){
                 setProgress(res.data.data)
                 return res.data.data;

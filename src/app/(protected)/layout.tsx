@@ -14,7 +14,17 @@ export default function Layout({
   }: Readonly<{
     children: React.ReactNode;
   }>) {
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      
+      staleTime: 1 * 60 * 1000, // Data is fresh for 1 minute
+      refetchOnWindowFocus: false, // Avoid refetching on window focus
+      refetchOnReconnect: false, // Avoid refetching on reconnect
+    },
+  },
+}
+)
 const router = useRouter()
 const {user,isAuthenticated,isLoading} = useSession();
 useEffect(()=>{

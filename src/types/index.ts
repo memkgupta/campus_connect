@@ -11,6 +11,7 @@ verified:boolean
       user: User | null;
       isAuthenticated: boolean;
       isLoading: boolean;
+      feed?:any
     }
     export interface LoginCredentials {
       email: string;

@@ -10,6 +10,7 @@ export const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   isLoading: true,
+  feed:null
 };
 
 export function authReducer(state: AuthState, action: AuthAction): AuthState {
