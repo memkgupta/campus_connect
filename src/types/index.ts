@@ -11,6 +11,7 @@ verified:boolean
       user: User | null;
       isAuthenticated: boolean;
       isLoading: boolean;
+      feed?:any
     }
     export interface LoginCredentials {
       email: string;
@@ -137,3 +138,28 @@ projectData:ProjectResponseData
 
 }
 
+export type Field = {
+  _id: number;
+  fieldType: 'text' | 'textarea' | 'number' | 'date' | 'select' | 'radio' | 'checkbox' | 'image';
+ fieldLabel: string;
+  placeholder: string;
+isRequired: boolean;
+  options?: string[];
+};
+export interface Registration {
+  _id: string;
+  user: {
+    username: string;
+    name: string;
+    email: string;
+  };
+  updatedAt: Date;
+}
+
+export interface FilterOptions {
+  search: string;
+  sortBy: string;
+  sortOrder: "asc" | "desc";
+  page: number;
+  onPageChange?: (page: number) => void;
+}

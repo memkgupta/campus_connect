@@ -1,74 +1,47 @@
 "use client";
 
-import { Bell, BookOpen, Calendar, FileText } from "lucide-react";
+import { Bell, BookOpen, Calendar, FileText, VideoIcon } from "lucide-react";
 import { CourseCard } from "@/components/ui/course-card";
 import { EventCard } from "@/components/ui/event-card";
 import { ResourceCard } from "@/components/ui/resource-card";
-
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { BACKEND_URL } from "@/constants";
+import Cookies from "js-cookie";
+import { toast } from "@/components/ui/use-toast";
+import Loader from "@/components/Loader";
+import { useSession } from "@/hooks/useSession";
+import CurrentCourses from "@/components/feed/current-courses";
+import RecentResources from "@/components/feed/recent-resources";
+import EventsList from "@/components/feed/events-list";
 export default function Home() {
+  const {isAuthenticated,user,feed} = useSession()
+ console.log(feed)
   return (
     <div className="min-h-screen bg-navy-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Announcements Section */}
-        <section className="mb-12">
-          <div className="flex items-center space-x-2 mb-6">
-            <Bell className="h-6 w-6 text-yellow-400" />
-            <h2 className="text-2xl font-bold">Announcements</h2>
-          </div>
-          <div className="bg-navy-800 rounded-lg p-6">
-            <div className="space-y-4">
-              {announcements.map((announcement, index) => (
-                <div key={index} className="border-b border-navy-700 last:border-0 pb-4 last:pb-0">
-                  <h3 className="font-semibold text-lg mb-2">{announcement.title}</h3>
-                  <p className="text-gray-300">{announcement.content}</p>
-                  <p className="text-sm text-gray-400 mt-2">{announcement.date}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Current Courses Section */}
-          <section>
-            <div className="flex items-center space-x-2 mb-6">
-              <BookOpen className="h-6 w-6 text-yellow-400" />
-              <h2 className="text-2xl font-bold">Current Courses</h2>
-            </div>
-            <div className="space-y-4">
-              {courses.map((course, index) => (
-                <CourseCard key={index} {...course} />
-              ))}
-            </div>
-          </section>
-
-          {/* Upcoming Events Section */}
-          <section>
-            <div className="flex items-center space-x-2 mb-6">
-              <Calendar className="h-6 w-6 text-yellow-400" />
-              <h2 className="text-2xl font-bold">Upcoming Events</h2>
-            </div>
-            <div className="space-y-4">
-              {events.map((event, index) => (
-                <EventCard key={index} {...event} />
-              ))}
-            </div>
-          </section>
-        </div>
-
-        {/* Recent Resources Section */}
-        <section className="mt-12">
-          <div className="flex items-center space-x-2 mb-6">
-            <FileText className="h-6 w-6 text-yellow-400" />
-            <h2 className="text-2xl font-bold">Recent Resources</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {resources.map((resource, index) => (
-              <ResourceCard key={index} {...resource} />
-            ))}
-          </div>
-        </section>
-      </div>
+      {!feed?(<Loader/>):(
+         <div className="min-h-screen bg-slate-950">
+         <div className="container mx-auto px-4 py-8">
+           <div className="flex items-center gap-3 mb-8">
+             <VideoIcon className="w-8 h-8 text-yellow-500" />
+             <h1 className="text-3xl font-bold text-yellow-500">Learning Feed</h1>
+           </div>
+           
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div className="space-y-6">
+               <CurrentCourses courses={feed.currentCourses} />
+               <RecentResources resources={feed.recentResources} />
+             </div>
+             <div className="space-y-6">
+               <EventsList
+                 registeredEvents={feed.registeredEvents}
+                 upcomingEvents={feed.upcomingEvents}
+               />
+             </div>
+           </div>
+         </div>
+       </div>
+      )}
     </div>
   );
 }

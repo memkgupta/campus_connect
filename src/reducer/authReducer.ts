@@ -10,6 +10,7 @@ export const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   isLoading: true,
+  feed:null
 };
 
 export function authReducer(state: AuthState, action: AuthAction): AuthState {
@@ -31,6 +32,11 @@ export function authReducer(state: AuthState, action: AuthAction): AuthState {
           isLoading:false
         }
     case 'AUTH_ERROR':
+      return{
+        user:null,
+        isAuthenticated:false,
+        isLoading:false
+      }
     case 'LOGOUT':
       return {
         user: null,

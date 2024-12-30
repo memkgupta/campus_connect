@@ -58,7 +58,7 @@ export function FormsDialog({ mode, initialData, onSubmit, trigger }: FormsDialo
             {mode === 'add' ? (
               <>
                 <PlusCircle className="w-4 h-4 mr-2" />
-                Add Form
+                Add External Form
               </>
             ) : (
               <>

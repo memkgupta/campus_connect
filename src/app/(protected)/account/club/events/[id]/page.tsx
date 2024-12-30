@@ -7,7 +7,7 @@ import axios, { AxiosError } from 'axios'
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, BuildingIcon, FlagIcon, UserPlusIcon, ClipboardIcon, ExternalLink, Trash2 } from 'lucide-react'
+import { CalendarIcon, MapPinIcon,LineChart, UsersIcon, ClockIcon, BuildingIcon, FlagIcon, UserPlusIcon, ClipboardIcon, ExternalLink, Trash2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import Image from 'next/image'
@@ -18,6 +18,7 @@ import UpdateEventForm from '@/components/component/update-event-form'
 import { BACKEND_URL } from '@/constants'
 import Cookies from 'js-cookie'
 import { FormsDialog } from '@/components/events/external-form-dialog'
+import Link from 'next/link'
 interface Form {
   _id: string;
   label: string;
@@ -26,7 +27,7 @@ interface Form {
 }
 
 
-const EventPage = ({params}:{params:{id:string}}) => {
+const Page = ({params}:{params:{id:string}}) => {
     const [data,setData] = useState<any>(null);
     const {toast} = useToast();
     const queryClient = useQueryClient()
@@ -166,6 +167,7 @@ const EventPage = ({params}:{params:{id:string}}) => {
           <Card>
             <CardHeader className='flex justify-between flex-row items-center'>
               <CardTitle>Event Details</CardTitle>
+              <Link href={`/account/club/events/analytics?eid=${params.id}`} className='flex gap-2 items-center bg-yellow-300 p-2 rounded-md text-black'>Analytics <LineChart/> </Link>
               <div className=''>
               <Dialog >
   <DialogTrigger className="bg-yellow-400 text-black p-2 rounded-md">Edit</DialogTrigger>
@@ -228,7 +230,45 @@ const EventPage = ({params}:{params:{id:string}}) => {
               <p>{data.description}</p>
             </CardContent>
           </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      Forms
+                    </CardTitle>
+                  </CardHeader>
+<CardContent>
+{
+  data.forms?.length>0 ?(
+data.forms.map((_form:{_id:string,formName:string})=>{
+  return(<Card>
+    <CardHeader>
+      <CardTitle>
+      {_form.formName}
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+    <Link href={`/account/club/events/forms/${_form._id}`} className='bg-yellow-300 p-2 rounded-md text-black'>View</Link>
+    </CardContent>
+  </Card>)
+})
+  )
+  :(<Card>
+    <CardHeader>
+      <CardTitle>
+      Registration form
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className='grid gap-2'>
+        <p>No Form added</p>
+        <Link href={`/account/club/events/add-form?eid=${params.id}`} className='bg-yellow-300 p-2 rounded-md text-black mt-2 max-w-[100px] text-center'>Add</Link>
+      </div>
+    </CardContent>
+  </Card>)
+}
   
+</CardContent>
+                </Card>
           {(
              <div className="space-y-6">
              <div className="flex justify-end">
@@ -293,4 +333,4 @@ const EventPage = ({params}:{params:{id:string}}) => {
   )
 }
 
-export default EventPage
+export default Page
