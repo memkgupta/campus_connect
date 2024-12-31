@@ -1,6 +1,6 @@
 "use client"
 import React, { ChangeEvent, KeyboardEvent, useContext, useEffect, useState } from 'react'
-import { signOut, useSession } from 'next-auth/react';
+// import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { CircleFadingPlus, Github, Instagram, Linkedin, Loader2, LogOutIcon, Pencil, Plus, PlusIcon, Trash, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -33,17 +33,22 @@ import { validateURL } from '@/utils/validator';
 import Image from 'next/image';
 import { setDate } from 'date-fns';
 import { Card, CardHeader } from '@/components/ui/card';
+import {useSession} from '@/hooks/useSession';
+import { BACKEND_URL } from '@/constants';
+import NoResourceFound from '@/components/NoResourceFound';
+import HorizontalProjectCard from '@/components/projects/HorizontalProjectCard';
+import HorizontalResourceCard from '@/components/resources/HorizontalResourceCard';
 function Page( {params}:{params:{username:string}}) {
 
   
-const [userDetails,setUserDetails] = useState({
-profile:'',
-username:'',
-socials:[''],
-name:'',
-bio:'',
-interests:[''],
-})
+// const [userDetails,setUserDetails] = useState({
+// profile:'',
+// username:'',
+// socials:[''],
+// name:'',
+// bio:'',
+// interests:[''],
+// })
 
 const [isLoading,setIsLoading] = useState(true);
 
@@ -53,23 +58,11 @@ const [isLoading,setIsLoading] = useState(true);
 const router = useRouter()
 
 const [error,setError] = useState(false);
-const {data:session,status} = useSession();
-
-
-
-
-
-
-
+const {user,isAuthenticated} = useSession();
 const icon = (link:string)=>{
   try {
-    // Create a new URL object
     const urlObj = new URL(link);
-
-    // Get the hostname (e.g., 'www.example.com')
     let hostname = urlObj.hostname;
-
-    // Remove 'www.' if present
     if (hostname.startsWith('www.')) {
       hostname = hostname.slice(4);
     }
@@ -85,41 +78,70 @@ const icon = (link:string)=>{
     return '';
   }
 }
+const fetchUserDetails = async()=>{
+  const username = params.username
+  try {
+const res = await axios.get(`${BACKEND_URL}/users`,{params:{username:username}});
+// setUserDetails(res.data.data);
+return res.data.data;
+  } catch (error:any) {
+    return  Promise.reject(error);
+  }
+  finally{
+      setIsLoading(false);
+  }
+}
+const fetchUserProjects = async()=>{
+  try {
+    const res = await axios.get(`${BACKEND_URL}/users/projects`,{params:{uid:userDetails._id,page:1,limit:4}})
+    return res.data.projects;
+  } catch (error) {
+    
+    return Promise.reject(error);
+  }
+}
+const fetchUserContributions = async()=>{
+  try {
+    const res = await axios.get(`${BACKEND_URL}/users/projects`,{params:{uid:userDetails._id,page:1,limit:4}})
+    return res.data.contributions;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+const {data:userDetails,isFetching} = useQuery({
+  queryKey:[params.username,'user-data'],
+  queryFn:fetchUserDetails,
+  refetchOnWindowFocus:false,
+  retry:false
+})
 
-
-
-
+const {data:projects,isFetching:projectsLoading} = useQuery({
+  queryKey:['project-users'],
+  queryFn:fetchUserProjects,
+  retry:false,
+  refetchOnWindowFocus:false,
+  enabled:!!userDetails?._id
+})
+const {data:contributions,isFetching:contributionsLoading} = useQuery({
+  queryKey:['contribution-users'],
+  queryFn:fetchUserContributions,
+  retry:false,
+  refetchOnWindowFocus:false,
+  enabled:!!userDetails?._id
+})
 useEffect(()=>{
-    const fetchUserDetails = async()=>{
-        const username = params.username
-    //  console.log(session)
-        try {
-      const res = await axios.get(`/api/users`,{params:{username:username}});
-      setUserDetails(res.data.data);
-        } catch (error:any) {
-           
-            console.log(error);
-        }
-        finally{
-            setIsLoading(false);
-        }
-    }
-
-    fetchUserDetails();
-},[])
-
-useEffect(()=>{
-    if(session){
+    if(isAuthenticated && user){
          
-        if(userDetails.username===session.user.username){
+        if(params.username===user.username){
             router.replace("/account")
         }
     }
-},[session])
+    
+},[user,isAuthenticated])
 
     return (
      <>
-     {!isLoading?(
+     {!isFetching?(
        <>
        {!error?(
          <div className="flex flex-col w-full items-center justify-center min-h-screen">
@@ -148,7 +170,7 @@ useEffect(()=>{
            
            {/* {interests} */}
            <div className="flex gap-x-3 mt-1 items-center">
-             {userDetails.interests?.map((interest,index)=>(
+             {userDetails.interests?.map((interest:string,index:number)=>(
              <div className='w-fit p-1 rounded-full bg-gray-800 text-white text-xs'>#{interest}</div>
              ))}
        
@@ -157,7 +179,7 @@ useEffect(()=>{
            
           
            <div className="flex gap-x-3 mt-3 items-center">
-             {userDetails.socials?.map((social,index)=>(
+             {userDetails.socials?.map((social:string,index:number)=>(
               <Link href={social} key={social}>{<img alt='' src={icon(social)} className='max-w-8 max-h-8'></img>}</Link>
              ))}
        
@@ -173,12 +195,54 @@ useEffect(()=>{
             className='bg-slate-950 text-white'
             >
                 <CardHeader>Projects</CardHeader>
+                <div>
+                  {projectsLoading ? (<>
+                  <Loader2 className='animate-spin text-gray-500'/>
+                  </>) :(
+                    <div>
+                      {
+                        projects &&projects.length>0?(
+                          projects.map((project:any)=>(
+                            <HorizontalProjectCard
+                            data={
+                             project
+                            }
+                            />
+                          ))
+                        ):(
+                          <NoResourceFound/>
+                        )
+                      }
+                    </div>
+                  )}
+                </div>
             </Card>
        
             <Card
             className='bg-slate-950 text-white'
             >
                 <CardHeader>Contributions</CardHeader>
+                <div>
+                  {contributionsLoading ? (<>
+                  <Loader2 className='animate-spin text-gray-500'/>
+                  </>) :(
+                    <div>
+                      {
+                        contributions &&contributions.length>0?(
+                         contributions.map((contribution:any)=>(
+                            <HorizontalResourceCard
+                            data={
+                             contribution
+                            }
+                            />
+                          ))
+                        ):(
+                          <NoResourceFound/>
+                        )
+                      }
+                    </div>
+                  )}
+                </div>
             </Card>
          
          </div>

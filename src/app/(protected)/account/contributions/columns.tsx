@@ -35,7 +35,7 @@ export const columns:ColumnDef<ContributionColumn>[]=[
     
     },
         {
-            accessorKey:"upvotes",
+            accessorKey:"upvoteCount",
             header:"Upvotes"
         },
         

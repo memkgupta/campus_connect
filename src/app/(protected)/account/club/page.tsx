@@ -6,69 +6,66 @@ import { ClubContext } from '@/context/ClubContext'
 import { useQuery } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+
 import * as z from "zod"
 
 import {  useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form,FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { editProfileSchema } from '@/schema/editProfileSchema';
 
-
-import ErrorLoadingPage from '@/components/ErrorLoadingPage';
-import { Label } from '@/components/ui/label';
-import { useDebounceCallback } from 'usehooks-ts';
-import { UploadButton } from '@/utils/uploadthing';
-import { Button } from '@/components/ui/button';
-import { Loader2, Pencil, Trash } from 'lucide-react';
 import { editClubSchema } from '@/schema/editClubSchema';
-import { Textarea } from '@/components/ui/textarea';
-import EventCard from '@/components/events/EventCard';
-import Link from 'next/link';
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar, Users, MessageSquare, PlusCircle, Trophy, MapPin } from "lucide-react";
+import { format } from "date-fns";
+import { BACKEND_URL } from '@/constants';
+import Cookies from 'js-cookie';
+import { useSession } from '@/hooks/useSession';
+import Link from 'next/link';
 const Page = () => {
   const {toast} = useToast();
-    const clubContextData = useContext(ClubContext);
-    const [clubDetails,setClubDetails] = useState({
+    const {isAuthenticated} = useSession();
+    const [clubDetails,setClubDetails] = useState<{
+      _id:string,
+      clubDescription:string,
+      clubName:string,
+      clubLogo:string,
+      contactPhone:string,
+      events:any[],
+      members:any[],
+      recruitmentStats?:any,
+      messages:any[]
+
+
+    }>({
+      _id:'',
       clubDescription:'',
       clubName:'',
       clubLogo:'',
       contactPhone:'',
+      events:[],
+      members:[],
+      messages:[],
     });
     const[loading,setLoading] = useState(true);
     const[isSubmitting,setIsSubmitting] = useState(false);
     const [isHovered,setIsHovered] = useState(false);
     const [preview,setPreview] = useState<string|null>('');
-    const handleProfileSelect = ()=>{
-      if(preview){
-    setPreview(null);
-    
-      }
-      else{
-       
-      }
-        
-    }
+
     const form = useForm<z.infer<typeof editClubSchema>>({
       resolver:zodResolver(editClubSchema),
       
     })
 const fetchClubDashboardData = async ()=>{
 try {
-  const res = await axios.get(`/api/club/dashboard`);
+  const res = await axios.get(`${BACKEND_URL}/club/dashboard`,{headers:{
+    "Authorization" : `Bearer ${Cookies.get('access-token')}`
+  }});
 const data = res.data.clubDetails;
+console.log(data)
 setPreview(data.clubLogo);
-setClubDetails({clubDescription:data.clubDescription,clubName:data.clubName,clubLogo:data.clubLogo,contactPhone:data.contactPhone})
+// clubContext?.setState(clubDetails)
+setClubDetails({_id:data._id,clubDescription:data.clubDescription,clubName:data.clubName,clubLogo:data.clubLogo,contactPhone:data.contactPhone,events:data.events,members:data.members,messages:data.messages})
 form.setValue("clubDescription",data.clubDescription);
 form.setValue("clubName",data.clubName);
 form.setValue("contactPhone",data.contactPhone);
@@ -96,35 +93,35 @@ finally{
 }
 }
 
-const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
-  try {
-    setIsSubmitting(true);
-    const reqData:any ={...data}
+// const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
+//   try {
+//     setIsSubmitting(true);
+//     const reqData:any ={...data}
   
-    if(preview!=clubDetails.clubLogo){
-      reqData.clubLogo = preview
-    }
+//     if(preview!=clubDetails.clubLogo){
+//       reqData.clubLogo = preview
+//     }
 
-    const res = await axios.put(`/api/club/update`,reqData);
+//     const res = await axios.put(`/api/club/update`,reqData);
    
-    toast({
-      title:'Club details updated successfully'
-    })
-  } catch (error) {
-    const axiosError = error as AxiosError<any>;
-    if(axiosError.response?.data){
-      toast({title:axiosError.response.data.message,variant:'destructive'})
-    }else{
-      toast({title:"Some error occured",variant:'destructive'})
+//     toast({
+//       title:'Club details updated successfully'
+//     })
+//   } catch (error) {
+//     const axiosError = error as AxiosError<any>;
+//     if(axiosError.response?.data){
+//       toast({title:axiosError.response.data.message,variant:'destructive'})
+//     }else{
+//       toast({title:"Some error occured",variant:'destructive'})
 
-    }
-  }
-  finally{
-    setIsSubmitting(false)
-  }
-}
+//     }
+//   }
+//   finally{
+//     setIsSubmitting(false)
+//   }
+// }
     const {data:clubData=undefined,isSuccess}=useQuery({
-        queryKey:[clubContextData?._id],
+        queryKey:[],
         queryFn:fetchClubDashboardData,
         refetchOnWindowFocus:false,
         retry:false
@@ -134,151 +131,133 @@ const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
     {!loading?(
     <div className='flex flex-col min-h-[90vh] items-center '>
     {clubData ? (
-      <div className={`bg-slate-950`}>
-      <div className="min-h-screen bg-background-dark text-primary-yellow p-6">
-        <header className="flex justify-between items-center py-4">
-          <h1 className="text-3xl font-bold">Club Dashboard</h1>
-        
-        </header>
-        
-        <main className='relative'>
-        <Dialog>
-              
-              <DialogTrigger> <Button className='absolute top-10 right-10 bg-yellow-300 hover:bg-yellow-400 flex gap-3'>Edit <Pencil size={20}/></Button></DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Update User Details</DialogTitle>
-                 
-                </DialogHeader>
-                <div className="flex flex-col justify-center items-center">
-           <div onMouseEnter={()=>{
-               setIsHovered(true)
-           }} onMouseLeave={()=>{setIsHovered(false)}} className={`relative w-52 h-52 rounded-full ${!preview && 'bg-gray-500' }`} onClick={handleProfileSelect}>
-               {preview&&<img src={preview} className='w-52 h-52 rounded-full'/>}
-               {isHovered && preview && (
-           <div className="absolute cursor-pointer inset-0 rounded-full flex items-center justify-center bg-gray-800 bg-opacity-50 transition-opacity">
-           <Trash size={40}/>
+       <div className="min-h-screen bg-slate-950">
+       {/* Header */}
+       <header className="border-b border-slate-800">
+         <div className="container mx-auto px-4 py-6 flex items-center justify-between">
+           <div className="flex items-center gap-4">
+             <img 
+               src={clubData.clubLogo} 
+               alt={clubData.clubName} 
+               className="w-12 h-12 rounded-full object-cover"
+             />
+             <div>
+               <h1 className="text-2xl font-bold text-yellow-400">{clubData.clubName}</h1>
+               <p className="text-slate-400 text-sm">{clubData.clubDescription}</p>
+             </div>
            </div>
-         )}
+           <div className="flex gap-3">
+             <Button variant="outline" className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-slate-950">
+               <MessageSquare className="w-4 h-4 mr-2" />
+               Messages
+             </Button>
+             <Link href={"/account/club/add-event"} className="bg-yellow-400 p-2 rounded-md flex items-center text-slate-950 hover:bg-yellow-500">
+               <PlusCircle className="w-4 h-4 mr-2" />
+               Create Event
+             </Link>
            </div>
-           <UploadButton
-          
-           className={`${preview&&'hidden'} mt-2`}
-           
-           endpoint="fileUploader"
-           onClientUploadComplete={(res) => {
-           setPreview(res[0].url)
-           
-           }}
-           onUploadError={(error: Error) => {
-             // Do something with the error.
-             alert(`ERROR! ${error.message}`);
-           }}
-         />
-       </div>
-                <Form {...form} >
-                      <form  onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 px-5">
-                     
-                      
-                        
-                     
-                      
-                      <FormField
-                        control={form.control}
-                        name='clubName'
-                        render={({field})=>(
-                          <FormItem>
-                            <FormLabel>ClubName</FormLabel>
-                          
-                             <>
-                             <Input   placeholder='Club Name' {...field} onChange={(e)=>{
-                                field.onChange(e);
-                              }}/>
-                             
-                             </>
-                          
-                        
-                          </FormItem>
-                        )}/>
-                    
-                     
-                      <FormField
-                        control={form.control}
-                        name='clubDescription'
-                        render={({field})=>(
-                          <FormItem>
-                            <FormLabel>ClubDescription</FormLabel>
-                            
-                              <Textarea  placeholder='name' {...field} onChange={(e:any)=>{
-                                field.onChange(e)
-                              }}/>
-                              
-                           
-                          </FormItem>
-                        )}/>
-                      
-                      <FormField
-                        control={form.control}
-                        name='contactPhone'
-                        render={({field})=>(
-                          <FormItem>
-                            <FormLabel>Contact Phone</FormLabel>
-                            
-                              <Input type='tel'  placeholder='Contact phone number' {...field} onChange={(e:any)=>{
-                                field.onChange(e)
-                              }}/>
-                              
-                           
-                          </FormItem>
-                        )}/>
-                       
-                      
-
-   
-   
-   
-                        <Button  type="submit" disabled={isSubmitting||(JSON.stringify(clubDetails)===JSON.stringify(form.getValues()))} className='bg-yellow-300 hover:bg-yellow-400 text-black'  >
-                        {isSubmitting?(<>
-                            <Loader2 className='mr-2 h-4 w-4 animate-spin'/>
-                            Please wait
-                            </> ):("Save")}
-                        </Button>
-                      
-                      </form>
-                    </Form>
-            <DialogFooter>
-             <DialogClose asChild>
-               <Button disabled={isSubmitting} className='bg-red-300  hover:bg-red-400'>Close</Button>
-             </DialogClose>
-            </DialogFooter>
-              </DialogContent>
-              
-            </Dialog>
-          <div className='grid gap-3 bg-slate-900 border border-white rounded-md text-lg p-2'>
-           <img className='rounded-full w-[200px] h-[200px]' src={clubData.clubLogo}></img>
-            <p className='text-white font-bold'>{clubData.clubName}</p>
-            <p className='text-white font-bold'>{clubData.clubDescription}</p>
-
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-background-dark p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Total Events</h2>
-              <p className="text-2xl">{clubData.totalEvents}</p>
-            </div>
-            
-            <div className="bg-background-dark p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
-              <p className="text-2xl">{clubData.upcomingEvents}</p>
-            </div>
-          </div>
-
-          <div className='grid md:grid-cols-3 gap-5'>
-            {clubData.events.map((event:any)=>(<EventCard isAdmin={true} data={event} key={event._id}/>))}
-          </div>
-          <div className='flex justify-center'><Link href={"/account/club/event"} className='bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black'>View All</Link></div>
-        </main>
-      </div>
-    </div>
+         </div>
+       </header>
+ 
+       {/* Main Content */}
+       <main className="container mx-auto px-4 py-8">
+         {/* Stats Grid */}
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+           <Card className="bg-slate-900 border-slate-800">
+             <CardHeader className="flex flex-row items-center justify-between pb-2">
+               <CardTitle className="text-yellow-400 text-sm font-medium">Total Events</CardTitle>
+               <Calendar className="w-4 h-4 text-yellow-400" />
+             </CardHeader>
+             <CardContent>
+               <div className="text-2xl font-bold text-white">{clubData.totalEvents}</div>
+             </CardContent>
+           </Card>
+           <Card className="bg-slate-900 border-slate-800">
+             <CardHeader className="flex flex-row items-center justify-between pb-2">
+               <CardTitle className="text-yellow-400 text-sm font-medium">Upcoming Events</CardTitle>
+               <Trophy className="w-4 h-4 text-yellow-400" />
+             </CardHeader>
+             <CardContent>
+               <div className="text-2xl font-bold text-white">{clubData.upcomingEvents}</div>
+             </CardContent>
+           </Card>
+           <Card className="bg-slate-900 border-slate-800">
+             <CardHeader className="flex flex-row items-center justify-between pb-2">
+               <CardTitle className="text-yellow-400 text-sm font-medium"><Link href={"/account/club/members"}>Total Members</Link></CardTitle>
+               <Users className="w-4 h-4 text-yellow-400" />
+             </CardHeader>
+             <CardContent>
+               <div className="text-2xl font-bold text-white">{clubData.members.length}</div>
+             </CardContent>
+           </Card>
+           <Card className="bg-slate-900 border-slate-800">
+             <CardHeader className="flex flex-row items-center justify-between pb-2">
+               <CardTitle className="text-yellow-400 text-sm font-medium">Messages</CardTitle>
+               <MessageSquare className="w-4 h-4 text-yellow-400" />
+             </CardHeader>
+             <CardContent>
+               <div className="text-2xl font-bold text-white">{clubData.messages.length}</div>
+             </CardContent>
+           </Card>
+         </div>
+ 
+         {/* Events Section */}
+         <div className="mb-8">
+           <div className="flex justify-between items-center mb-6">
+             <h2 className="text-xl font-bold text-white">Recent Events</h2>
+             <Link href={"/account/club/events"}  className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-slate-950">
+               View All Events
+             </Link>
+           </div>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             {clubData.events.map((event:any) => (
+               <Card key={event._id} className="bg-slate-900 border-slate-800">
+                 <CardHeader>
+                   <CardTitle className="text-white">{event.name}</CardTitle>
+                   <div className="flex items-center text-slate-400 text-sm">
+                     <Calendar className="w-4 h-4 mr-2" />
+                     {format(new Date(event.dateTime), "PPP")}
+                   </div>
+                   <div className="flex items-center text-slate-400 text-sm">
+                     <MapPin className="w-4 h-4 mr-2" />
+                     {event.venue}
+                   </div>
+                 </CardHeader>
+                 <CardContent>
+                   <div className="flex justify-between items-center text-sm">
+                     <span className="text-yellow-400">Category: {event.category}</span>
+                     <span className="text-slate-400">Capacity: {event.maxCapacity}</span>
+                   </div>
+                 </CardContent>
+               </Card>
+             ))}
+           </div>
+         </div>
+ 
+         {/* Quick Actions */}
+         <div>
+           <h2 className="text-xl font-bold text-white mb-6">Quick Actions</h2>
+           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+             <Button className="bg-slate-900 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-slate-950 p-8 h-auto flex flex-col gap-2">
+               <PlusCircle className="w-6 h-6" />
+               <span>Create Event</span>
+             </Button>
+             <Button className="bg-slate-900 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-slate-950 p-8 h-auto flex flex-col gap-2">
+               <Users className="w-6 h-6" />
+               <span>Add Member</span>
+             </Button>
+             <Button className="bg-slate-900 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-slate-950 p-8 h-auto flex flex-col gap-2">
+               <MessageSquare className="w-6 h-6" />
+               <span>Send Message</span>
+             </Button>
+             <Button className="bg-slate-900 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-slate-950 p-8 h-auto flex flex-col gap-2">
+               <Calendar className="w-6 h-6" />
+               <span>View Calendar</span>
+             </Button>
+           </div>
+         </div>
+       </main>
+     </div>
      ):(
       <div className='bg-slate-800 rounded-md p-4 my-auto mx-auto w-2/4  flex flex-col items-center'>
         <p className='text-center'>You have not registered your club yet</p>

@@ -8,7 +8,9 @@ import Link from 'next/link'
 import React, { useContext, useState } from 'react'
 import { DataTable } from './data-table'
 import { columns } from './columns'
+import Cookies from 'js-cookie'
 import usePagination from '@/hooks/usePagination'
+import { BACKEND_URL } from '@/constants'
 type contributionItem = {
   label:string,
   link:string,
@@ -21,15 +23,24 @@ const Page = () => {
   const [loading,setLoading] = useState(true);
   const [count,setCount] = useState(0);
   
-  const isContributor = useContext(ContributorContext)
+  // const isContributor = useContext(ContributorContext)
 const fetchContributorData = async()=>{
   try {
-    if(isContributor){
-const res = await axios.get(`/api/contributor/my-contributions`);
+   
+const res = await axios.get(`${BACKEND_URL}/users/my-contributions`,{
+  headers:{
+    "Authorization":`Bearer ${Cookies.get('access-token')}`
+  },
+  params:{
+
+    page:pagination.pageIndex,
+    limit:pagination.pageSize
+  }
+});
 const data = res.data;
 setCount(data.totalContributions);
 return data.contributions
-    }
+    
   } catch (error) {
     toast({
       title:'Some error occured',
@@ -44,7 +55,7 @@ return data.contributions
 const {
   data:contributionData
 } = useQuery({
-  queryKey:[],
+  queryKey:["contributions",pagination],
   queryFn:fetchContributorData,
   refetchOnWindowFocus:false,
   retry:false
@@ -63,22 +74,7 @@ const {
       
       <main className="container mx-auto p-4">
         <h1 className="text-3xl font-bold mb-4">Contribute to Campus Connect</h1>
-        {!isContributor ?
-        (<>
-        <Card>
-  <CardHeader>
-    <CardTitle>Not a Contributor ? Become one</CardTitle>
-    <CardDescription>
-      Campus connect is initiative in order to provide all the resources and guides for an engineering student , but we need your support show your support by contributing whatever resources you have
-    </CardDescription>
-  </CardHeader>
-  <CardContent>
-    <Link target='_blank' href='https://forms.gle/5pyeVcoRk68FbE9v8' className='bg-yellow-300 hover:bg-yellow-400 p-2 text-black rounded-md ' >Become a contributor </Link>
-  </CardContent>
- 
-</Card>
-        </>)
-        :
+        {
         (
       <>
 <div className='px-12 mt-12 flex justify-center'>

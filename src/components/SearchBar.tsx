@@ -71,7 +71,7 @@ return (
         onFocus={()=>{setIsFocused(true)}}
         onBlur={()=>{setIsFocused(false)}}
         onChange={handleInputChange}
-        className="w-full pl-10 pr-4 py-2 rounded-l-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white "
+        className="w-full pl-10 pr-4 text-black py-2 rounded-l-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white "
         placeholder="Search..."
       />
       <svg

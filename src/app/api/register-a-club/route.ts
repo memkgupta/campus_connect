@@ -1,5 +1,5 @@
 import connect from "@/lib/db";
-import Club from "@/lib/models/club.model";
+import Club from "@/lib/models/club/club.model";
 import College from "@/lib/models/college.model";
 import User from "@/lib/models/user.model";
 import { getServerSession } from "next-auth";
@@ -19,6 +19,7 @@ export const POST = async(req:Request)=>{
     try {
       const user = await User.findOne({email:_user.email});
         const college = await College.findById(user.college);
+        console.log(user)
         const isValidEmail = college.emailDomain===clubEmail.split('@')[1];
        if(!isValidEmail){
         return Response.json({success:false,message:"Email id is not valid of your college"},{status:400});

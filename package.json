@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.1.1",
+    "@hello-pangea/dnd": "^17.0.0",
     "@hookform/resolvers": "^3.6.0",
     "@material-tailwind/react": "^2.1.9",
     "@radix-ui/react-alert-dialog": "^1.1.1",
@@ -21,10 +22,13 @@
     "@radix-ui/react-navigation-menu": "^1.2.0",
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-progress": "^1.1.0",
+    "@radix-ui/react-radio-group": "^1.2.2",
+    "@radix-ui/react-scroll-area": "^1.2.1",
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.1",
     "@react-pdf/renderer": "^3.4.4",
     "@tanstack/react-query": "^5.51.1",
@@ -47,6 +51,7 @@
     "next-nprogress-bar": "^2.3.13",
     "react": "^18",
     "react-avatar-editor": "^13.0.2",
+    "react-datepicker": "^7.5.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
@@ -60,9 +65,11 @@
     "uploadthing": "^6.13.2",
     "usehooks-ts": "^3.1.0",
     "uuid": "^10.0.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.62.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",

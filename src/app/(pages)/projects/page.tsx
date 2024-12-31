@@ -8,10 +8,12 @@ import Loader from '@/components/Loader'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 import { Select, SelectValue,SelectTrigger, SelectContent, SelectItem } from '@/components/ui/select'
-import { projectCategories } from '@/constants'
+import { BACKEND_URL, projectCategories } from '@/constants'
 import { Input } from '@/components/ui/input'
 import { useDebounceCallback } from 'usehooks-ts'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
+import Image from 'next/image'
+import { Loader2 } from 'lucide-react'
 
 interface ProjectRes {
 title:string,
@@ -20,6 +22,7 @@ lead:{
   username:string,
   profile:string,
 },
+banner:string,
 _id:string,
 description:string
 }
@@ -54,7 +57,7 @@ const Page = () => {
       }
 
 
-      const res = await axios.get(`/api/projects`,{params:reqParams});
+      const res = await axios.get(`${BACKEND_URL}/projects`,{params:reqParams});
       setProjects(res.data.projects)
       setTotal(res.data.total);
       return res.data.projects;
@@ -79,17 +82,15 @@ toast({
     }
   }
 
-   const {data:ss} = useQuery({
+   const {data:ss,isFetching,isError} = useQuery({
     queryKey:[params.title,params.categ,params.page],
     queryFn:fetchData
    })
 
   return (
     <div>
-      {isLoading?(
-        <Loader/>
-      ):(
-        <>
+ 
+    
        <div className='flex gap-2 justify-center mx-auto max-w-3xl'>
        <Select onValueChange={(e)=>{debounced({...params,categ:e})}}>
 <SelectTrigger>
@@ -106,7 +107,9 @@ toast({
         </Select>
         <Input type='text' placeholder='Search By title' onChange={(e)=>{debounced({...params,title:e.target.value})}}/>
        </div>
-       <div className='grid grid-cols-3 gap-3 mt-12 px-12'>
+       {!ss||isFetching?(<>
+       <Loader2 className='animate-spin text-gray-400'/>
+       </>):(<div className='grid grid-cols-3 gap-3 mt-12 px-12'>
        {
  projects.map(project=>(
   <Card>
@@ -116,6 +119,7 @@ toast({
 }</CardTitle>
     </CardHeader>
     <CardContent>
+      <img src={project.banner} alt='' className='w-full '/>
       {project.description}
     </CardContent>
     <CardFooter className='justify-between'>
@@ -134,7 +138,7 @@ toast({
         }
 
 
-       </div>
+       </div>)}
        <div className='mt-5'>
        <Pagination>
   <PaginationContent>
@@ -157,10 +161,8 @@ toast({
 </Pagination>
        </div>
   
-        </>
-      )
-     
-      }</div>
+       
+     </div>
   )
 }
 

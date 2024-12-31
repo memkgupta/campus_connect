@@ -2,11 +2,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Bug, GithubIcon, LinkedinIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useSession } from "@/hooks/useSession";
+import { useContext, useEffect, useState } from "react";
 import Loader from "@/components/Loader";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function Home() {
+  const router = useRouter()
   const about = [
     {
       id: 1,
@@ -30,16 +33,21 @@ export default function Home() {
       image: "/projects.png",
     },
   ];
+  const authContext = useContext(AuthContext)
 const [isLoading,setIsLoading] = useState(true);
-  const { data: session, status } = useSession();
+  const session = useSession();
   useEffect(()=>{
 if(session?.user){
   setIsLoading(false);
+  router.replace("/home");  
 }
-if(status==="unauthenticated"){
-  setIsLoading(false);
+else{
+  setIsLoading(false)
 }
-  },[status,session])
+  },[session])
+  useEffect(()=>{
+
+  },[])
   return (
     <>
       {isLoading ? (

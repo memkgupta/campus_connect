@@ -4,7 +4,7 @@ import mongoose,{Schema} from "mongoose"
 const contributionSchema = new Schema({
     branch:{type:String,required:true},
     label:{type:String,required:true},
-    type:{type:String,enum:['pyq','notes','question-bank','lectures']},
+    type:{type:String,enum:['pyq','notes','question-bank','lectures','short-notes','quantum']},
     code:{type:String,required:true},
     sessionYear:{type:String},
     thumbnail:{type:String,},

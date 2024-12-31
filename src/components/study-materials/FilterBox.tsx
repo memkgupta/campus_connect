@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ComboBox from "../ComboBox";
 import axios from "axios";
 import { useToast } from "../ui/use-toast";
-import { paperType, universities } from "@/constants";
+import { BACKEND_URL, branches, paperType, universities } from "@/constants";
 import { yearTillNow } from "@/helpers/yearUtility";
 import {
   useQuery,
@@ -28,6 +28,7 @@ const FilterBox = ({
     year: true,
     branch: true,
     subjects: true,
+    source:false,
     paperType: false,
     session: true,
     university: true,
@@ -43,6 +44,7 @@ const FilterBox = ({
     subjects?: boolean;
     branch?: boolean;
     session?: boolean;
+    source?:boolean;
     paperType?: boolean;
     university?: boolean;
   };
@@ -79,9 +81,12 @@ const fetchSubjects = async()=>{
   }
   
 try {
-   const res  = await axios.get(`/api/subjects/${params}`);
+   const res  = await axios.get(`${BACKEND_URL}/utils/subjects/${params}`);
    const data = res.data;
    subjectsState(data.subjects);
+   res.data.subjects.unshift({
+    value:'',label:'All',id:'All'
+   })
    return res.data.subjects;
   
 } catch (error) {
@@ -98,7 +103,7 @@ const {data:subjectsFilterOptions} = useQuery<{value:string,label:string,id:stri
   refetchOnWindowFocus:false,
         retry:false
 })
-  const [subject, setSubject] = useState();
+  const [subject, setSubject] = useState<{value:string,label:string,id:string}>();
 
   const sessions = yearTillNow();
 
@@ -128,6 +133,12 @@ const fetchResources = async()=>{
     if (selectedSession) {
       params.sessionYear = selectedSession.value;
     }
+    if(subject){
+      params.code = subject.value;
+    }
+    if(selectedPaperType){
+      params.paperType = selectedPaperType.value
+    }
     if(type){
       console.log(type)
       params.type = type;
@@ -148,10 +159,10 @@ const fetchResources = async()=>{
       loading(false);
     }
 }
-
+// const fetchSources = async
 const {data:resourceData,isSuccess} = useQuery<any>(
   {
-    queryKey:[year,selectedBranch,selectedSession],
+    queryKey:[year,selectedBranch,selectedSession,subject],
     queryFn:fetchResources,
     // refetchOnMount:false,
     refetchOnWindowFocus:false,
@@ -200,6 +211,10 @@ const {data:resourceData,isSuccess} = useQuery<any>(
           stateSetter={setSubject}
         />
       )}
+      {
+     ( parseInt(year.value)>1) && <ComboBox label="Select Branch"
+      options={branches} stateSetter={setSelectedBranch}/>
+      }
       {filters.university && (
         <ComboBox
           label="Select university"

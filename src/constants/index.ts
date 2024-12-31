@@ -1,4 +1,4 @@
-export const HOST_URL = "http://localhost:3000/api"
+export const BACKEND_URL = "http://localhost:8080/api/v1"
 export const universities = [
     { "value": "AKTU", "label": "AKTU", "id": "AKTU" },
    
@@ -23,7 +23,11 @@ export const eventCategories = [
    
     
   ];
-
+export const eventFormTypes = [
+    {value:'registration',label:"Registration",id:'registration'},
+    {value:'feedback',label:'Feedback',id:'feedback'},
+    {value:'other',label:"Other",id:'other'}
+]
  export const branches = [
     { value: 'CSE CORE', label: 'Computer Science and Engineering (CORE)', id: 'cse-core' },
       { value: 'CSE AI', label: 'Computer Science and Engineering (Artificial Intelligence)', id: 'cse-ai' },
@@ -50,7 +54,9 @@ export const eventCategories = [
         export const resourceTypes = [
             {value:'pyq',label:'PYQ',id:'pyq'},
             {value:'notes',label:'NOTES',id:'notes'},
-            {value:'question-bank',label:'Question Bank',id:'question-bank'}
+            {value:'question-bank',label:'Question Bank',id:'question-bank'},
+            {value:'quantum',label:'Quantum',id:'quantum'},
+            {value:'short-notes',label:'Short Notes',id:'short-notes'}
         ]
 
         export const projectCategories = [

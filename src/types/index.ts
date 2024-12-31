@@ -1,14 +1,26 @@
 export type User ={
-id:string,
+id?:string,
+email:string,
+name:string,
 username:string,
 verified:boolean
 }
-export type AuthContextProps = {
- user: User | null;
-authStatus:boolean;
-logout: () => void;
-}
 
+    
+    export interface AuthState {
+      user: User | null;
+      isAuthenticated: boolean;
+      isLoading: boolean;
+      feed?:any
+    }
+    export interface LoginCredentials {
+      email: string;
+      password: string;
+    }
+    
+    export interface RegisterCredentials extends LoginCredentials {
+      name: string;
+    }
 // export type UserDetails = {
 //     username:string,
 //     name:string,
@@ -29,7 +41,7 @@ export type EventParticipantRequestResponse = {
 }
 
 export type YTLecture = {
-      _id: string | null | undefined; label: string | null | undefined; videoUrl: string; thumbnail:string|null|undefined
+      _id: string | null | undefined; label: string | null | undefined; videoUrl: string; thumbnail:string|null|undefined,description:string|null|undefined
 
 }
 export interface TeamMember{
@@ -46,12 +58,11 @@ export interface ProjectFormData {
       tags: string;
       projectImage: string | null;
       problemStatement: string;
-      objectives: string;
-      features: string;
+    
       technologiesUsed: string;
       status: string;
-      teamMembers: TeamMember[];
-      projectLead: string;
+      // teamMembers: TeamMember[];
+      // projectLead: string;
       projectURL: string;
       githubRepoLink: string;
       documentation: string | null;
@@ -59,8 +70,8 @@ export interface ProjectFormData {
       openForCollaboration: boolean;
       contactInformation: string;
       feedbackComments: string;
-      startDate: string;
-      endDate: string;
+      startDate: Date;
+      endDate: Date | undefined;
       license: string;
       challengesFaced: string;
       futureScope: string;
@@ -69,7 +80,35 @@ export interface ProjectFormData {
       privacySettings: string;
       approvalStatus: string;
     }
- 
+   
+    
+    export interface Contributor {
+      user: User;
+      role: string;
+    }
+    
+    export interface Project {
+      _id: string;
+      user: User;
+      category: string;
+      title: string;
+      description: string;
+      banner: string;
+      images: string[];
+      openForCollab: boolean;
+      start: string;
+      end?: string;
+      documentation?: string;
+      demo?: string;
+      currently_working: boolean;
+      tags: string;
+      status: string;
+      technologiesUsed: string;
+      lead?: string;
+      live_link?: string;
+      github?: string;
+      contributors: Contributor[];
+    }
     export interface ProjectResponseData{
       
       category:string,
@@ -99,3 +138,28 @@ projectData:ProjectResponseData
 
 }
 
+export type Field = {
+  _id: number;
+  fieldType: 'text' | 'textarea' | 'number' | 'date' | 'select' | 'radio' | 'checkbox' | 'image';
+ fieldLabel: string;
+  placeholder: string;
+isRequired: boolean;
+  options?: string[];
+};
+export interface Registration {
+  _id: string;
+  user: {
+    username: string;
+    name: string;
+    email: string;
+  };
+  updatedAt: Date;
+}
+
+export interface FilterOptions {
+  search: string;
+  sortBy: string;
+  sortOrder: "asc" | "desc";
+  page: number;
+  onPageChange?: (page: number) => void;
+}

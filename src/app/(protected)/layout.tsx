@@ -1,7 +1,7 @@
 "use client"
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hooks/useSession";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -14,14 +14,24 @@ export default function Layout({
   }: Readonly<{
     children: React.ReactNode;
   }>) {
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      
+      staleTime: 1 * 60 * 1000, // Data is fresh for 1 minute
+      refetchOnWindowFocus: false, // Avoid refetching on window focus
+      refetchOnReconnect: false, // Avoid refetching on reconnect
+    },
+  },
+}
+)
 const router = useRouter()
-const {data:session,status} = useSession();
+const {user,isAuthenticated,isLoading} = useSession();
 useEffect(()=>{
-  if(!session?.user&&status!="loading"){
+  if(!user&&!isAuthenticated&&!isLoading){
 router.replace("/auth/sign-in")
   }
-},[session])
+},[user])
     return (
         <QueryClientProvider client={queryClient}>
  {children}
