@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: "LOGIN_START" });
       // Simulate API call
       const request = await axios.post(
-        `http://localhost:8080/api/v1/auth/login`,
+        `${BACKEND_URL}/auth/login`,
         { usernameOrEmail: credentials.email, password: credentials.password }
       );
       if (!request.data.success) {
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (token) {
       try {
         const request = await axios.get(
-          `http://localhost:8080/api/v1/auth/session`,
+          `${BACKEND_URL}/auth/session`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (axiosError.status != 500) {
           try {
             const refreshRequest = await axios.post(
-              `http://localhost:8080/api/v1/auth/refresh-token`,
+              `${BACKEND_URL}/auth/refresh-token`,
               {},
               { withCredentials: true }
             );
@@ -120,7 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else {
       try {
         const refreshRequest = await axios.post(
-          `http://localhost:8080/api/v1/auth/refresh-token`,
+          `${BACKEND_URL}/auth/refresh-token`,
           {},
           { withCredentials: true }
         );
