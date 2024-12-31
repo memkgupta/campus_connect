@@ -64,7 +64,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const fetchRegistrationStatus = async () => {
     if (isAuthenticated) {
       try {
-        const res = await axios.get(`${BACKEND_URL}/events/registration/status`, {
+        const res = await axios.get(`${BACKEND_URL}/events/registration/is-registered`, {
           params: {
             eid: id,
           },
