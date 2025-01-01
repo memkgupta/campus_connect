@@ -183,7 +183,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                   </Link>
                 ) : (
                   <Link
-                    href={`/events/registeration/${registrationStatus.rid}`}
+                    href={`/events/registration/${registrationStatus.rid}`}
                     className="bg-yellow-300 p-2 rounded-md text-black"
                   >
                     View Registration
