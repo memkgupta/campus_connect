@@ -40,7 +40,8 @@ import axios from "axios"
 import { useToast } from "../ui/use-toast"
 import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
-
+import { BACKEND_URL } from "@/constants"
+import Cookies from "js-cookie"
 
 
 export type Event = {
@@ -177,7 +178,9 @@ const [page,setPage] = React.useState(1);
   })
 const fetchEvents = async()=>{
 try {
-  const res = await axios.get(`/api/club/dashboard/events`,{params:{page}});
+  const res = await axios.get(`${BACKEND_URL}/club/dashboard/events`,{params:{page},headers:{
+    "Authorization":`Bearer ${Cookies.get('access-token')}`
+  }},);
   if(res.data.success){
 setData(res.data.events);
 setTotalResults(res.data.totalResults);

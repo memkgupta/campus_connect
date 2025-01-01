@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react'
 import { Button } from './ui/button';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/hooks/useSession';
 
 const Sidebar = ({show,setter}:{show:boolean,setter:any}) => {
     // const router = useRouter();
     const [query,setQuery] = useState('');
-    const {data:session,status} = useSession();
+    // const {data:session,status} = useSession();
+    const {isAuthenticated} = useSession();
     const handleInputChange = (e:any) => {
         setQuery(e.target.value);
       };
@@ -154,7 +155,7 @@ const Sidebar = ({show,setter}:{show:boolean,setter:any}) => {
                 route="/about"
                 icon={<Info />}
             />
-        { status==="authenticated"? <MenuItem 
+        { isAuthenticated? <MenuItem 
           name="Account"
           route="/account"
           icon={<User/>}/>:<MenuItem
