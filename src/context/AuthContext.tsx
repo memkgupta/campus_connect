@@ -89,11 +89,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const parsedFeed = JSON.parse(existingFeed||"[]");
         if (!existingFeed || !isFeedFresh(parsedFeed.time)) {
           const newFeed = await fetchFeed();
-          setFeed(newFeed);
+          setFeed(newFeed.data);
           localStorage.setItem("feed",JSON.stringify({time:new Date(),feed:newFeed.data}))
         } else {
           setFeed(parsedFeed.feed)
-          console.log(parsedFeed)
+       
         }
         dispatch({ type: "SET_SESSION", payload: user });
       } catch (error) {
