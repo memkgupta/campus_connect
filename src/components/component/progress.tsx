@@ -5,14 +5,16 @@ import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { BookOpen, Calendar, CheckCircle, Clock } from "lucide-react"
 import { useState } from "react"
-
+import Cookies from "js-cookie"
 export default function Component({tracker}:{tracker:any}) {
   // This would typically come from props or a data fetch
   const [progress,setProgress] = useState<any>({})
   const fetchProgress = async()=>{
     try {
         if(tracker!=null){
-            const res = await axios.get(`${BACKEND_URL}/tracker/progress?tid=${tracker._id}`)
+            const res = await axios.get(`${BACKEND_URL}/tracker/progress?tid=${tracker._id}`,{
+              headers:{"Authorization":`Bearer ${Cookies.get("access-token")}`}
+            })
             if(res.data.success){
                 setProgress(res.data.data)
                 return res.data.data;

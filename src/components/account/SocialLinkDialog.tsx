@@ -16,6 +16,8 @@ import {
 import { Button } from '../ui/button';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import { BACKEND_URL } from '@/constants';
+import Cookies from 'js-cookie';
 const SocialLinkDialog = ({userDetails,setUserDetails}:{userDetails:any,setUserDetails:any}) => {
 const {toast} = useToast();
     const [isNotValidURL,setIsNotValidURL] = useState(true);
@@ -33,7 +35,9 @@ const handleAddLink =async ()=>{
     try {
   
      
-     const res = await axios.put(`/api/users/update`,{social_links:socialLink});
+     const res = await axios.put(`${BACKEND_URL}/auth/update`,{social_links:socialLink},{headers:{
+      "Authorization":`Bearer ${Cookies.get("access-token")}`
+     }});
     if(res.data.success){
       toast({title:"Link added successfully"});
     }

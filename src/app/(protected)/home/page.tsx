@@ -16,7 +16,7 @@ import RecentResources from "@/components/feed/recent-resources";
 import EventsList from "@/components/feed/events-list";
 export default function Home() {
   const {isAuthenticated,user,feed} = useSession()
- console.log(feed)
+
   return (
     <div className="min-h-screen bg-navy-900 text-white">
       {!feed?(<Loader/>):(

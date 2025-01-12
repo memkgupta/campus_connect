@@ -122,7 +122,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const refreshRequest = await axios.post(
           `${BACKEND_URL}/auth/refresh-token`,
           {},
-          { withCredentials: true }
+          { withCredentials: true,headers:{"Authorization":`Bearer ${Cookies.get('refreshToken')}`} }
         );
         if (refreshRequest.data.success) {
           Cookies.set("access-token", refreshRequest.data.accessToken, {
@@ -177,11 +177,11 @@ const isFeedFresh = (time: string | Date) => {
 
   // Calculate the difference in milliseconds
   const timeDifference = Math.abs(
-    date2.getMilliseconds() - date1.getMilliseconds()
+    date2.getTime() - date1.getTime()
   );
 
   // Convert milliseconds to hours
-  const hoursDifference = timeDifference / (1000 * 60 * 60);
-  // console.log(date1,date2);
-  return hoursDifference < 1;
+  const minuteDifference = timeDifference / (1000*60);
+console.log(minuteDifference,timeDifference,date1.getMilliseconds(),date2.getMilliseconds(),date1,date2)
+  return minuteDifference < 10;
 };

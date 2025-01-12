@@ -38,9 +38,9 @@ export function ProjectPage({projectData}:{projectData:ProjectResponseData}) {
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div>
-                    <div className="font-medium">{projectData.lead.name}</div>
+                    <div className="font-medium">{projectData.admin.name}</div>
                     <div className="text-xs text-muted-foreground">{
-                      <Link href={projectData.lead.linkedin||"#"} target="_blank" ><Image src={"/linkedin.png"} width={20} height={20} alt="linkedin"/></Link>
+                      <Link href={projectData.admin.linkedin||"#"} target="_blank" ><Image src={"/linkedin.png"} width={20} height={20} alt="linkedin"/></Link>
                       }
                       </div>
                   </div>
@@ -143,8 +143,8 @@ export function ProjectPage({projectData}:{projectData:ProjectResponseData}) {
         <div className="container space-y-6">
           <h2 className="text-2xl font-bold">Technologies Used</h2>
           <div className="flex flex-wrap gap-2">
-           {projectData.technologiesUsed.map((tech:string)=>(
-            <Badge variant={"secondary"}>{tech}</Badge>
+           {projectData.technologiesUsed.split(',').map((tech:string)=>(
+            <Badge variant={"secondary"}>{tech.trim()}</Badge>
            ))}
           </div>
         </div>
@@ -155,7 +155,7 @@ export function ProjectPage({projectData}:{projectData:ProjectResponseData}) {
           <div className="grid gap-6 md:grid-cols-2">
             <div className="rounded-lg bg-background p-4 shadow-sm">
               <div className="text-sm font-medium text-muted-foreground">Current Phase</div>
-              <div className="text-2xl font-bold">{projectData.status}</div>
+              <div className="text-2xl font-bold">{projectData.currently_working?"In progress":"Completed"}</div>
             </div>
         
           </div>
@@ -165,18 +165,18 @@ export function ProjectPage({projectData}:{projectData:ProjectResponseData}) {
         <div className="container space-y-6">
           <h2 className="text-2xl font-bold">Team Members</h2>
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-           {projectData.contributors.map(contributor=>(
+           {projectData.contributors.map((contributor)=>(
              <div className="flex items-center gap-4">
              <Avatar>
                <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
                <AvatarFallback>CN</AvatarFallback>
              </Avatar>
              <div>
-               <div className="font-medium">{contributor.name}</div>
-               <div className="text-xs text-muted-foreground">{contributor.role}</div>
+               <div className="font-medium">{contributor.user.name}</div>
+               {/* <div className="text-xs text-muted-foreground">{contributor.role}</div> */}
                <div className="flex gap-2 items-center">
-               {contributor.username &&<Link href={`/user/${contributor.username}`}>{`@${contributor.username}`}</Link>}
-               {contributor.linkedin &&<Link href={contributor.linkedin}>
+               {contributor.user.username &&<Link href={`/user/${contributor.user.username}`}>{`@${contributor.user.username}`}</Link>}
+               {contributor.user.linkedin &&<Link href={contributor.user.linkedin}>
                <Image src={"/linkedin.png"} width={20} height={20} alt="linkedin"/>
                </Link>}
                </div>
@@ -193,9 +193,9 @@ export function ProjectPage({projectData}:{projectData:ProjectResponseData}) {
             <div className="rounded-lg bg-background p-4 shadow-sm">
               <div className="text-sm font-medium text-muted-foreground">Live</div>
               <div className="flex items-center gap-2">
-                <Link href={projectData.live_link} className="font-medium" prefetch={false}>
+                {projectData.live_link&&<Link href={projectData.live_link} className="font-medium" prefetch={false}>
                   Live
-                </Link>
+                </Link>}
                 <Button variant="ghost" size="icon">
                   <LinkIcon className="h-5 w-5" />
                 </Button>
@@ -204,9 +204,9 @@ export function ProjectPage({projectData}:{projectData:ProjectResponseData}) {
           {projectData.documentationLink &&  <div className="rounded-lg bg-background p-4 shadow-sm">
               <div className="text-sm font-medium text-muted-foreground">Documentation</div>
               <div className="flex items-center gap-2">
-                <Link href={projectData.documentationLink} className="font-medium" prefetch={false}>
+             {projectData.documentationLink&&   <Link href={projectData.documentationLink} className="font-medium" prefetch={false}>
                   Docs
-                </Link>
+                </Link>}
                 <Button variant="ghost" size="icon">
                   <LinkIcon className="h-5 w-5" />
                 </Button>
@@ -226,9 +226,9 @@ export function ProjectPage({projectData}:{projectData:ProjectResponseData}) {
             <div className="rounded-lg bg-background p-4 shadow-sm">
               <div className="text-sm font-medium text-muted-foreground">Collaboration</div>
               <div className="flex items-center gap-2">
-                <Link href={projectData.github} className="font-medium" prefetch={false}>
+               {projectData.github&& <Link href={projectData.github} className="font-medium" prefetch={false}>
                   Github
-                </Link>
+                </Link>}
                 <Button variant="ghost" size="icon">
                   <LinkIcon className="h-5 w-5" />
                 </Button>

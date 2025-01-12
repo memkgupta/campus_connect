@@ -61,7 +61,7 @@ const Page = () => {
         return;
       }
 
-      const res = await axios.post(`${BACKEND_URL}/clubs/register`, {
+      const res = await axios.post(`${BACKEND_URL}/club/register`, {
         clubEmail: data.clubEmail,
         clubName: data.clubName,
         clubDescription: data.clubDescription,

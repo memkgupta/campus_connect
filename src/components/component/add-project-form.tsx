@@ -105,7 +105,7 @@ const handleSubmit = async()=>{
       }
     });
     // const res_data = res.data;/
-    router.push(`/projects/view/${res.data.pid}`)
+    router.push(`/account/projects/my-projects/view/${res.data.pid}`)
 toast({
   title:"Project added successfully",
   className:"bg-green-500 "

@@ -1,5 +1,6 @@
 "use client"
 import { ProjectPage } from '@/components/component/project-page';
+import { BACKEND_URL } from '@/constants';
 import { ProjectDashboardData } from '@/types'
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -10,7 +11,7 @@ const [data,setData] = useState<ProjectDashboardData|null>(null);
 const [isLoading,setIsLoading] = useState();
 const fetchProjectDetails = async()=>{
     try {
-        const res = await axios.get(`/api/projects/${params.id}`);
+        const res = await axios.get(`${BACKEND_URL}/projects/view?pid=${params.id}`);
 setData({
     projectData:res.data.data
 });
@@ -21,7 +22,9 @@ setData({
 
 const {data:resData} = useQuery({
     queryKey:[],
-    queryFn:fetchProjectDetails
+    queryFn:fetchProjectDetails,
+    retry:false,
+    refetchOnWindowFocus:false
 });
   return (
     <div>

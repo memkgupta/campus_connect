@@ -49,6 +49,7 @@ try {
  
     return res.data
 } catch (error) {
+  
     const axiosError = error as AxiosError<any>;
   
       toast({
@@ -90,13 +91,14 @@ const handleStartTracker = async()=>{
 // Call handleVote with 'up' or 'down' based on the action
     const fetchTracker = async()=>{
   
+     if(isAuthenticated){
       try {
         const headers:any = {}
-        if(isAuthenticated){
-          headers.Authorization = `Bearer ${Cookies.get('access-token')}`
-        }
+        
         if(data!=null && auth.isAuthenticated){
-          const res = await axios.get(`${BACKEND_URL}/tracker?rid=${params.id}`,{headers:headers});
+          const res = await axios.get(`${BACKEND_URL}/tracker?rid=${params.id}`,{headers:{
+            "Authorization":`Bearer ${Cookies.get("access-token")}`
+          }});
           if(res.data.success && res.data.tracker){
             setTracker(res.data.tracker);
             const index = videos.findIndex((_v:any)=>_v._id===res.data.tracker.recent);
@@ -117,9 +119,11 @@ const handleStartTracker = async()=>{
         const message = axiosError.response?.data.message||"Something went wrong"
         return new Error(message)
       }
-      finally{
-        // setIsLoading(false)
-      }
+   
+     }
+     else{
+      return null;
+     }
     }
     const {data:_data,isLoading:isResourceLoading} = useQuery({
       queryKey:['resource',params.id,isAuthenticated],
@@ -130,7 +134,7 @@ const handleStartTracker = async()=>{
     const {data:_tracker,isLoading:isTrackerLoading} = useQuery(
    
       {
-       queryKey:['tracker',params.id,isAuthenticated],
+       queryKey:['tracker',params.id,,isAuthenticated],
         queryFn:fetchTracker,
         retry:false,
         refetchOnWindowFocus:false,
@@ -198,7 +202,7 @@ if(tracker){
       {/* Progress */}
 
     </div>
-    <ProgressComponent tracker ={tracker}/>
+    {isAuthenticated&&<ProgressComponent tracker ={tracker}/>}
    </div>
    
     {/* Video List Section */}

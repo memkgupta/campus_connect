@@ -14,6 +14,7 @@ import { Form,FormControl, FormDescription, FormField, FormItem, FormLabel } fro
 import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
 import { useSession } from '@/hooks/useSession'
+import { BACKEND_URL } from '@/constants'
 function page() {
   // const [email,setEmail] = useState<string>("");
   const[username,setUsername] = useState('')
@@ -39,7 +40,7 @@ const checkUsername = async()=>{
     setIsUsernameChecking(true);
     setUsernameMessage('');
     try {
-     const response = await axios.get(`/api/users/username-valid-check?username=${username}`)
+     const response = await axios.get(`${BACKEND_URL}/utils/username-valid-check?username=${username}`)
      setUsernameMessage(response.data.message)
     } catch (error) {
       const axiosError = error as AxiosError<any>;
@@ -58,7 +59,7 @@ const checkUsername = async()=>{
   const handleSubmit = async(data:Zod.infer<typeof signUpSchema>)=>{
 setIsSubmitting(true);
 try {
- const res = await axios.post(`/api/users/sign-up`,data)
+ const res = await axios.post(`${BACKEND_URL}/auth/sign-up`,data)
  toast({title:"Success",description:res.data.message})
  router.replace(`/auth/verify/${username}`);
  setIsSubmitting(false);

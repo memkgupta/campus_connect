@@ -143,12 +143,19 @@ function Page() {
                           userDetails={userDetails}
                           setUserDetails={setUserDetails}
                         />
-                        {data.isClubAdmin && (
+                        {data.isClubAdmin ?(
                           <Link
                             className="bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black w-fit mt-4 justify-self-end"
                             href={"/account/club"}
                           >
                             Your Club
+                          </Link>
+                        ):(
+                          <Link
+                            className="bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black w-fit mt-4 justify-self-end"
+                            href={"/account/register-a-club"}
+                          >
+                            Register Your Club
                           </Link>
                         )}
                       </div>

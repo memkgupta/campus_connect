@@ -30,6 +30,7 @@ import { Input } from "../ui/input";
 import * as z from "zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BACKEND_URL } from "@/constants";
+import Cookies from "js-cookie";
 const EditDialog = ({
   userDetails,
   setUserDetails,
@@ -64,7 +65,9 @@ const EditDialog = ({
     try {
       const reqData: any = { ...data };
       reqData.profile = preview;
-      const res = await axios.put(`/api/users/update`, reqData);
+      const res = await axios.put(`${BACKEND_URL}/auth/update`, reqData,{headers:{
+        "Authorization":`Bearer ${Cookies.get("access-token")}`
+      }});
       if (res.data.success) {
         toast({ title: "Details updated successfully" });
         queryClient.invalidateQueries({queryKey:['account-data']})

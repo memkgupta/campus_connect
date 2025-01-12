@@ -48,7 +48,7 @@ export interface TeamMember{
       name:string,
       username:string,
       linkedin:string,
-      role:string
+      profile:string,
     }
     
 export interface ProjectFormData {
@@ -119,16 +119,16 @@ export interface ProjectFormData {
       images:string[],
       openForCollab:boolean,
       start:Date,
-      technologiesUsed:string[],
+      technologiesUsed:string,
       end:Date|undefined,
       currently_working:boolean,
       status:string,
       tags:string[],
-      lead:TeamMember,
+      admin:TeamMember,
       live_link:string,
       github:string,
       demo:string,
-      contributors:TeamMember[],
+      contributors:{role:string,user:TeamMember}[],
       createdAt:Date,
       updatedAt:Date
   }
