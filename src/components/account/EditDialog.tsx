@@ -31,6 +31,7 @@ import * as z from "zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BACKEND_URL } from "@/constants";
 import Cookies from "js-cookie";
+import { ImageEditor as ImageSelector } from "../imageSelector/ImageSelector";
 const EditDialog = ({
   userDetails,
   setUserDetails,
@@ -157,39 +158,11 @@ const EditDialog = ({
           <DialogTitle>Update User Details</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col justify-center items-center">
-          <div
-            onMouseEnter={() => {
-              setIsHovered(true);
-            }}
-            onMouseLeave={() => {
-              setIsHovered(false);
-            }}
-            className={`relative w-52 h-52 rounded-full ${
-              !preview && "bg-gray-500"
-            }`}
-            onClick={handleProfileSelect}
-          >
-            {preview && (
-              <img src={preview} className="w-52 h-52 rounded-full" />
-            )}
-            {isHovered && preview && (
-              <div className="absolute cursor-pointer inset-0 rounded-full flex items-center justify-center bg-gray-800 bg-opacity-50 transition-opacity">
-                <Trash size={40} />
-              </div>
-            )}
-          </div>
-          <UploadButton
-            className={`${preview && "hidden"} mt-2`}
-            endpoint="fileUploader"
-            onClientUploadComplete={(res) => {
-              setPreview(res[0].url);
-              setUserDetails({ ...userDetails, profile: res[0].url });
-            }}
-            onUploadError={(error: Error) => {
-              // Do something with the error.
-              alert(`ERROR! ${error.message}`);
-            }}
-          />
+      
+        
+          
+          <ImageSelector preview={preview} isRound={true} type="profile" title={`Profile image for ${userDetails.username}`} setImage={(url)=>setPreview(url)}/>
+         
         </div>
         <Form {...form}>
           <form

@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ComboBox from "../ComboBox";
 import axios from "axios";
 import { useToast } from "../ui/use-toast";
+import {parseAsString, useQueryState} from "nuqs"
 import { BACKEND_URL, branches, paperType, universities } from "@/constants";
 import { yearTillNow } from "@/helpers/yearUtility";
 import {
@@ -56,28 +57,21 @@ const FilterBox = ({
     branch: string;
   };
   const { toast } = useToast();
-  const [year, setYear] = useState({
-    value: "1",
-    label: "1st year",
-    id: "1",
-  });
-  const [selectedBranch, setSelectedBranch] = useState<{
-    value: string;
-    label: string;
-    id: string;
-  } | null>({ value: "first-year", label: "First Year", id: "first-year" });
+  const [year, setYear] = useQueryState('year',parseAsString.withDefault('1'));
+  const [selectedBranch, setSelectedBranch] = useQueryState('branch');
 
-
-
-  // fetching subjects
+  const [subject, setSubject] = useQueryState('subject');
+  const [selectedUniversity, setSelectedUniversity] = useQueryState('university')
+  // const [selectedPaperType, setSelectedPaperType] = useQueryState('')
+  const [selectedSession, setSelectedSession] = useQueryState('session');
 const fetchSubjects = async()=>{
   var params = "";
   if (year) {
-  
-    params = params.concat("?year=").concat(year.value);
+ 
+    params = params.concat("?year=").concat(year);
   }
   if (selectedBranch) {
-    params = params.concat(`&branch=${selectedBranch.value}`);
+    params = params.concat(`&branch=${selectedBranch}`);
   }
   
 try {
@@ -87,6 +81,8 @@ try {
    res.data.subjects.unshift({
     value:'',label:'All',id:'All'
    })
+ 
+ 
    return res.data.subjects;
   
 } catch (error) {
@@ -97,48 +93,37 @@ try {
 
   
 }
-const {data:subjectsFilterOptions} = useQuery<{value:string,label:string,id:string}[]>({
+const {data:subjectsFilterOptions,isLoading:isSubjectsLoading} = useQuery<{value:string,label:string,id:string}[]>({
   queryKey:[year,selectedBranch],
   queryFn:fetchSubjects,
   refetchOnWindowFocus:false,
         retry:false
 })
-  const [subject, setSubject] = useState<{value:string,label:string,id:string}>();
+ 
 
   const sessions = yearTillNow();
 
-  const [selectedUniversity, setSelectedUniversity] = useState({
-    label: "AKTU",
-    value: "AKTU",
-    id: "AKTU",
-  });
-  const [selectedPaperType, setSelectedPaperType] = useState({
-    value: "end-sem",
-    label: "Semester exams",
-    id: "end-sem",
-  });
-  const [selectedSession, setSelectedSession] = useState(sessions[0]);
+ 
 
 const fetchResources = async()=>{
   var params: any = {};
     if (year) {
-      params.collegeYear = year.value;
+      params.collegeYear = year;
     }
-    if (selectedBranch) {
-      params.branch = selectedBranch.value;
+    if (parseInt(year)>1 && selectedBranch) {
+      params.branch = selectedBranch;
+    }
+    else{
+      params.branch = 'first-year';
     }
     if (selectedUniversity) {
-      params.university = selectedUniversity.value;
+      params.university = selectedUniversity;
     }
-    if (selectedSession) {
-      params.sessionYear = selectedSession.value;
-    }
+   
     if(subject){
-      params.code = subject.value;
+      params.code = subject;
     }
-    if(selectedPaperType){
-      params.paperType = selectedPaperType.value
-    }
+
     if(type){
       console.log(type)
       params.type = type;
@@ -159,7 +144,7 @@ const fetchResources = async()=>{
       loading(false);
     }
 }
-// const fetchSources = async
+
 const {data:resourceData,isSuccess} = useQuery<any>(
   {
     queryKey:[year,selectedBranch,selectedSession,subject],
@@ -177,6 +162,7 @@ const {data:resourceData,isSuccess} = useQuery<any>(
       {/* Year filter */}
       {filters.year && (
         <ComboBox
+        defaultValue={year}
           label="Select Year"
           options={[
             {
@@ -204,32 +190,29 @@ const {data:resourceData,isSuccess} = useQuery<any>(
         />
       )}
       {/* Subject filter */}
-      {filters.subjects && (
+      {filters.subjects &&!isSubjectsLoading &&(
         <ComboBox
+        defaultValue={subject}
           label="Select Subject"
-          options={subjectsFilterOptions?subjectsFilterOptions:[]}
+          options={subjectsFilterOptions?subjectsFilterOptions:[{id:'all',value:'',label:'All'}]}
           stateSetter={setSubject}
         />
       )}
       {
-     ( parseInt(year.value)>1) && <ComboBox label="Select Branch"
+     ( parseInt(year)>1) && <ComboBox label="Select Branch"
+     defaultValue={selectedBranch}
       options={branches} stateSetter={setSelectedBranch}/>
       }
       {filters.university && (
         <ComboBox
+        defaultValue={selectedUniversity}
           label="Select university"
           options={universities}
           stateSetter={setSelectedUniversity}
         />
       )}
       {/* <ComboBox label='Select university' options={paperType} stateSetter={setSelectedPaperType} /> */}
-      {filters.session && (
-        <ComboBox
-          label="Select session"
-          options={sessions}
-          stateSetter={setSelectedSession}
-        />
-      )}
+     
     </div>
   );
 };

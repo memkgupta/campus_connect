@@ -41,6 +41,7 @@ import EditDialog from "@/components/account/EditDialog";
 import SocialLinkDialog from "@/components/account/SocialLinkDialog";
 import dynamic from "next/dynamic";
 import { BACKEND_URL } from "@/constants";
+import CustomImage from "@/components/ui/image";
 function Page() {
   const [userDetails, setUserDetails] = useState({
     profile: "",
@@ -68,11 +69,13 @@ function Page() {
       });
 
       if (res.data.success) {
-        setUserDetails(res.data.data);
- 
-        return res.data.data;
+     const user_data = res.data.data;
+       
+        setUserDetails(user_data);
+        return user_data;
       }
     } catch (error) {
+      console.log(error)
       setError(true);
       const axiosError = error as AxiosError<any>;
       if (axiosError.response?.status !== 500 && axiosError.response) {
@@ -108,7 +111,7 @@ function Page() {
                 <div className="relative w-2/3 bg-slate-800 rounded-md  border-gray-100">
                   <div className="z-10 absolute top-20 left-5 rounded-full min-w-[100px] min-h-[100px] md:min-w-[200px] md:min-h-[200px] bg-slate-500 border-2 border-black">
                     {data.profile && (
-                      <img
+                      <CustomImage
                         src={data.profile}
                         className="w-[100px] h-[100px] md:w-[200px] md:h-[200px] rounded-full"
                       />
@@ -132,6 +135,7 @@ function Page() {
                           setUserDetails={setUserDetails}
                           userDetails={userDetails}
                         />
+                        
                       </div>
                       <div className="flex flex-col mt-24 ml-10">
                         <p className="font-bold text-white md:text-2xl sm:text-lg">
