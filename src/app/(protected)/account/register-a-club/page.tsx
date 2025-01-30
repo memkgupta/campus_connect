@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { UploadButton } from "@/utils/uploadthing";
 import ComboBox from "@/components/ComboBox";
 import { BACKEND_URL } from "@/constants";
+import { ImageEditor as ImageSelector } from "@/components/imageSelector/ImageSelector";
 import Cookies from "js-cookie";
 const Page = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -115,38 +116,7 @@ const Page = () => {
             </h2>
 
             <div className="flex flex-col justify-center items-center">
-              <div
-                onMouseEnter={() => {
-                  setIsHovered(true);
-                }}
-                onMouseLeave={() => {
-                  setIsHovered(false);
-                }}
-                className={`relative w-52 h-52 rounded-full ${
-                  !preview && "bg-gray-500"
-                }`}
-                onClick={handleProfileSelect}
-              >
-                {preview && (
-                  <img src={preview} className="w-52 h-52 rounded-full" />
-                )}
-                {isHovered && preview && (
-                  <div className="absolute cursor-pointer inset-0 rounded-full flex items-center justify-center bg-gray-800 bg-opacity-50 transition-opacity">
-                    <Trash size={40} />
-                  </div>
-                )}
-              </div>
-              <UploadButton
-                className={`${preview && "hidden"} mt-2`}
-                endpoint="fileUploader"
-                onClientUploadComplete={(res) => {
-                  setPreview(res[0].url);
-                }}
-                onUploadError={(error: Error) => {
-                  // Do something with the error.
-                  alert(`ERROR! ${error.message}`);
-                }}
-              />
+             <ImageSelector isRound={true} preview={preview} setImage={(url)=>setPreview(url)} type="profile" />
             </div>
             {/* <ComboBox options={} stateSetter={setCollegeId}/> */}
             <Form {...form}>

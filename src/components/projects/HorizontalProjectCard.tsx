@@ -1,3 +1,5 @@
+import CustomImage from "../ui/image";
+
 export default function HorizontalProjectCard({data}:{data:{details:{
     banner:string,title:string,openForCollab:boolean,category:string,tags:string,updatedAt:Date
 },upvoteCount:number,downvoteCount:number,}}) {
@@ -6,7 +8,7 @@ export default function HorizontalProjectCard({data}:{data:{details:{
         <div className="flex bg-blue-900 text-white shadow-md rounded-lg overflow-hidden">
           {/* Banner */}
           <div className="w-24">
-            <img
+            <CustomImage
               src={data.details.banner || "/placeholder-banner.jpg"}
               alt="Banner"
               className="h-full w-full object-cover"

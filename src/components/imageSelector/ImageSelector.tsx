@@ -28,7 +28,7 @@ interface ImageAdjustments {
   isRound: boolean;
 }
 
-export function ImageEditor({preview,isRound,type,title,setImage}:{preview:string|null,isRound:boolean,type:string,title?:string,setImage:(url:string)=>void}) {
+export function ImageEditor({preview,isRound,type,title,setImage,size}:{preview:string|null,isRound:boolean,type:string,title?:string,setImage:(url:string)=>void,size?:{width:number,height:number}}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(preview);
   const [isChanged,setIsChanged] = useState(false);
@@ -96,12 +96,12 @@ export function ImageEditor({preview,isRound,type,title,setImage}:{preview:strin
   };
 
   return (
-    <div   className="max-w-md mx-auto p-6">
-      <input style={{ display: "none" }} onChange={handleFileChange} type='file' accept='image/jpeg' id='profileSelector_file'/>
+    <div   className=" mx-auto p-6">
+      <input style={{ display: "none" }} onChange={handleFileChange} type='file' accept='image/*' id='profileSelector_file'/>
       <div 
         onClick={()=>{document.getElementById('profileSelector_file')?.click()}}
         className={`border-2 border-dashed border-gray-300 text-center cursor-pointer hover:border-blue-500 transition-colors relative ${adjustments.isRound ? 'rounded-full' : 'rounded-lg'}`}
-        style={{ height: '200px', width: '200px', margin: '0 auto',objectFit:'contain' }}
+        style={{ height: size?.height||"200px", width: size?.width||"200px", margin: '0 auto',objectFit:'contain' }}
       >
         {selectedImage ? (
           <>
@@ -112,7 +112,7 @@ export function ImageEditor({preview,isRound,type,title,setImage}:{preview:strin
               
                 <CustomImage
                   src={selectedImage}
-                
+                  
                   className="max-w-none"
                     alt="Selected"
                   width={"100%"}
@@ -137,7 +137,7 @@ export function ImageEditor({preview,isRound,type,title,setImage}:{preview:strin
       <DialogContent className="max-h-screen max-w-screen">
        
         <ImageEditorModal
-        
+        size={size}
        isRounded={isRound}
         isOpen={isChanged}
         onClose={() => setIsChanged(false)}

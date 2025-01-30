@@ -25,7 +25,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { format } from "date-fns"
-
+import { ImageEditor as ImageSelector } from "../imageSelector/ImageSelector";
 export function AddProjectForm() {
   const router = useRouter()
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -136,7 +136,7 @@ setIsLoading(false);
   return (
     <div className="dark bg-background text-foreground">
       <Card className="w-full max-w-5xl mx-auto p-6 sm:p-8 md:p-10">
-      <div onMouseEnter={()=>{
+      {/* <div onMouseEnter={()=>{
             setIsHovered(true)
         }} onMouseLeave={()=>{setIsHovered(false)}} className={`relative w-3/4 mx-auto rounded-md h-[200px] mb-4 flex items-center justify-center ${!formData.projectImage && 'bg-slate-900/50' }`} onClick={(e)=>{
           if(formData.projectImage){
@@ -161,7 +161,17 @@ setIsLoading(false);
          alert(`ERROR! ${error.message}`);
        }}
      />
-</div>
+
+</div> */}
+     
+<div className="flex flex-col justify-center items-center">
+      
+        
+          
+          <ImageSelector size={{width:900,height:300}} preview={formData.projectImage} isRound={false} type="image" title={`Banner image for Projext`} setImage={(url:string)=>setFormData((prev)=>({...prev,projectImage:url}))}/>
+         
+        </div>
+
         <CardHeader>
           <CardTitle className="text-3xl font-bold">Project Details</CardTitle>
           <CardDescription>Fill out the form to provide comprehensive details about your project.</CardDescription>

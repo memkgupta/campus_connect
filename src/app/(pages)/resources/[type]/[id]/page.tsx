@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie';
+import CustomDocViewer from '@/components/ui/doc-viewer';
 // import {Document, Page,pdfjs} from 'react-pdf'
 
 const Page = ({params}:{params:{id:string,type:string}}) => {
@@ -43,7 +44,7 @@ const Page = ({params}:{params:{id:string,type:string}}) => {
             _data.votes = [{upvoteCount:0,downvoteCount:0}]
             }
             setData(_data)
-          
+          setPdfUrl(_data.resource.file)
 setIsVoted(res.data.data.isVoted);
             return res.data.data;
           } catch (error: any) {
@@ -92,7 +93,7 @@ setIsVoted(res.data.data.isVoted);
               </div>
 </div>
         <div className="mt-5 flex justify-center">
-{data?.resource.file&&(<iframe src={data.resource.file} width="640" height="640" allow="autoplay"></iframe>)}
+{pdfUrl&&(<CustomDocViewer src={pdfUrl}/>)}
         </div>
         </div>
       ):

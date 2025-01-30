@@ -15,6 +15,7 @@ import Link from 'next/link'
 import NoResourceFound from '@/components/NoResourceFound'
 import Image from 'next/image'
 import { BACKEND_URL } from '@/constants'
+import CustomImage from '@/components/ui/image'
 const Page = ({params}:{params:{type:string,id:string}}) => {
     const type = params.type||"pyq";
   const[isLoading,setIsLoading] = useState(true)
@@ -40,7 +41,7 @@ console.log(data)
             data?.map((res)=>(
               <Card className='min-w-[300px] '>
               <CardContent className='flex flex-col justify-center items-center'>  
-                {res.data.thumbnail && <img src={res.data.thumbnail} className='max-w-fit w-[200px] h-[200px]' />}
+                {res.data.thumbnail && <CustomImage src={res.data.thumbnail} className='max-w-fit w-[200px] h-[200px]' />}
                 {res.data.label}
                 
                 {res.data.sessionYear}

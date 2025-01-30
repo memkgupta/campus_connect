@@ -22,50 +22,27 @@ import { BACKEND_URL } from '@/constants';
 import Cookies from 'js-cookie';
 import { useSession } from '@/hooks/useSession';
 import Link from 'next/link';
+import CustomImage from '@/components/ui/image';
 const Page = () => {
   const {toast} = useToast();
-    const {isAuthenticated} = useSession();
-    const [clubDetails,setClubDetails] = useState<{
-      _id:string,
-      clubDescription:string,
-      clubName:string,
-      clubLogo:string,
-      contactPhone:string,
-      events:any[],
-      members:any[],
-      recruitmentStats?:any,
-      messages:any[]
 
-
-    }>({
-      _id:'',
-      clubDescription:'',
-      clubName:'',
-      clubLogo:'',
-      contactPhone:'',
-      events:[],
-      members:[],
-      messages:[],
-    });
     const[loading,setLoading] = useState(true);
-    const[isSubmitting,setIsSubmitting] = useState(false);
-    const [isHovered,setIsHovered] = useState(false);
-    const [preview,setPreview] = useState<string|null>('');
+
 
     const form = useForm<z.infer<typeof editClubSchema>>({
       resolver:zodResolver(editClubSchema),
       
     })
 const fetchClubDashboardData = async ()=>{
+  console.log("Hello function working")
 try {
   const res = await axios.get(`${BACKEND_URL}/club/dashboard`,{headers:{
     "Authorization" : `Bearer ${Cookies.get('access-token')}`
   }});
 const data = res.data.clubDetails;
-console.log(data)
-setPreview(data.clubLogo);
-// clubContext?.setState(clubDetails)
-setClubDetails({_id:data._id,clubDescription:data.clubDescription,clubName:data.clubName,clubLogo:data.clubLogo,contactPhone:data.contactPhone,events:data.events,members:data.members,messages:data.messages})
+
+
+
 form.setValue("clubDescription",data.clubDescription);
 form.setValue("clubName",data.clubName);
 form.setValue("contactPhone",data.contactPhone);
@@ -93,34 +70,8 @@ finally{
 }
 }
 
-// const handleSubmit = async(data:Zod.infer<typeof editClubSchema>)=>{
-//   try {
-//     setIsSubmitting(true);
-//     const reqData:any ={...data}
-  
-//     if(preview!=clubDetails.clubLogo){
-//       reqData.clubLogo = preview
-//     }
 
-//     const res = await axios.put(`/api/club/update`,reqData);
-   
-//     toast({
-//       title:'Club details updated successfully'
-//     })
-//   } catch (error) {
-//     const axiosError = error as AxiosError<any>;
-//     if(axiosError.response?.data){
-//       toast({title:axiosError.response.data.message,variant:'destructive'})
-//     }else{
-//       toast({title:"Some error occured",variant:'destructive'})
-
-//     }
-//   }
-//   finally{
-//     setIsSubmitting(false)
-//   }
-// }
-    const {data:clubData=undefined,isSuccess}=useQuery({
+    const {data:clubData,isSuccess}=useQuery({
         queryKey:[],
         queryFn:fetchClubDashboardData,
         refetchOnWindowFocus:false,
@@ -136,7 +87,7 @@ finally{
        <header className="border-b border-slate-800">
          <div className="container mx-auto px-4 py-6 flex items-center justify-between">
            <div className="flex items-center gap-4">
-             <img 
+             <CustomImage 
                src={clubData.clubLogo} 
                alt={clubData.clubName} 
                className="w-12 h-12 rounded-full object-cover"

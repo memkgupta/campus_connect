@@ -22,9 +22,13 @@ interface ImageEditorModalProps {
   onSave: (image: Blob) => void;
   initialImage: string|null;
   initialAdjustments?: ImageAdjustments;
+  size?:{
+    width:number,
+    height:number
+  }
 }
 
-export function ImageEditorModal({ isOpen,onSave, initialImage, initialAdjustments,isRounded }: ImageEditorModalProps) {
+export function ImageEditorModal({ isOpen,onSave, initialImage, initialAdjustments,isRounded,size }: ImageEditorModalProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(initialImage || null);
 
  
@@ -33,7 +37,7 @@ export function ImageEditorModal({ isOpen,onSave, initialImage, initialAdjustmen
   const [rotation, setRotation] = useState(0)
   const [zoom, setZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area|null>(null)
-  const [croppedImage, setCroppedImage] = useState(null)
+  
   const[brightness,setBrightness]=useState(0);
   const onCropComplete = (croppedArea:any, croppedAreaPixels:any) => {
     setCroppedAreaPixels(croppedAreaPixels)
@@ -49,7 +53,7 @@ export function ImageEditorModal({ isOpen,onSave, initialImage, initialAdjustmen
 {selectedImage ?   
 <Cropper
 style={
-  { containerStyle:{width:"400px",height:"400px",marginRight:"auto",marginLeft:"auto",position:"relative"},mediaStyle:{
+  { containerStyle:{width:size?size.width:"400px",height:size?size.height:"400px",marginRight:"auto",marginLeft:"auto",position:"relative"},mediaStyle:{
     filter:`brightness(${brightness+100}%)`
   }}
 }
@@ -57,7 +61,7 @@ style={
     crop={crop}
     cropShape={isRounded?'round':'rect'}
     zoom={zoom}
-    aspect={4 / 4}
+    aspect={size?(size.width/size.height):4/4}
   rotation={rotation}
     onCropChange={setCrop}
     onCropComplete={onCropComplete}

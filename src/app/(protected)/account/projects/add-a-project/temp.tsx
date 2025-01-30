@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils'
 import { PopoverContent } from '@radix-ui/react-popover'
 import { Calendar } from '@/components/ui/calendar'
 import { format } from 'date-fns'
+import CustomImage from '@/components/ui/image'
 const Page = () => {
     const {data:session} = useSession()
     const router = useRouter();
@@ -116,7 +117,7 @@ router.replace("/auth/sign-in")
             setBanner(null);
           }
         }} >
- {banner&&<img src={banner} className='w-full h-full'/>}
+ {banner&&<CustomImage src={banner} className='w-full h-full'/>}
             {isHovered && banner && (
         <div className="absolute cursor-pointer inset-0 rounded-md flex items-center justify-center bg-gray-800 bg-opacity-50 transition-opacity">
         <Trash size={40}/>

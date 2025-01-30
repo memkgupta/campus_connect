@@ -1,3 +1,5 @@
+import CustomImage from "../ui/image";
+
 export default function HorizontalResourceCard({ data }:{data:{details:{
    thumbnail:string,label:string,category:string,type:string,branch:string,sessionYear:string,code:string,updatedAt:Date
 },upvoteCount:number,downvoteCount:number,}}) {
@@ -6,7 +8,7 @@ export default function HorizontalResourceCard({ data }:{data:{details:{
         <div className="flex bg-blue-900 text-white shadow-md rounded-lg overflow-hidden">
           {/* Thumbnail */}
           <div className="w-24">
-            <img
+            <CustomImage
               src={data.details.thumbnail || "/placeholder-thumbnail.jpg"}
               alt="Thumbnail"
               className="h-full w-full object-cover"

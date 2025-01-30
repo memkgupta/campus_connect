@@ -14,6 +14,7 @@ import { useDebounceCallback } from 'usehooks-ts'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import Image from 'next/image'
 import { Loader2 } from 'lucide-react'
+import CustomImage from '@/components/ui/image'
 
 interface ProjectRes {
 title:string,
@@ -119,14 +120,14 @@ toast({
 }</CardTitle>
     </CardHeader>
     <CardContent>
-      <img src={project.banner} alt='' className='w-full '/>
+      <CustomImage src={project.banner} alt='' className='w-full '/>
       {project.description}
     </CardContent>
     <CardFooter className='justify-between'>
       {
      <>
         <div className='flex gap-2 items-center'>
-        <img src={project.lead.profile} className='w-12 h-12 rounded-full'></img>
+        <CustomImage src={project.lead.profile} className='w-12 h-12 rounded-full'/>
         <Link href={`/user/${project.lead.username}`}>{project.lead.name}</Link>
         </div>
         <Link href={`/projects/${project._id}`} className='bg-yellow-300 hover:bg-yellow-400 text-black p-2  rounded-md'>View</Link>

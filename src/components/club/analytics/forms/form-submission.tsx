@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CustomImage from "@/components/ui/image";
 import { format } from "date-fns";
 import { AtSign, Calendar } from "lucide-react";
 
@@ -33,7 +34,7 @@ export function FormSubmission({ data }: FormSubmissionProps) {
     <Card className="bg-slate-950 border-yellow-500">
       {/* Event Banner */}
       <div className="relative h-48 w-full">
-        <img 
+        <CustomImage
           src={data.event.banner} 
           alt={data.event.name}
           className="w-full h-full object-cover"
@@ -60,7 +61,7 @@ export function FormSubmission({ data }: FormSubmissionProps) {
         <div className="p-6 rounded-lg bg-slate-900/50 border border-yellow-500/20">
           <h3 className="text-xl font-semibold text-yellow-400 mb-4">Applicant Details</h3>
           <div className="flex items-center gap-4">
-            <img 
+            <CustomImage
               src={data.userDetails.profile} 
               alt={data.userDetails.name}
               className="w-16 h-16 rounded-full object-cover border-2 border-yellow-500"

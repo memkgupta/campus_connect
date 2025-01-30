@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CustomImage from "@/components/ui/image";
 import { Separator } from "@/components/ui/separator";
 import { RegistrationDocument } from "@/types/types";
 import { format } from "date-fns";
@@ -14,7 +15,7 @@ export function RegistrationDetails({ registration }: {registration:Registration
         <Card className="bg-slate-950 border-yellow-500">
         {/* Event Banner Section */}
         <div className="relative h-48 w-full">
-          <img 
+          <CustomImage
             src={registration.event.banner} 
             alt={registration.event.name}
             className="w-full h-full object-cover"
@@ -41,7 +42,7 @@ export function RegistrationDetails({ registration }: {registration:Registration
           <div className="p-6 rounded-lg bg-slate-900/50 border border-yellow-500/20">
             <h3 className="text-xl font-semibold text-yellow-400 mb-4">Registrant Details</h3>
             <div className="flex items-center gap-4">
-              <img 
+              <CustomImage
                 src={registration.user.profile} 
                 alt={registration.user.name}
                 className="w-16 h-16 rounded-full object-cover border-2 border-yellow-500"

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import EditDialog from '../dialogs/EditDialog';
 import { Project } from '@/types/index';
 import { projectCategories } from '@/constants';
+import CustomImage from '@/components/ui/image';
 
 export default function ProjectHeader({ project }: { project: Project }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -21,7 +22,7 @@ export default function ProjectHeader({ project }: { project: Project }) {
         Edit
       </button>
 
-      <img src={project.banner} alt={project.title} className="w-full h-48 object-cover rounded-lg mb-4" />
+      <CustomImage src={project.banner} alt={project.title} className="w-full h-48 object-cover rounded-lg mb-4" />
       <h1 className="text-3xl font-bold text-yellow-400">{project.title}</h1>
       <span className="inline-block bg-blue-900 text-yellow-400 px-3 py-1 rounded-full text-sm">
         {project.category}

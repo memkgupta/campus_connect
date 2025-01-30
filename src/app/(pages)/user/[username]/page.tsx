@@ -38,6 +38,7 @@ import { BACKEND_URL } from '@/constants';
 import NoResourceFound from '@/components/NoResourceFound';
 import HorizontalProjectCard from '@/components/projects/HorizontalProjectCard';
 import HorizontalResourceCard from '@/components/resources/HorizontalResourceCard';
+import CustomImage from '@/components/ui/image';
 function Page( {params}:{params:{username:string}}) {
 
   
@@ -149,7 +150,7 @@ useEffect(()=>{
          <div className='relative w-2/3 bg-slate-800 rounded-md  border-gray-100'>
          <div className='z-10 absolute top-20 left-5 rounded-full min-w-[100px] min-h-[100px] md:min-w-[200px] md:min-h-[200px] bg-slate-500 border-2 border-black'>
           {userDetails.profile&&
-          <img src={userDetails.profile} className='w-[100px] h-[100px] md:w-[200px] md:h-[200px] rounded-full'/>}
+          <CustomImage src={userDetails.profile} className='w-[100px] h-[100px] md:w-[200px] md:h-[200px] rounded-full'/>}
          </div>
          <div className="grid w-full">
             {/* banner */}

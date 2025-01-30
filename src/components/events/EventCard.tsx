@@ -11,6 +11,7 @@ import {
 import Link from 'next/link'
 import { MapPin } from 'lucide-react'
 import { Badge } from '../ui/badge'
+import CustomImage from '../ui/image'
 const EventCard = ({data,isAdmin}:{data:any,isAdmin?:boolean}) => {
   return (
     <Card className="w-[350px]">
@@ -34,7 +35,7 @@ const EventCard = ({data,isAdmin}:{data:any,isAdmin?:boolean}) => {
       </CardContent>
    {data.club &&   <CardFooter className="flex justify-between">
        <p className='text-white'>{data.club.clubName}</p>
-       <img src={data.club.clubLogo} className='w-8 h-8 rounded-full' alt="" />
+       <CustomImage src={data.club.clubLogo} className='w-8 h-8 rounded-full' alt="" />
       </CardFooter>}
     </Card>
   )

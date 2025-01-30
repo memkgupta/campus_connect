@@ -169,7 +169,7 @@ finally{
        year.value!="1" &&
        (
        
-               <ComboBox options={branches} label='Select Branch' stateSetter={setSelectedBranch}/>
+      <ComboBox options={branches} label='Select Branch' stateSetter={setSelectedBranch}/>
           
        )
    

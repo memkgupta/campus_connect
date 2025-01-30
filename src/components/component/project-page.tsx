@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { ProjectFormData, ProjectResponseData } from "@/types"
 import Image from "next/image"
+import CustomImage from "../ui/image"
 
 export function ProjectPage({projectData}:{projectData:ProjectResponseData}) {
   return (
@@ -52,7 +53,7 @@ export function ProjectPage({projectData}:{projectData:ProjectResponseData}) {
       </section>
       <section className="px-12 ">
         <div className="container">
-          <img
+          <CustomImage
             src={projectData.banner}
             width="1200"
             height="600"

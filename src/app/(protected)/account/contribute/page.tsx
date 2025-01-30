@@ -78,14 +78,15 @@ const Page = () => {
     ) {
       const data = {
         label: label,
-        type: resourceType.value,
-        branch: selectedBranch.value,
-        code: selectedSubject.value,
-        collegeYear: year.value,
-        sessionYear: sessionYear.value,
+        type: resourceType,
+        branch: selectedBranch,
+        code: selectedSubject,
+        collegeYear: year,
+        sessionYear: sessionYear,
         file: fileUrl?.replace("view", "preview"),
         university: selectedUniversity.value,
       };
+      console.log(selectedBranch)
       try {
         setIsSubmitting(true);
         const res = await axios.post(`${BACKEND_URL}/resources/upload-resource`,data,{headers:{

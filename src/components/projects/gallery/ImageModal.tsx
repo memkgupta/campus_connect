@@ -1,4 +1,5 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import CustomImage from "@/components/ui/image";
 import { X } from "lucide-react";
 
 interface ImageModalProps {
@@ -20,7 +21,7 @@ export default function ImageModal({ isOpen, image, onClose }: ImageModalProps) 
           <X size={24} />
         </button>
         <div className="relative w-full h-[80vh]">
-          <img
+          <CustomImage
             src={image}
             alt="Project image"
             className="w-full h-full object-contain"

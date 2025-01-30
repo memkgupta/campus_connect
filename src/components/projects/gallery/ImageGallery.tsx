@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ImageModal from './ImageModal';
+import CustomImage from '@/components/ui/image';
 
 interface ImageGalleryProps {
   images: string[];
@@ -25,7 +26,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
             className="relative aspect-square cursor-pointer overflow-hidden rounded-lg"
             onClick={() => setSelectedImage(image)}
           >
-            <img
+            <CustomImage
               src={image}
               alt={`Project image ${index + 1}`}
               className="object-cover w-full h-full hover:scale-105 transition-transform duration-200"
