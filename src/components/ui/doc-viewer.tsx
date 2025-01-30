@@ -35,7 +35,17 @@ const CustomDocViewer = memo(({src}:{src:string}) => {
         <div className="max-w-[1000px] px-24">
         {url && <DocViewer documents={[
             {uri:url}
-        ]} pluginRenderers={DocViewerRenderers} prefetchMethod="GET" />}
+            
+        ]}
+        config={{
+          header: {
+          
+            disableFileName: true,
+      
+          },
+        
+        }} 
+        pluginRenderers={DocViewerRenderers} prefetchMethod="GET" />}
         </div>
     )
 })
