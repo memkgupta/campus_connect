@@ -1,8 +1,8 @@
 "use client"
-import NoResourceFound from '@/components/NoResourceFound';
+import NoResourceFound from '@/components/no-resource-found-card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import Voting from '@/components/utils/Voting';
+import Voting from '@/components/utils/voting';
 import { BACKEND_URL } from '@/constants';
 import { useQuery } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';

@@ -35,11 +35,10 @@ import {
 import { cn } from "@/lib/utils"
 import axios from "axios"
 // import { toast } from "react-toastify"
-import FileUpload from "@/components/utils/FileUpload"
+import FileUpload from "@/components/utils/files/file-upload"
 import { ClubContext } from "@/context/ClubContext"
 import { BACKEND_URL, eventCategories } from "@/constants"
 import { useToast } from "@/components/ui/use-toast"
-import { title } from "process"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
 // Mock event categories enum

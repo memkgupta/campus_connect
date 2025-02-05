@@ -20,12 +20,6 @@ const Voting = ({currentVote,votes,c_id,setVotes,setIsVoted}:{currentVote:string
         return;
       }
       setIsVoting(true);
-      
-      
-        // Create a copy of votes to update
-        // const votes = data.votes;
-        // const currentVote = isVoted;
-      
         if (currentVote&& currentVote === voteType) {
           // User is undoing their vote
           setIsVoted(null);

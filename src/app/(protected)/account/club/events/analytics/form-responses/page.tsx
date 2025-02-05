@@ -1,7 +1,7 @@
 "use client"
 import { TablePagination } from '@/components/club/analytics/registrations/table-pagination'
-import { SubmissionsTable } from '@/components/club/analytics/SubmissionsTable'
-import Loader from '@/components/Loader'
+import { SubmissionsTable } from '@/components/club/analytics/submission-table'
+import Loader from '@/components/loader'
 import { Input } from '@/components/ui/input'
 import { BACKEND_URL } from '@/constants'
 import { FilterOptions } from '@/types'

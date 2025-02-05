@@ -16,7 +16,7 @@ import { format } from 'date-fns'
 import { cn } from "@/lib/utils"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import FileUpload from '../utils/FileUpload'
+import FileUpload from '../utils/files/file-upload'
 import { eventCategories } from '@/constants'
 
 const formSchema = z.object({

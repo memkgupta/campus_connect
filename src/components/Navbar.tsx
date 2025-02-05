@@ -4,9 +4,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSession } from '@/hooks/useSession';
 import {User} from "next-auth"
 import Image from 'next/image';
-import { NavigationMenuDemo } from './NavigationMenu';
+import { NavigationMenuDemo } from './navigation-menu';
 import { Cross, CrossIcon, HamIcon, Loader2, MenuIcon, Search, User2, X } from 'lucide-react';
-import Sidebar from './Sidebar';
+import Sidebar from './sidebar';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
@@ -14,8 +14,8 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { document } from 'postcss';
 import axios from 'axios';
 import { useToast } from './ui/use-toast';
-import SearchResult from './SearchResult';
-import SearchBar from './SearchBar';
+import SearchResult from './search-results';
+import SearchBar from './search-bar';
 function Navbar() {
 
    

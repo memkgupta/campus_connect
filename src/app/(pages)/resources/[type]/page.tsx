@@ -1,5 +1,5 @@
 'use client'
-import FilterBox from '@/components/study-materials/FilterBox'
+import FilterBox from '@/components/utils/study-materials/filter-box'
 import React, { useEffect, useState } from 'react'
 import {
   Card,
@@ -12,7 +12,7 @@ import {
 import { ArrowUp, FileX, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import NoResourceFound from '@/components/NoResourceFound'
+import NoResourceFound from '@/components/no-resource-found-card'
 import Image from 'next/image'
 import { BACKEND_URL } from '@/constants'
 import CustomImage from '@/components/ui/image'

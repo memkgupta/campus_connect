@@ -1,24 +1,21 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react'
-import { UploadButton } from "@/utils/uploadthing";
-import { ContributorContext } from '@/context/ContributorContext';
-import { zodResolver } from "@hookform/resolvers/zod"
+
 import { Button } from '@/components/ui/button'
-import { Form,FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {  FileText, Loader2 } from 'lucide-react'
-import * as z from "zod"
-import { useForm } from "react-hook-form"
-import ComboBox from '@/components/ComboBox';
+import {  Loader2 } from 'lucide-react'
+
+
+import ComboBox from '@/components/ui/combobox-custom';
 import axios, { AxiosError } from 'axios';
 import { useToast } from '@/components/ui/use-toast';
 import { yearTillNow } from '@/helpers/yearUtility';
-import { useDebounceCallback } from 'usehooks-ts';
-import Link from 'next/link';
+
+
 import { BACKEND_URL, branches, resourceTypes, universities } from '@/constants';
 import { Label } from '@/components/ui/label';
 import { YTLecture } from '@/types';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+
 
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';

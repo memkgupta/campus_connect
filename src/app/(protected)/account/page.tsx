@@ -28,11 +28,11 @@ import { Input } from "@/components/ui/input";
 import { editProfileSchema } from "@/schema/editProfileSchema";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/components/ui/use-toast";
-import ErrorLoadingPage from "@/components/ErrorLoadingPage";
+import ErrorLoadingPage from "@/components/error-loading-page";
 
 import { useDebounceCallback } from "usehooks-ts";
 import Cookies from "js-cookie";
-import ActiveCourse from "@/components/ActiveCourse";
+import ActiveCourse from "@/components/active-course";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { validateURL } from "@/utils/validator";
@@ -162,6 +162,14 @@ function Page() {
                             Register Your Club
                           </Link>
                         )}
+                        {user?.role&& user.role =="ADMIN" &&
+                        (  <Link
+                          className="bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black w-fit mt-4 justify-self-end"
+                          href={"/admin/dashboard"}
+                        >
+                          Admin
+                        </Link>)
+                        }
                       </div>
                     </div>
 

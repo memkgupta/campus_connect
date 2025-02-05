@@ -8,7 +8,7 @@ import { CirclePlus } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
-import ComboBox from '@/components/ComboBox'
+import ComboBox from '@/components/ui/combobox-custom'
 import {Input} from '@/components/ui/input'
 const AddEventForm = () => {
     const params = useSearchParams();

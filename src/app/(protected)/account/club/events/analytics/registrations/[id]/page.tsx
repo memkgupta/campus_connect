@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import React from 'react'
 import Cookies from 'js-cookie'
-import Loader from '@/components/Loader'
+import Loader from '@/components/loader'
 const Page = ({params}:{params:{id:string}}) => {
     const mockRegistration ={
         _id: "6770e305536489b1008777db",

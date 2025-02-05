@@ -1,6 +1,6 @@
 "use client"
-import ComboBox from '@/components/ComboBox';
-import EventCard from '@/components/events/EventCard';
+import ComboBox from '@/components/ui/combobox-custom';
+import EventCard from '@/components/events/event-card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';

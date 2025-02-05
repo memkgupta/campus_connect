@@ -14,7 +14,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { UploadButton } from "@/utils/uploadthing";
 import { Button } from "../ui/button";
 import { Loader2, Pencil, Trash, X } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -31,7 +30,7 @@ import * as z from "zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BACKEND_URL } from "@/constants";
 import Cookies from "js-cookie";
-import { ImageEditor as ImageSelector } from "../imageSelector/ImageSelector";
+import { ImageEditor as ImageSelector } from "../imageSelector/image-selector";
 const EditDialog = ({
   userDetails,
   setUserDetails,
@@ -40,7 +39,6 @@ const EditDialog = ({
   setUserDetails: any;
 }) => {
   const { toast } = useToast();
-  const [isHovered, setIsHovered] = useState(false);
   const [preview, setPreview] = useState<any>(
     userDetails.profile != "" ? userDetails.profile : null
   );
@@ -58,7 +56,6 @@ const EditDialog = ({
       name: userDetails.name,
       bio: userDetails.bio,
       interests: userDetails.interest,
-      // profile:userDetails.profile
     },
   });
   const handleSubmit = async (data: Zod.infer<typeof editProfileSchema>) => {
@@ -81,12 +78,6 @@ const EditDialog = ({
       }
     } finally {
       setIsSubmitting(false);
-    }
-  };
-  const handleProfileSelect = () => {
-    if (preview) {
-      setPreview(null);
-    } else {
     }
   };
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {

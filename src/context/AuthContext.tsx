@@ -17,6 +17,7 @@ import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { toast } from "@/components/ui/use-toast";
 import { BACKEND_URL } from "@/constants";
+import Loader from "@/components/loader";
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
@@ -29,7 +30,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
-
+  // const [isLoading,setIsLoading] = useState(true);
   const login = useCallback(async (credentials: LoginCredentials) => {
     try {
       dispatch({ type: "LOGIN_START" });
@@ -168,7 +169,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     fetchSession();
   }, []);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>
+    {state.isLoading?(<Loader/>):children}
+  </AuthContext.Provider>;
 }
 
 const isFeedFresh = (time: string | Date) => {

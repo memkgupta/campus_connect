@@ -7,7 +7,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { Analytics } from "@vercel/analytics/react"
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { type ReactNode } from 'react'
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -63,7 +63,7 @@ export default function RootLayout({
        
         <main>
        
-    <NuqsAdapter>    {children}</NuqsAdapter>
+    <NuqsAdapter>{children}</NuqsAdapter>
        
         </main>
        

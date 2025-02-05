@@ -2,43 +2,24 @@
 import React, { ChangeEvent, KeyboardEvent, useContext, useEffect, useState } from 'react'
 // import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { CircleFadingPlus, Github, Instagram, Linkedin, Loader2, LogOutIcon, Pencil, Plus, PlusIcon, Trash, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import * as z from "zod"
-import { DialogClose } from '@radix-ui/react-dialog';
-import {  useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form,FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { editProfileSchema } from '@/schema/editProfileSchema';
+
 import axios, { AxiosError } from 'axios';
 import { useToast } from '@/components/ui/use-toast';
-import ErrorLoadingPage from '@/components/ErrorLoadingPage';
-import { Label } from '@/components/ui/label';
-import { useDebounceCallback } from 'usehooks-ts';
-import { UploadButton } from '@/utils/uploadthing';
-import ActiveCourse from '@/components/ActiveCourse';
+import ErrorLoadingPage from '@/components/error-loading-page';
+
+
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { validateURL } from '@/utils/validator';
-import Image from 'next/image';
-import { setDate } from 'date-fns';
+
 import { Card, CardHeader } from '@/components/ui/card';
 import {useSession} from '@/hooks/useSession';
 import { BACKEND_URL } from '@/constants';
-import NoResourceFound from '@/components/NoResourceFound';
-import HorizontalProjectCard from '@/components/projects/HorizontalProjectCard';
-import HorizontalResourceCard from '@/components/resources/HorizontalResourceCard';
+import NoResourceFound from '@/components/no-resource-found-card';
+import HorizontalProjectCard from '@/components/projects/horizontal-project-card';
+import HorizontalResourceCard from '@/components/resources/horizontal-resource-card';
 import CustomImage from '@/components/ui/image';
+import { Loader2 } from 'lucide-react';
 function Page( {params}:{params:{username:string}}) {
 
   

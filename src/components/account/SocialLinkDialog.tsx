@@ -20,9 +20,8 @@ import { BACKEND_URL } from '@/constants';
 import Cookies from 'js-cookie';
 const SocialLinkDialog = ({userDetails,setUserDetails}:{userDetails:any,setUserDetails:any}) => {
 const {toast} = useToast();
-    const [isNotValidURL,setIsNotValidURL] = useState(true);
-    const[socialLink,setSocialLink] = useState<string>('');
-
+const [isNotValidURL,setIsNotValidURL] = useState(true);
+const[socialLink,setSocialLink] = useState<string>('');
 const handleAddLink =async ()=>{
   if(isNotValidURL){
     toast({
@@ -31,17 +30,14 @@ const handleAddLink =async ()=>{
     })
     return;
   }
-  
     try {
-  
-     
      const res = await axios.put(`${BACKEND_URL}/auth/update`,{social_links:socialLink},{headers:{
       "Authorization":`Bearer ${Cookies.get("access-token")}`
      }});
     if(res.data.success){
       toast({title:"Link added successfully"});
     }
-    setUserDetails({...userDetails,socials:[...userDetails.socials,socialLink]})
+  setUserDetails({...userDetails,socials:[...userDetails.socials,socialLink]})
   setSocialLink('');
   setIsNotValidURL(true)
   

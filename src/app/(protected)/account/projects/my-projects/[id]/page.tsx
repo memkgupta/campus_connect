@@ -1,5 +1,6 @@
 "use client"
-import ProjectDetails from '@/components/projects/ProjectDetails'
+import { ProjectDashboard } from '@/components/projects/dashboard/project-dashboard'
+import ProjectDetails from '@/components/projects/project-details'
 import { BACKEND_URL } from '@/constants'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
@@ -26,7 +27,8 @@ const ProjectPage = ({params}:{params:{id:string}}) => {
             isFetching || !project ? <div className='w-full h-full flex justify-center items-center'>
             <Loader2 className='text-gray-400 animate-spin'/>
             </div>:
-            <ProjectDetails project={project}/>
+            // <ProjectDetails project={project}/>
+            <ProjectDashboard project_id={params.id}/>
         }
         
     </div>

@@ -1,7 +1,7 @@
 "use client"
-import EventCard, { dateToString } from '@/components/events/EventCard';
-import NotRegisteredCard from '@/components/events/NotRegisteredCard';
-import Loader from '@/components/Loader';
+import EventCard, { dateToString } from '@/components/events/event-card';
+import NotRegisteredCard from '@/components/events/not-registered-card';
+import Loader from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { useQuery } from '@tanstack/react-query';

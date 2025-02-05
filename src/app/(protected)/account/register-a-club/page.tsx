@@ -20,10 +20,9 @@ import { useForm } from "react-hook-form";
 import { clubRegistrationSchema } from "@/schema/clubRegistrationSchema";
 import axios, { AxiosError } from "axios";
 import { Textarea } from "@/components/ui/textarea";
-import { UploadButton } from "@/utils/uploadthing";
-import ComboBox from "@/components/ComboBox";
+
 import { BACKEND_URL } from "@/constants";
-import { ImageEditor as ImageSelector } from "@/components/imageSelector/ImageSelector";
+import { ImageEditor as ImageSelector } from "@/components/imageSelector/image-selector";
 import Cookies from "js-cookie";
 const Page = () => {
   const [isLoading, setIsLoading] = useState(true);

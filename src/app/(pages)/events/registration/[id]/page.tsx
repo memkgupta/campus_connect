@@ -1,5 +1,5 @@
 'use client'
-import Loader from '@/components/Loader'
+import Loader from '@/components/loader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BACKEND_URL } from '@/constants'
 import { format, getDate } from 'date-fns'

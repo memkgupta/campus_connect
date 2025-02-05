@@ -1,8 +1,8 @@
 "use client"
 import { FormGrid } from '@/components/club/analytics/forms/form-grid'
-import { RegistrationsTable } from '@/components/club/analytics/RegistrationTable'
-import { StatsCard } from '@/components/club/analytics/StatsCard'
-import { SubmissionsTable } from '@/components/club/analytics/SubmissionsTable'
+import { RegistrationsTable } from '@/components/club/analytics/registrations-table'
+import { StatsCard } from '@/components/club/analytics/stats-card'
+import { SubmissionsTable } from '@/components/club/analytics/submission-table'
 import { BACKEND_URL } from '@/constants'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
@@ -11,7 +11,7 @@ import { useSearchParams } from 'next/navigation'
 import Cookies from 'js-cookie'
 import React from 'react'
 import { toast } from '@/components/ui/use-toast'
-import Loader from '@/components/Loader'
+import Loader from '@/components/loader'
 interface User {
   username: string;
   name: string;

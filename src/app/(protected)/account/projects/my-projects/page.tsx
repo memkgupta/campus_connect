@@ -6,7 +6,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { toast } from '@/components/ui/use-toast'
 import { Loader2 } from 'lucide-react'
-import HorizontalProjectCard from '@/components/projects/HorizontalProjectCard'
+import HorizontalProjectCard from '@/components/projects/horizontal-project-card'
 import {
     Pagination,
     PaginationContent,

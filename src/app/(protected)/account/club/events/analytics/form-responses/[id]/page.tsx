@@ -6,7 +6,7 @@ import axios from 'axios';
 import React from 'react'
 import Cookies from 'js-cookie';
 import { toast } from '@/components/ui/use-toast';
-import Loader from '@/components/Loader';
+import Loader from '@/components/loader';
 const Page = ({params}:{params:{id:string}}) => {
   
 const fetchSubmissionData = async()=>{

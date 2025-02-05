@@ -1,8 +1,8 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { UploadButton } from "@/utils/uploadthing";
+
 import { ContributorContext } from "@/context/ContributorContext";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { FileText, Loader2 } from "lucide-react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import ComboBox from "@/components/ComboBox";
+import ComboBox from "@/components/ui/combobox-custom";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { yearTillNow } from "@/helpers/yearUtility";
@@ -24,7 +24,7 @@ import { useDebounceCallback } from "usehooks-ts";
 import Link from "next/link";
 import { BACKEND_URL, branches, resourceTypes, universities } from "@/constants";
 import { Label } from "@/components/ui/label";
-import FileUpload from "@/components/utils/FileUpload";
+import FileUpload from "@/components/utils/files/file-upload";
 import { headers } from "next/headers";
 import Cookies from "js-cookie";
 const Page = () => {

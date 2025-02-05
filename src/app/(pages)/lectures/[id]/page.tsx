@@ -1,5 +1,5 @@
 'use client'
-import Loader from '@/components/Loader';
+import Loader from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -8,8 +8,8 @@ import axios, { AxiosError } from 'axios';
 import { useSession } from '@/hooks/useSession';
 import Image from 'next/image';
 import React, { useState } from 'react'
-import ProgressComponent from '@/components/component/progress'
-import Voting from '@/components/utils/Voting';
+import ProgressComponent from '@/components/resources/progress'
+import Voting from '@/components/utils/voting';
 import { BACKEND_URL } from '@/constants';
 import Cookies from 'js-cookie';
 const Page = ({params}:{params:{id:string}}) => {

@@ -3,6 +3,7 @@ id?:string,
 email:string,
 name:string,
 username:string,
+role:string,
 verified:boolean
 }
 
@@ -45,6 +46,7 @@ export type YTLecture = {
 
 }
 export interface TeamMember{
+    _id?:string,
       name:string,
       username:string,
       linkedin:string,
@@ -110,7 +112,7 @@ export interface ProjectFormData {
       contributors: Contributor[];
     }
     export interface ProjectResponseData{
-      
+      _id?:string,
       category:string,
       title:string,
       description:string,

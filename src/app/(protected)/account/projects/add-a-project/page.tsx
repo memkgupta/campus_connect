@@ -1,5 +1,5 @@
 'use client'
-import { AddProjectForm } from '@/components/component/add-project-form'
+import { AddProjectForm } from '@/components/projects/add-project-form'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
