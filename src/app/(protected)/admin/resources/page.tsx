@@ -48,7 +48,7 @@ const ResourcesPage = () => {
       }
     }
     const {data:resources,isLoading} = useQuery({
-      queryKey:['resources',filters],
+      queryKey:['resources',{...filters}],
       queryFn:fetchResources
     })
     const debouncedFilter = useDebounceCallback(setFilters,500);

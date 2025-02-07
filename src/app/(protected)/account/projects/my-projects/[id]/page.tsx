@@ -6,11 +6,13 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import React from 'react'
-
+import Cookies from 'js-cookie'
 const ProjectPage = ({params}:{params:{id:string}}) => {
     const fetchProjectDetail = async()=>{
          try {
-            const res = await axios.get(`${BACKEND_URL}/projects/view`,{params:{pid:params.id}});
+            const res = await axios.get(`${BACKEND_URL}/projects/${params.id}/dashboard`,{headers:{
+              "Authorization":`Bearer ${Cookies.get("access-token")}`
+            }});
             const data = res.data.data;
             return data;
          } catch (error) {

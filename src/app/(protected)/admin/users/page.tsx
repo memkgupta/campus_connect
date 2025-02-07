@@ -81,7 +81,7 @@ const debouncedFilters = useDebounceCallback(setFilters,500);
 }
 
 const {data:users,isLoading} = useQuery({
-    queryKey:['users',filters],
+    queryKey:['users',{...filters}],
     queryFn:fetchUsers,
     retry:false,
     refetchOnWindowFocus:false

@@ -116,7 +116,7 @@ const [filters,setFilters] = useState({
 
     const debouncedFilter = useDebounceCallback(setFilters,500);
     const {data:subjects,isLoading} = useQuery({
-        queryKey:['subjects-admin',filters],
+        queryKey:['subjects-admin',{...filters}],
         queryFn:fetchSubjects
     })
     const handleFilterChange = (name:any,value:string|number)=>{
