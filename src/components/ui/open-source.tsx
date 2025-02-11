@@ -24,7 +24,7 @@ const AnimatedCounter = ({ end, duration = 2000 }:any) => {
 export const OpenSource = ()=>{
     return(
         <div className="bg-slate-950 rounded-xl p-6 px-24 shadow-xl hover:shadow-2xl transition-all duration-300 w-full">
-<div className="flex gap-8 justify-between items-center">
+<div className="flex flex-col md:flex-row gap-8 justify-between items-center">
   {/* Content */}
   <div className="">
     

@@ -40,7 +40,7 @@ else{
       {isLoading ? (
         <Loader />
       ) : (
-        <>
+        <div className="overflow-x-hidden">
         <section className="min-h-screen">
         <BackgroundBeamsWithCollision className="min-h-screen">
        
@@ -110,7 +110,7 @@ else{
               </Link>
             </div>
           </footer>
-        </>
+        </div>
       )}
     </>
   );
