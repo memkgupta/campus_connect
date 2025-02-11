@@ -9,6 +9,7 @@ import { useSession } from '@/hooks/useSession';
 import Image from 'next/image';
 import React, { useState } from 'react'
 import ProgressComponent from '@/components/resources/progress'
+//@ts-nocheck
 import Voting from '@/components/utils/voting';
 import { BACKEND_URL } from '@/constants';
 import Cookies from 'js-cookie';

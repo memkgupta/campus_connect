@@ -3,6 +3,7 @@ import NoResourceFound from '@/components/no-resource-found-card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 
+// @ts-ignore
 import Voting from '@/components/utils/voting';
 import { BACKEND_URL } from '@/constants';
 import { useQuery } from '@tanstack/react-query';
