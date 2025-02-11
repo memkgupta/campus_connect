@@ -4,6 +4,7 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { useToast } from './ui/use-toast';
 import { Loader2, Search } from 'lucide-react';
 import SearchResult from './search-results';
+import {BACKEND_URL} from "@/constants";
 
 const SearchBar = () => {
     const [query, setQuery] = useState('');
@@ -44,7 +45,7 @@ const handleInputChange = (e:any) => {
     const fetchResults = async()=>{
       try {
         if(query.length>0){
-          const res = await axios.get(`/api/search`,{params:{type:searchType,query:query}});
+          const res = await axios.get(`${BACKEND_URL}/utils/search`,{params:{type:searchType,query:query}});
        setSearchResult(res.data.results);
         }
     else{
