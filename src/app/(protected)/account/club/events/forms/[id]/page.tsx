@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 import { headers } from 'next/headers'
 import { useQuery } from '@tanstack/react-query'
-import Loader from '@/components/loader'
+import Loader from '@/components/Loader'
 const Page = ({params}:{params:{id:string}}) => {
 
     const [fields,setFields] = useState<Field[]>([]);

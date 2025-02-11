@@ -11,7 +11,7 @@ import { useSearchParams } from 'next/navigation'
 import Cookies from 'js-cookie'
 import React from 'react'
 import { toast } from '@/components/ui/use-toast'
-import Loader from '@/components/loader'
+import Loader from '@/components/Loader'
 interface User {
   username: string;
   name: string;

@@ -35,7 +35,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CustomTable } from "@/components/ui/custom-table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialogContent } from "@/components/ui/alert-dialog";
-import Loader from "@/components/loader";
+//@ts-ignore
+import Loader from "@/components/Loader";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { headers } from "next/headers";
 import { useRouter, useSearchParams } from "next/navigation";

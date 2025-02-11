@@ -4,7 +4,9 @@ import Link from "next/link";
 import { Bug, GithubIcon, LinkedinIcon } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { useContext, useEffect, useState } from "react";
-import Loader from "@/components/loader";
+//@ts-ignore
+//@ts-ignore
+import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";

@@ -12,7 +12,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '@/constants';
 import { toast } from '@/components/ui/use-toast';
 import { useDebounceCallback } from 'usehooks-ts';
-import Loader from '@/components/loader';
+import Loader from '@/components/Loader';
 import {
   DropdownMenu,
   DropdownMenuContent,

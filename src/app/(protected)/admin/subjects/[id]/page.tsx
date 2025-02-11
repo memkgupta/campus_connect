@@ -6,7 +6,7 @@ import axios from 'axios';
 import { BookOpen, Building2, Code2, GraduationCap, Pencil, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
 import Cookies from 'js-cookie';
-import Loader from '@/components/loader';
+import Loader from '@/components/Loader';
 import { headers } from 'next/headers';
 interface Subject{
    _id:string,

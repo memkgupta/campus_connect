@@ -17,7 +17,7 @@ import {
   } from "@/components/ui/table"
 
 import { Book, Hash, Pencil, Plus, Tag } from 'lucide-react'
-import Loader from '@/components/loader'
+import Loader from '@/components/Loader'
 import { Button } from '@/components/ui/button'
 import { SubjectModal } from '@/components/admin/SubjectModal'
 import { ColumnDef } from '@tanstack/react-table'

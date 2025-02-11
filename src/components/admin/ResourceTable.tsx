@@ -18,7 +18,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { toast } from '../ui/use-toast';
 import { useQuery } from '@tanstack/react-query';
-import Loader from '../loader';
+import Loader from '../Loader';
 
 import {
     Pagination,

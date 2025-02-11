@@ -1,5 +1,6 @@
 "use client";
-import Loader from "@/components/loader";
+//@ts-ignore
+import Loader from "@/components/Loader";
 
 import { useToast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";

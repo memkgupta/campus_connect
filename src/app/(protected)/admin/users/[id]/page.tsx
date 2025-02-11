@@ -5,7 +5,7 @@ import React from 'react'
 import Cookies from 'js-cookie'
 import { useQuery } from '@tanstack/react-query'
 import { UserCard } from '@/components/admin/UserCard'
-import Loader from '@/components/loader'
+import Loader from '@/components/Loader'
 const ViewUserPage = ({params}:{params:{id:string}}) => {
     const fetchUserData = async()=>{
         const req = await axios.get(

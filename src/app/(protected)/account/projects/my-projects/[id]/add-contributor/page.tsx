@@ -7,7 +7,7 @@ import React from 'react'
 import Cookies from 'js-cookie'
 import { toast } from '@/components/ui/use-toast'
 import { AddContributorModal } from '@/components/projects/dashboard/add-contributor-form'
-import Loader from '@/components/loader'
+import Loader from '@/components/Loader'
 const AddContributorPage = ({params}:{params:{id:string}}) => {
     const searchParams = useSearchParams()
     const requestId = searchParams.get('request_id')

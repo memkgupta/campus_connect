@@ -17,7 +17,7 @@ import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { toast } from "@/components/ui/use-toast";
 import { BACKEND_URL } from "@/constants";
-import Loader from "@/components/loader";
+
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;

@@ -17,7 +17,7 @@ import {
 import { Input } from './input';
 import ComboBox from './combobox-custom';
 import { TableBody, TableCell, TableHeader, TableRow } from './table';
-import Loader from '../loader';
+import Loader from '../Loader';
 
 export interface FilterState{
   [key:string]:any

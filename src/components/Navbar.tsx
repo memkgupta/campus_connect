@@ -6,7 +6,7 @@ import {User} from "next-auth"
 import Image from 'next/image';
 import { NavigationMenuDemo } from './navigation-menu';
 import { Cross, CrossIcon, HamIcon, Loader2, MenuIcon, Search, User2, X } from 'lucide-react';
-import Sidebar from './sidebar';
+import Sidebar from './Sidebar';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';

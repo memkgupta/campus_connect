@@ -30,7 +30,7 @@ import { Label } from "@/components/ui/label";
 import React, { useState } from 'react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
-import Loader from '@/components/loader'
+import Loader from '@/components/Loader'
 const ProjectContributorsPage = ({params}:{params:{id:string,cid:string}}) => {
   const fetchContributor = async()=>{
 try {

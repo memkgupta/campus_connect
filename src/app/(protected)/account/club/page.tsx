@@ -1,5 +1,5 @@
 "use client"
-import Loader from '@/components/loader';
+import Loader from '@/components/Loader';
 import { useToast } from '@/components/ui/use-toast';
 import { ClubContext } from '@/context/ClubContext'
 

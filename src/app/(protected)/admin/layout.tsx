@@ -1,6 +1,6 @@
 "use client"
 import { Sidebar } from '@/components/admin/Sidebar';
-import Loader from '@/components/loader';
+import Loader from '@/components/Loader';
 import { useSession } from '@/hooks/useSession';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

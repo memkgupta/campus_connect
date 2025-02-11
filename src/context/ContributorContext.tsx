@@ -3,7 +3,8 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Loader from "@/components/loader";
+//@ts-ignore
+import Loader from "@/components/Loader";
 import { useQuery } from "@tanstack/react-query";
 export const ContributorContext = createContext<boolean>(false);
 
