@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss"
-
+const {
+  default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
 export default({
   darkMode: ["class"],
   content: [
@@ -64,6 +66,16 @@ export default({
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
+        spotlight: {
+          "0%": {
+            opacity: 0,
+            transform: "translate(-72%, -62%) scale(0.5)",
+          },
+          "100%": {
+            opacity: 1,
+            transform: "translate(-50%,-40%) scale(1)",
+          },
+        },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
@@ -71,9 +83,16 @@ export default({
         "marquee":{
           '0%': { transform: 'translateX(50%)' },
           '100%': { transform: 'translateX(-50%)' },
-        }
+        },  scroll: {
+          to: {
+            transform: "translate(calc(-50% - 0.5rem))",
+          },
+        },
       },
       animation: {
+        spotlight: "spotlight 2s ease .75s 1 forwards",
+        scroll:
+        "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "marquee":"marquee 30s linear infinite"
@@ -81,6 +100,16 @@ export default({
     },
   },
 
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),addVariablesForColors],
 }); 
 
+function addVariablesForColors({ addBase, theme }: any) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+ 
+  addBase({
+    ":root": newVars,
+  });
+}

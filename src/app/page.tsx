@@ -7,33 +7,18 @@ import { useContext, useEffect, useState } from "react";
 import Loader from "@/components/loader";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
+import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
+import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
+import { FeaturesSectionDemo } from "@/components/ui/features";
+import { BackgroundBeams } from "@/components/ui/background-beams";
+import { BackgroundLines } from "@/components/ui/background-lines";
+import { Spotlight } from "@/components/ui/spotlight";
+import { OpenSource } from "@/components/ui/open-source";
 
 export default function Home() {
   const router = useRouter()
-  const about = [
-    {
-      id: 1,
-      heading: "Resources",
-      description:
-        "Find all the academic resources you need in one place. Our platform offers access to study guides, lecture notes, textbooks, and interactive tools to support your learning journey. Whether for exam prep or daily study, we’ve got everything to help you succeed",
-      image: "/resources.png",
-    },
-    {
-      id: 2,
-      heading: "Events",
-      description:
-        "Stay informed about all campus events with ease. Our platform keeps you updated on upcoming seminars, workshops, social gatherings, and more. From major events to small activities, find everything you need to stay connected and engaged with campus life.",
-      image: "/events.png",
-    },
-    {
-      id: 3,
-      heading: "Projects",
-      description:
-        "Explore and collaborate on a variety of projects with fellow students. Our platform connects you with project ideas, team opportunities, and resources to bring your academic and extracurricular projects to life. Find the perfect project to enhance your skills and work together with peers.",
-      image: "/projects.png",
-    },
-  ];
-  const authContext = useContext(AuthContext)
+
+ 
 const [isLoading,setIsLoading] = useState(true);
   const session = useSession();
   useEffect(()=>{
@@ -54,130 +39,60 @@ else{
         <Loader />
       ) : (
         <>
-          <div className="bg-red-500 w-full">
-            <p className="animate-marquee">
-              This project is currently in beta version and it may (will 🫠)
-              contain bugs.
-            </p>
+        <section className="min-h-screen">
+        <BackgroundBeamsWithCollision className="min-h-screen">
+       
+        
+       <div className={"flex-col items-center justify-center"}>
+         <h1 className={"text-3xl relative z-20 md:text-5xl lg:text-8xl font-bold text-center text-white font-sans tracking-tight"}>
+           Campus Connect
+         </h1>
+         <div className="text-xl md:text-xl text-yellow-400 text-center lg:text-4xl  font-bold py-4  [text-shadow:0_0_rgba(0,0,0,0.1)]">
+            <span className="">Collaborate, innovate, and grow</span>
           </div>
-          <section
-            className={"md:flex justify-center items-center px-12 py-10"}
-          >
-            <div className={"hero-img"}>
-              <Image
-                width={500}
-                height={500}
-                alt={"hero-image"}
-                src={"/hero.svg"}
-                className={"w-[500px] h-[400px]"}
-              />
-            </div>
-            <div className={"flex-col items-center justify-center"}>
-              <h1 className={"md:text-7xl text-center text-4xl font-bold mb-4"}>
-                Campus Connect
-              </h1>
-              <p className={"text-center  text-xl"}>
-                "Discover, Connect, and Collaborate with Fellow Students"
-              </p>
-              <div className={"flex justify-center"}>
-                <p
-                  className={
-                    "w-[300px] text-sm text-yellow-300 antialiased italic text-center mt-4"
-                  }
-                >
-                  Your One-Stop place for all your academic resources and
-                  projects ideas and collaboration
-                </p>
-              </div>
-              <div className={"flex justify-center gap-2 mt-4"}>
-                <Link
-                  href={"https://github.com/memkgupta/campus_connect"}
-                  className={
-                    "flex gap-2 mt-2 bg-amber-300 border border-yellow-400 p-2 rounded-full w-fit text-black hover:bg-yellow-100"
-                  }
-                >
-                  <GithubIcon />
-                  Star our repo
-                </Link>
-                <Link
-                  target={"_blank"}
-                  href={
-                    "https://docs.google.com/forms/d/e/1FAIpQLSdiumf-CgOqwSmuHEk06CFOoAG5OXxfMTml824hLsqRgxbyfg/viewform?usp=sf_link"
-                  }
-                  className={
-                    "flex gap-2 mt-2 bg-red-500 border border-yellow-400 p-2 rounded-full w-fit  hover:bg-red-300"
-                  }
-                >
-                  <Bug />
-                  Report a bug
-                </Link>
-              </div>
-            </div>
-          </section>
+          <div className="">
+   <InfiniteMovingCards
+   className="mt-12"
+        items={testimonials}
+        direction="right"
+        speed="slow"
+      />
+          </div>
+       
+       </div>
+   
+       </BackgroundBeamsWithCollision>
+        </section>
+     
+          <FeaturesSectionDemo/>
 
-          {/*  About  */}
-          <div className={"flex-col px-12 items-center justify-center"}>
-            <p className={"text-center font-bold text-3xl mb-4"}>About</p>
-            <p
-              className={`text-center mx-auto md:px-24 px-10 text-yellow-200 text-sm antialiased `}
-            >
-              This platform is created for connecting students of our college
-              with the aim of promoting collaboration and connecting students
-              with each other. This platform provides you all the ongoing events
-              details and clubs and communities can also register themselves and
-              can share their events. And Moreover you can share your projects
-              here and can also open them for collaboration. And last but not
-              least this is an open source so if you want any feature and find
-              any bug you can contribute to it and get featured on this website.
-            </p>
-          </div>
-          <section className={"md:px-24 px-10 mt-24"}>
-            {about.map((item) => (
-              <div key={item.id} className={`md:flex gap-3 items-center`}>
-                <Image
-                  src={item.image}
-                  alt={item.image}
-                  className={"py-3 mx-auto"}
-                  width={300}
-                  height={300}
-                />
-                <div className={"px-12"}>
-                  <p className={"mb-5 font-bold text-4xl"}>{item.heading}</p>
-                  <p className={"text-justify"}>{item.description}</p>
-                </div>
-              </div>
-            ))}
-          </section>
-          <section
-            className={
-              "mt-2 md:px-24 px-12 flex flex-col justify-center items-center"
-            }
-          >
-            <p className={"text-center font-bold text-4xl my-4"}>Open Source</p>
-            <p className={"text-center"}>
-              This project is an effort to cultivate an open-source mindset
-              within our community. By contributing your ideas, adding new
-              features, and fixing bugs, you have the opportunity to directly
-              shape and improve this platform. We encourage everyone to
-              participate, learn, and grow together, making this platform better
-              for all. Your involvement not only enhances your skills but also
-              fosters a collaborative environment where we all benefit from
-              shared knowledge and creativity. Let's work together to build
-              something truly impactful.
-            </p>
-            <Link
-              href={"https://github.com/memkgupta/campus_connect"}
-              className={
-                "flex gap-2 mt-2 bg-amber-300 border border-yellow-400 p-2 rounded-full w-fit text-black hover:bg-yellow-100"
-              }
-            >
-              <GithubIcon />
-              Star our repo
-            </Link>
-          </section>
+      <div className="relative">
+     <Spotlight/>
+    <div className="h-screen w-full rounded-md bg-slate-950 relative flex flex-col items-center justify-center antialiased">
+      <div className="max-w-2xl mx-auto p-4">
+        <h1 className="relative z-10 text-2xl md:text-7xl  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-600  text-center font-sans font-bold">
+        Campus Connect is Open Source – Join & Contribute!
+        </h1>
+        
+        <p className="text-neutral-500 max-w-lg mx-auto my-2 text-lg mt-5 text-center relative z-10">
+        Campus Connect is an open-source project built to empower students through collaboration and shared knowledge. Join us on this journey—contribute your ideas, code, and innovations to make it even better!
+        </p>
+        <div className="flex justify-center">
+        <button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+        Star Repo
+      </button>
+        </div>
+      
+      </div>
+      <OpenSource/>
+    </div>
+ 
+      </div>
+
+        
           <footer
             className={
-              "mt-3 flex flex-col items-center justify-center  bottom-0 w-full h-20 bg-slate-900"
+              "mt-3 flex flex-col items-center justify-center  bottom-0 w-full h-20 bg-slate-950"
             }
           >
             <p className={"mt-1"}>
@@ -198,3 +113,36 @@ else{
     </>
   );
 }
+const testimonials:any = [
+  {
+    quote:
+      "Campus Connect is a good project and is problem solving. From finding team members for hackathons to staying updated with events, everything is now seamless!",
+    name: "Priyanshu Pal",
+    title: "CSE",
+  },
+  {
+    quote:
+      "Campus Connect is a good project and is problem solving. From finding team members for hackathons to staying updated with events, everything is now seamless!",
+    name: "Nikhil Soni",
+    title: "CSE",
+  },
+  {
+    quote:
+      "Before Campus Connect, it was tough to discover project collaborations. Now, I can easily connect with peers who share my interests and work on real-world applications.",
+    name: "Mantosh",
+    title: "CSE",
+  },
+  {
+    quote:
+      "Our college clubs struggled with event promotions. With Campus Connect, we saw a huge increase in participation and engagement. It's a must-have for any campus!",
+    name: "Rudraksh Kushwaha",
+    title: "GDSC Lead",
+  },
+  {
+    quote:
+      "I always wanted a platform where students from different branches could collaborate easily. Campus Connect makes it effortless to share knowledge and work on interdisciplinary projects.",
+    name: "Mayank Rana",
+    title: "CSE",
+  },
+ 
+]
