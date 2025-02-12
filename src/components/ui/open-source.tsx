@@ -23,8 +23,8 @@ const AnimatedCounter = ({ end, duration = 2000 }:any) => {
 
 export const OpenSource = ()=>{
     return(
-        <div className="bg-slate-950 rounded-xl p-6 px-24 shadow-xl hover:shadow-2xl transition-all duration-300 w-full">
-<div className="flex flex-col md:flex-row gap-8 justify-between items-center">
+        <div className="bg-slate-950 rounded-xl p-6 px-24 shadow-xl hover:shadow-2xl transition-all duration-300 ">
+<div className="flex flex-col md:flex-row gap-8 justify-between items-center px-12">
   {/* Content */}
   <div className="">
     
@@ -32,39 +32,39 @@ export const OpenSource = ()=>{
   
 
     {/* GitHub Stats */}
-    <div className="flex gap-6 mb-4">
+    <div className="flex gap-6 mb-4 px-12">
       <div className="flex items-center gap-2 bg-slate-900/50 px-4 py-2 rounded-lg group hover:bg-slate-900 transition-colors">
-        <Star className="w-10 h-10 text-yellow-200 " />
+        <Star className="w-5 h-5 md:w-10 md:h-10 text-yellow-200 " />
         <div>
-          <div className="text-gray-200 text-lg font-semibold">
+          <div className="text-gray-200 text-xs md:text-lg font-semibold">
             <AnimatedCounter end={1200} />
           </div>
           <div className="text-gray-400 text-lg">Stars</div>
         </div>
       </div>
       <div className="flex items-center gap-2 bg-slate-900/50 px-4 py-2 rounded-lg group hover:bg-slate-900 transition-colors">
-        <GitFork className="w-10 h-10 text-yellow-200 " />
+        <GitFork className="w-5 h-5 md:w-10 md:h-10 text-yellow-200 " />
         <div>
-          <div className="text-gray-200 text-lg font-semibold">
+          <div className="text-gray-200 text-xs md:text-lg font-semibold">
             <AnimatedCounter end={280} />
           </div>
-          <div className="text-gray-400 text-lg">Forks</div>
+          <div className="text-gray-400 text-xs md:text-lg">Forks</div>
         </div>
       </div>
       <div className="flex items-center gap-2 bg-slate-900/50 px-4 py-2 rounded-lg group hover:bg-slate-900 transition-colors">
-        <Code2 className="w-10 h-10 text-yellow-200 " />
+        <Code2 className="w-5 h-5 md:w-10 md:h-10 text-yellow-200 " />
         <div>
-          <div className="text-gray-200 text-lg font-semibold">
+          <div className="text-gray-200 text-xs md:text-lg font-semibold">
             <AnimatedCounter end={15000} />
           </div>
-          <div className="text-gray-400 text-lg">Lines of Code</div>
+          <div className="text-gray-400 text-xs md:text-lg">Lines of Code</div>
         </div>
       </div>
     </div>
   </div>
 
   {/* Contributors Section */}
-  <div className="w-[24rem] shrink-0 bg-slate-900/50 rounded-lg p-4">
+  <div className="w-[24rem] shrink-0 bg-slate-900/50 rounded-lg p-4 px-12">
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-2">
         <Users className="w-5 h-5 text-yellow-200" />

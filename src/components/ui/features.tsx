@@ -221,7 +221,7 @@ export const SkeletonThree = () => {
                 </div>
               </div>
               <button className="flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition-colors">
-                <span className="text-sm font-medium">Learn More</span>
+                <a href="/events" className="text-sm font-medium">Learn More</a>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -258,7 +258,7 @@ export const SkeletonFive = () => {
 export const SkeletonFour = () => {
   return (
     <div className="bg-slate-950 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 w-full">
-    <div className="flex gap-8 items-center">
+    <div className="flex flex-col md:flex-row gap-8 items-center">
       {/* Content */}
       <div className="flex-1">
         <div className="flex items-center gap-3 mb-3">
@@ -307,10 +307,7 @@ export const SkeletonFour = () => {
                 +5
               </div>
             </div>
-            <button className="flex items-center gap-1.5 text-yellow-400 hover:text-yellow-300 transition-colors bg-slate-950/80 px-3 py-1.5 rounded-lg">
-              <span className="text-xs font-medium">Join Now</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+          
           </div>
         </div>
       </div>
