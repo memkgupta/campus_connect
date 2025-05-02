@@ -56,31 +56,19 @@ export const DashboardSidebar = () => {
               url: `/account/club`,
               icon: Home,
           },
-        {
-          title: "Tasks",
-          url: `/account/club/tasks`,
-          icon: ListChecks,
-        },
+     
         {
           title: "Events",
           url: `/account/club/events`, 
           icon: CalendarCheck,
         },
-        {
-            title: "Calendar",
-            url: `/account/club/calendar`, 
-            icon: Calendar,
-        },
+      
         {
             title:"Messages",
             url:`/account/club/messages`,
             icon:Users
         },
-        {
-          title: "Reports",
-          url: `/account/club/reports`,
-          icon: FolderClosedIcon,
-        },
+      
       
       ],
     },
