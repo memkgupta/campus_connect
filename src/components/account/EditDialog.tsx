@@ -152,7 +152,7 @@ const EditDialog = ({
       
         
           
-          <ImageSelector preview={preview} isRound={true} type="profile" title={`Profile image for ${userDetails.username}`} setImage={(url)=>setPreview(url)}/>
+          <ImageSelector  preview={preview} isRound={true} type="profile" title={`Profile image for ${userDetails.username}`} setImage={(url)=>setPreview(url)}/>
          
         </div>
         <Form {...form}>

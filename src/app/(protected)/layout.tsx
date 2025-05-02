@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSession } from "@/hooks/useSession";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import StoreProvider from "../StoreProvider";
+import { ClubContextProvider } from "@/context/ClubContext";
 
 
 
@@ -34,7 +36,13 @@ router.replace("/auth/sign-in")
 },[user])
     return (
         <QueryClientProvider client={queryClient}>
- {children}
+          <ClubContextProvider>
+<StoreProvider>
+{children}
+</StoreProvider>
+</ClubContextProvider>
+       
+
         </QueryClientProvider>
     
     );

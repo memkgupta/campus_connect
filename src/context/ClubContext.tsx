@@ -7,24 +7,86 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { createContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-type ClubContextProps = {
-    _id:string,
-    admin:string,
-    name:string
+import { useAppDispatch } from "@/lib/hooks";
+import { setClubDetails } from "@/lib/slices/clubSlice";
+type ClubContextState = {
+     clubs:{
+        _id:string,
+        title:string,
+        role:string,
+        team:{
+            _id:string,
+            title:string,
+        }
+        member_id:string,
+        permissions:{
+            action:string,
+            resource:string
+        }[]
+    }[],
+    selectedClub?:{
+        _id:string,
+        title:string,
+        role:string,
+        team:{
+            _id:string,
+            title:string,
+        }
+        member_id:string,
+        permissions:{
+            action:string,
+            resource:string
+        }[]
+    }|null
 }
-
+type ClubContextProps = {
+    clubs:{
+        _id:string,
+        title:string,
+        role:string,
+        team:{
+            _id:string,
+            title:string,
+        }
+        member_id:string,
+        permissions:{
+            action:string,
+            resource:string
+        }[]
+    }[],
+    selectedClub?:{
+        _id:string,
+        title:string,
+        role:string,
+        team:{
+            _id:string,
+            title:string,
+        }
+        member_id:string,
+        permissions:{
+            action:string,
+            resource:string
+        }[]
+    }|null,
+    handleChangeSelectedClub:(id:string)=>void
+}
 export const ClubContext = createContext<ClubContextProps|null>(null);
-
 export const ClubContextProvider = ({children}:{children:React.ReactNode})=>{
     const router = useRouter();
-    const [state,setState] = useState(null);
+    const [state,setState] = useState<ClubContextState|null>(null);
     const [isLoading,setIsLoading] = useState(true);
+// const dispatch = useAppDispatch()
     const {isAuthenticated} = useSession();
-    const {toast} = useToast();
+    const handleChangeSelectedClub = (id:string)=>{
+        if(state!=null){
+            const clubS = state.clubs.find(c=>c._id===id);
+            if(clubS!=undefined){
+                setState((prev:any)=>({...prev,selectedClub:clubS}))
+            }
+        }
+    }
     useEffect(()=>{
-       
 if(isAuthenticated){
-    
 {
 
     axios.get(`${BACKEND_URL}/club/my-club`,{headers:{
@@ -33,20 +95,16 @@ if(isAuthenticated){
     .then((res)=>{
         const data = res.data;
         if(!data.success){
-            setState(null)
+            setState({clubs:[],selectedClub:null})
         }
         else{
-            setState(data.clubs);
+            setState({clubs:data.clubs,selectedClub:data.clubs.length>0?data.clubs[0]:null});
         }
     })
     .catch((error)=>{
+        console.log(error)
         const axiosError = error as AxiosError<any>;
-        if(axiosError.response?.data){
-            toast({
-                title:axiosError.response.data.message,
-                variant:'destructive'
-            })
-        }
+        setState({clubs:[]});
     })
     .finally(()=>{
         setIsLoading(false);
@@ -58,15 +116,18 @@ if(isAuthenticated){
 return(()=>{})
 },[isAuthenticated])
     return(
-    <ClubContext.Provider value={state} >
+    <ClubContext.Provider value={{clubs:state?.clubs||[],selectedClub:state?.selectedClub,handleChangeSelectedClub:handleChangeSelectedClub}} >
       <>
       {isLoading?(
         <div className="flex jsutify-center items-center min-h-[80vh] w-full">
            <Loader2 className="animate-spin text-gray-500"  size={40}/>
 
         </div>
-        ):
-        children
+        ):<>
+{
+    state && children
+}
+        </>
         }
       </>
     </ClubContext.Provider>

@@ -18,7 +18,7 @@ interface EditMemberDialogProps {
 export function EditMemberDialog({ member, onClose }: EditMemberDialogProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
+    
     onClose();
   };
 

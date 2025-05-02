@@ -35,7 +35,7 @@ export function FormCard({ _id, formName, responseCount, enabled }: FormCardProp
         <span className="text-sm text-slate-400">
           {responseCount} responses
         </span>
-        <Link href={`/account/club/events/analytics/form-responses?fid=${_id}`}>
+        <Link href={`/account/club/events/dashboard/form-responses?fid=${_id}`}>
           <Button variant="outline" size="sm" className="border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10">
             View Responses
             <ExternalLink className="w-4 h-4 ml-2" />

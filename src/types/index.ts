@@ -161,6 +161,7 @@ export interface Registration {
 export interface FilterOptions {
   search: string;
   sortBy: string;
+  formId?:string;
   sortOrder: "asc" | "desc";
   page: number;
   onPageChange?: (page: number) => void;

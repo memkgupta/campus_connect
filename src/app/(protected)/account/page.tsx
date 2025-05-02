@@ -42,6 +42,7 @@ import SocialLinkDialog from "@/components/account/SocialLinkDialog";
 import dynamic from "next/dynamic";
 import { BACKEND_URL } from "@/constants";
 import CustomImage from "@/components/ui/image";
+import { useClub } from "@/hooks/useClubContext";
 function Page() {
   const [userDetails, setUserDetails] = useState({
     profile: "",
@@ -55,7 +56,7 @@ function Page() {
     isClubAdmin: false,
   });
   // const [isLoading, setIsLoading] = useState(true);
-
+const clubContext = useClub();
   const { toast } = useToast();
   const router = useRouter();
   const [error, setError] = useState(false);
@@ -147,19 +148,12 @@ function Page() {
                           userDetails={userDetails}
                           setUserDetails={setUserDetails}
                         />
-                        {data.isClubAdmin ?(
+                        {clubContext.clubs.length>0&&(
                           <Link
                             className="bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black w-fit mt-4 justify-self-end"
                             href={"/account/club"}
                           >
                             Your Club
-                          </Link>
-                        ):(
-                          <Link
-                            className="bg-yellow-300 hover:bg-yellow-400 rounded-md p-2 text-black w-fit mt-4 justify-self-end"
-                            href={"/account/register-a-club"}
-                          >
-                            Register Your Club
                           </Link>
                         )}
                         {user?.role&& user.role =="ADMIN" &&

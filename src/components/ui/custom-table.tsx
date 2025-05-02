@@ -25,6 +25,7 @@ export interface FilterState{
 
   interface TableProps<T> {
     data: T[];
+    isLoading?:boolean,
     columns: ColumnDef<T>[];
     sortable?: string[];
     filterable?: {label:string,options?:{value:string,label:string,id:string}[],type:string}[];
@@ -33,13 +34,14 @@ export interface FilterState{
     pageSize?: number;
     onPageChange?:({pageNumber,totalResults}:{pageNumber:number,totalResults:number})=>void
     totalResults?:number,
-    filterState:FilterState
-    handleFilterStateChange:(name:string,value:any)=>void
+    filterState?:FilterState
+    handleFilterStateChange?:(name:string,value:any)=>void
   }
   
   export function CustomTable<T>({
     data,
     totalResults,
+    isLoading,
     columns,
     onPageChange,
     sortable = [],
@@ -47,7 +49,7 @@ export interface FilterState{
     pagination = false,
     manualPagination=true,
     pageSize = 10,
-    filterState,
+
    handleFilterStateChange
   }: TableProps<T>) {
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -79,7 +81,7 @@ export interface FilterState{
   
     return (
       <div className="p-4">
-        {filterable.length > 0 && (
+        {filterable &&handleFilterStateChange && filterable.length > 0 && (
           <div className="mb-4">
             {
              filterable.map((filter)=>{
@@ -121,7 +123,7 @@ export interface FilterState{
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody>
+       {isLoading?(<Loader/>):     <TableBody>
               {table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} >
                   {row.getVisibleCells().map((cell) => (
@@ -137,7 +139,7 @@ export interface FilterState{
                   ))}
                 </TableRow>
               ))}
-            </TableBody>
+            </TableBody>}
           </table>
         </div>:(<Loader/>)}
   

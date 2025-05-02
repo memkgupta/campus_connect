@@ -41,6 +41,7 @@ import { BACKEND_URL, eventCategories } from "@/constants"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
+import { ImageEditor } from "@/components/imageSelector/image-selector"
 // Mock event categories enum
 const eventCategoriesEnum = [
   "Conference",
@@ -117,6 +118,8 @@ export default function AddEventForm() {
   }
   const res = await axios.post(`${BACKEND_URL}/events/add-event`,{...values,banner:bannerUrl,clubId:clubContext?._id},{headers:{
     "Authorization":`Bearer ${Cookies.get('access-token')}`
+  },params:{
+    club_id:clubContext?._id
   }});
   if(res.data.success){
     toast.toast({
@@ -135,7 +138,7 @@ export default function AddEventForm() {
   return (
     <div
      className="p-24">
-      <FileUpload fileType="img"  fileUrl={bannerUrl} setFileUrl={(v)=>{setBannerUrl(v)}} />
+  <ImageEditor size={{width:900,height:300}} preview={bannerUrl} isRound={false} type="banner" title={`Profile image for event`} setImage={(url)=>setBannerUrl(url)}/>
         <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
