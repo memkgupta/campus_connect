@@ -12,22 +12,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Switch } from "@/components/ui/switch";
 import { useEffect } from "react";
-function ToggleSwitch({ value, onChange }: { value: boolean; onChange: (value: boolean) => void }) {
-    return (
-      <div
-        onClick={() => onChange(!value)}
-        className={`relative inline-block mr-2 align-middle select-none transition duration-200 ease-in rounded-full  w-16 ${
-          value ? "bg-green-400" : "bg-gray-300"
-        }`}
-      >
-        <span
-          className={`inline-block mt-[5px] w-7 h-7  rounded-full bg-white transition-all duration-300 ease-in-out ${
-            value ? "transform translate-x-9 drop-shadow-md shadow-black" : ""
-          }`}
-        ></span>
-      </div>
-    );
-  }
+
 export default function Step2_BasicDetails() {
   const {
     register,
@@ -43,7 +28,7 @@ export default function Step2_BasicDetails() {
   const endDate = watch("basicDetails.endDate")
   const startDate = watch("basicDetails.startDate")
   const registrationDeadline = watch("basicDetails.registrationDeadline")
-
+  const participantsFromOutsideAllowed = watch("basicDetails.participantsFromOutsideAllowed")
 useEffect(()=>{
     if(isTeamEvent == undefined && isFree==undefined && multipleRounds==undefined && isOnline ==undefined){
         setValue("basicDetails.isTeamEvent",false)
@@ -233,6 +218,11 @@ useEffect(()=>{
       <div className="flex items-center gap-2">
       <Label>Multiple Rounds</Label>
         <Switch checked={multipleRounds} onCheckedChange={(value)=>setValue("basicDetails.multipleRounds",value)} />
+       
+      </div>
+      <div className="flex items-center gap-2">
+      <Label>Outside participants Allowed</Label>
+        <Switch checked={participantsFromOutsideAllowed} onCheckedChange={(value)=>setValue("basicDetails.participantsFromOutsideAllowed",value)} />
        
       </div>
 </div>

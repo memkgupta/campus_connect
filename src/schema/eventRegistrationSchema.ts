@@ -13,21 +13,21 @@ export const eventRegistrationSchema = z.object({
 });
 
 
-const teamSchema = z.object({
+export const teamSchema = z.object({
     minimumStrength:z.number(),
     diffCollegeTeamMembersAllowed:z.boolean(),
     otherCriterias:z.string().array(),
 });
-const roundsSchema = z.object({
-    noOfRounds:z.number(),
-    rounds:z.object({
+export const roundsSchema = z.object({
+  
+
         title:z.string(),
         description:z.string(),
         isOnline:z.boolean(),
         isElimination:z.boolean().optional()
-    }).array()
+
 });
-const ticketingSchema = z.object({
+export const ticketingSchema = z.object({
     tickets:z.object(
         {
             title:z.string(),
@@ -37,49 +37,45 @@ const ticketingSchema = z.object({
     ).array(),
     description:z.string().optional()
 });
-const timeLineSchema = z.object({
+export const timeLineSchema = z.object({
     start:z.date(),
     end:z.date(),
     description:z.string()
 })
-const prizeSchema = z.object({
+export const prizeSchema = z.object({
     title:z.string(),
     description:z.string(),
     type:z.enum(["cash","swags","voucher","goods"]),
 })
-const guestSchema = z.object({
+export const guestSchema = z.object({
     name:z.string(),
     image:z.string(),
     about:z.string(),
-    category:z.enum(["speaker","mentor","chief-guest","judge"])
+ 
 });
-const sponsorsSchema = z.object({
-    levels:z.object(
-        {title:z.string(),level:z.number()}
-    ),
-    sponsors:z.object({
-        name:z.string(),
-    description:z.string(),
+export const sponsorsSchema = z.object({
+ 
+ 
+    name:z.string().min(10),
+    description:z.string().min(10),
     level:z.number(),
-    logo:z.string(),
+    logo:z.string().min(10),
   
-    }).array()
+
 })
-const organiserSchema = z.object({
+export const organiserSchema = z.object({
     name:z.string(),
     level:z.number(),
     position:z.string(),
     image:z.string()
 })
-const guidelineSchema = z.object({
+export const guidelineSchema = z.object({
     title:z.string(),
     description:z.string(),
 
 })
 //step 1
-export const eventCreationEventTypeSchema=z.object({
-    type:z.enum(["hackathon","session","workshop","contest","campaign","other","ground-work"])
-})
+
 // step 2
 export const eventCreationBasicDetailsSchema = z.object({
     title:z.string().min(20).max(200),
@@ -88,6 +84,7 @@ export const eventCreationBasicDetailsSchema = z.object({
     startDate:z.date(),
     endDate:z.date(),
     isOnline:z.boolean(),
+    participantsFromOutsideAllowed:z.boolean(),
     isTeamEvent:z.boolean(),
     category:z.union([z.enum(["entreprenurship","technical","cultural","social"]),z.string()]),
     isFree:z.boolean(),
@@ -99,7 +96,7 @@ export const eventCreationBasicDetailsSchema = z.object({
 export const eventCreationEventStructureSchema = z.object({
     eligibility:z.string(),
     teamRequirements:teamSchema.optional(),
-    roundsDetails:roundsSchema.optional(),
+    roundsDetails:roundsSchema.array().optional(),
     speakers:guestSchema.array().optional(),
     timeline:timeLineSchema.array().optional(),
     judges:guestSchema.array().optional(),
@@ -111,7 +108,7 @@ export const eventCreationMonetoryDetailsSchema = z.object({
  
     ticketDetails:ticketingSchema.optional(),
     prizes:prizeSchema.array().optional(),
-    sponsors:sponsorsSchema,
+    sponsors:sponsorsSchema.array().optional(),
 })
 //step 5
 export const eventCreationOrganiserDetailsSchema = z.object({
@@ -121,7 +118,7 @@ export const eventCreationOrganiserDetailsSchema = z.object({
 
 // complete event schema
 export const eventCreationSchema = z.object({
-    type:eventCreationEventTypeSchema,
+    type:z.string(),
     basicDetails:eventCreationBasicDetailsSchema,
     eventStructure:eventCreationEventStructureSchema,
     monetaryDetails:eventCreationMonetoryDetailsSchema,

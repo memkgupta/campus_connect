@@ -1,5 +1,6 @@
- // export const BACKEND_URL = "https://campus-connect-dev.xyz/api/v1"
+//  export const BACKEND_URL = "https://campus-connect-dev.xyz/api/v1"
 export const BACKEND_URL = "http://localhost:8000/api/v1"
+export const BACKEND_URL_V2 = "http://localhost:8000/api/v2"
 export const universities = [
     { "value": "AKTU", "label": "AKTU", "id": "AKTU" },
    

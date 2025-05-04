@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CustomImage from '@/components/ui/image';
-import { BACKEND_URL } from '@/constants';
+import { BACKEND_URL, BACKEND_URL_V2 } from '@/constants';
 import { useClub } from '@/hooks/useClubContext';
 import axios, { AxiosError } from 'axios';
 import { BuildingIcon, CalendarIcon, ClipboardIcon, ClockIcon, FlagIcon, MapPinIcon, UserPlusIcon, UsersIcon } from 'lucide-react';
@@ -13,47 +13,43 @@ import { toast } from '@/components/ui/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import Loader from '@/components/Loader';
 const AdminEventDetails = ({event_id}:{event_id:string}) => {
-    const clubContext = useClub();
+  const [tab, setTab] = useState("overview");
     const fetchEvent = async () => {
-      if (clubContext.selectedClub?._id) {
-        try {
+      try {
         
-          const res = await axios.get(
-            `${BACKEND_URL}/club/events/dashboard/${event_id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${Cookies.get("access-token")}`,
-              },
-              params: { club_id: clubContext.selectedClub?._id },
-            }
-          );
-          const data = res.data.data;
-      
-          // setIsRegistered(data.registered)
-         
-          return data;
-        } catch (error) {
-         
-          const axiosError = error as AxiosError<any>;
-          if (axiosError.response) {
-            if (axiosError.status !== 500) {
-              toast({
-                title: axiosError.response.data.message,
-                variant: "destructive",
-              });
-            } else {
-              toast({
-                title: "Some error occured",
-                variant: "destructive",
-              });
-            }
+        const res = await axios.get(
+          `${BACKEND_URL_V2}/events/admin/dashboard/${event_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${Cookies.get("access-token")}`,
+            },
+            
           }
-  
-          return Promise.reject("Some error occured");
-        } 
-      } else {
-        return Promise.reject("Inavlid session");
-      }
+        );
+        const data = res.data.data;
+    
+        // setIsRegistered(data.registered)
+       
+        return data;
+      } catch (error) {
+       
+        const axiosError = error as AxiosError<any>;
+        if (axiosError.response) {
+          if (axiosError.status !== 500) {
+            toast({
+              title: axiosError.response.data.message,
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Some error occured",
+              variant: "destructive",
+            });
+          }
+        }
+
+        return Promise.reject("Some error occured");
+      } 
     };
   
   const {data,isLoading} =  useQuery({

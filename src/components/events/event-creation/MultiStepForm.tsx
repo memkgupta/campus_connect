@@ -10,17 +10,22 @@ import Step3_Structure from "./steps/step-3";
 import Step4_MonetaryDetails from "./steps/step-4";
 import Step5_OrganiserDetails from "./steps/step-5";
 import { Button } from "@/components/ui/button";
+import {z} from "zod"
 import {
     eventCreationSchema,
-    eventCreationEventTypeSchema,
+  
     eventCreationBasicDetailsSchema,
     eventCreationEventStructureSchema,
     eventCreationMonetoryDetailsSchema,
     eventCreationOrganiserDetailsSchema
   } from "@/schema/eventRegistrationSchema";
-  
+import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
+import { BACKEND_URL } from "@/constants";
+import { useSession } from "@/hooks/useSession";
+  import Cookies from "js-cookie"
   const stepSchemas = [
-    eventCreationEventTypeSchema,
+    z.enum(["hackathon","session","workshop","contest","campaign","other","ground-work"]),
     eventCreationBasicDetailsSchema,
     eventCreationEventStructureSchema,
     eventCreationMonetoryDetailsSchema,
@@ -37,24 +42,30 @@ const steps = [
 export default function MultiStepForm() {
   const [step, setStep] = useState(0);
   const [stepValid, setStepValid] = useState<boolean[]>(Array(steps.length).fill(false));
+  const {toast} = useToast()
   const methods = useForm({
     resolver: zodResolver(eventCreationSchema),
     mode: "onChange",
-    // defaultValues: {
-    //   type: { type: "hackathon" },
-    //   basicDetails: {
-    //     isOnline: false,
-    //     isTeamEvent: false,
-    //     isFree: true,
-    //   },
-    // },
+   
   });
-
+  const token = Cookies.get("access-token");
+  
   const CurrentStep = steps[step];
  
-  const onSubmit = (data: any) => {
+  const onSubmit = async(data: any) => {
     console.log("Final Data ✅", data);
-    // submit to API here
+    try{
+const req = await axios.post(`http://localhost:8000/api/v2/events/admin/add-event?event_organiser_type=individual`,data,{
+  headers:{
+    "Authorization":`Bearer ${token}`
+  }
+})
+    }
+    catch(error:any){
+      toast({
+        title:error.message
+      })
+    }
   };
   const validateStep = async () => {
     const currentValues = methods.getValues();
@@ -62,12 +73,12 @@ export default function MultiStepForm() {
     // validate only current step
     try {
       const stepData =
-        step === 0 ? {  ...currentValues.type } :
+        step === 0 ? {  ...currentValues }.type :
         step === 1 ? { ...currentValues.basicDetails } :
         step === 2 ? { ...currentValues.eventStructure } :
         step === 3 ? { ...currentValues.monetaryDetails } :
         step === 4 ? { ...currentValues.organiserDetails } : {};
-        console.log(stepData)
+        console.log("lal",stepData)
       await stepSchemas[step].parseAsync(stepData);
       
       // ✅ step valid
@@ -94,18 +105,14 @@ export default function MultiStepForm() {
             className="space-y-6 h-full overflow-y-auto px-4"
           >
             <CurrentStep />
-          </form>
-        </div>
-
-        {/* Fixed Next/Back Footer */}
-        <div className="bg-slate-950 fixed bottom-0 left-0 w-full border-t shadow-md py-4 px-4 flex justify-center z-50">
+            <div className="bg-slate-950 fixed bottom-0 left-0 w-full border-t shadow-md py-4 px-4 flex justify-center z-50">
           <div className="w-[90%] max-w-4xl flex justify-between">
             {step > 0 && (
               <Button variant="secondary" type="button" onClick={() => setStep(step - 1)}>
                 Back
               </Button>
             )}
-           {step < steps.length - 1 ? (
+           {step <= steps.length - 1 ? (
   <Button
     type="button"
     onClick={async () => {
@@ -116,10 +123,15 @@ export default function MultiStepForm() {
     Next
   </Button>
 ) : (
-  <Button type="submit">Submit</Button>
+  <Button type="submit" >Submit</Button>
 )}
           </div>
         </div>
+          </form>
+        </div>
+
+        {/* Fixed Next/Back Footer */}
+      
       </div>
     </FormProvider>
   );

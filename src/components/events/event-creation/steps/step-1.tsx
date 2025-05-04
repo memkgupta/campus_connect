@@ -15,7 +15,7 @@ const typeDescriptions: Record<string, string> = {
 
 export default function Step1_EventType() {
   const { setValue, watch } = useFormContext();
-  const selected = watch("type.type");
+  const selected = watch("type");
 
   const types = Object.keys(typeDescriptions);
     useEffect(()=>{console.log(selected)},[selected])
@@ -30,7 +30,7 @@ export default function Step1_EventType() {
           return (
             <div
               key={type}
-              onClick={() => setValue("type.type", type)}
+              onClick={() =>{console.log("f",typeof type); setValue("type",type)}}
               className={cn(
                 "cursor-pointer border rounded-md p-4 shadow-sm transition-all",
                 isSelected ? "border-blue-600 bg-yellow-50/10" : "hover:border-blue-300"

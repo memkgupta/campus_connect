@@ -29,7 +29,7 @@ export default function Step3_Structure() {
   const type = watch("type.type")
   const roundsArray = useFieldArray({
     control,
-    name: "eventStructure.roundsDetails.rounds",
+    name: "eventStructure.roundsDetails",
   });
 
   const timelineArray = useFieldArray({
@@ -41,13 +41,9 @@ export default function Step3_Structure() {
   const mentors = useFieldArray({ control, name: "eventStructure.mentors" });
   const judges = useFieldArray({ control, name: "eventStructure.judges" });
   const guests = useFieldArray({ control, name: "eventStructure.guests" });
-  const noOfRounds = watch("eventStructure.roundsDetails.noOfRounds")
+ 
 
-  useEffect(()=>{
-    if(noOfRounds==undefined){
-        setValue("eventStructure.roundsDetails.noOfRounds",0)
-    }
-  },[noOfRounds])
+
   return (
     <div className="space-y-6">
       {/* Eligibility */}
@@ -79,14 +75,10 @@ export default function Step3_Structure() {
       {/* Round Details (if multipleRounds is true) */}
       {hasRounds && (
         <div className="space-y-4">
-            <div className="flex justify-between items-center">
-            <Label>Total Rounds</Label>
-            <Input type="number" defaultValue={1} min={1} onChange={(e)=>{setValue("eventStructure.roundDetails.noOfRounds",e.target.value)}} value={noOfRounds}/>
-             
-          </div>
+           
           <div className="flex justify-between items-center">
             <Label>Rounds</Label>
-            <Button type="button" disabled={noOfRounds==roundsArray.fields.length} onClick={() =>{ roundsArray.append({ title: "", description: "", isOnline: false });
+            <Button type="button"  onClick={() =>{ roundsArray.append({ title: "", description: "", isOnline: false });
      
         }}>
               + Add Round

@@ -1,4 +1,4 @@
-import { BACKEND_URL } from '@/constants';
+import { BACKEND_URL, BACKEND_URL_V2 } from '@/constants';
 import { useClub } from '@/hooks/useClubContext';
 import { FilterOptions } from '@/types';
 import axios from 'axios';
@@ -17,7 +17,7 @@ import { TablePagination } from '@/components/club/analytics/registrations/table
 import { CustomTable } from '@/components/ui/custom-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { EventRegistration } from '@/types/club-dashboard';
-import Image from 'next/image';
+
 import CustomImage from '@/components/ui/image';
 import Link from 'next/link';
 const EventRegistrationsDashboard = ({event_id}:{event_id:string}) => {
@@ -25,19 +25,18 @@ const EventRegistrationsDashboard = ({event_id}:{event_id:string}) => {
   const pathName = usePathname()
   const clubContext = useClub()
   const [filters, setFilters] = useState({
-  username:"",
-  email:"",
+
   page:1
   });
   const[search,setSearch]=useState('')
   const [totalResults,setTotalResults] = useState(0);
   const fetchRegistrations = async()=>{
     try {
-      const res = await axios.get(`${BACKEND_URL}/club/events/registrations`,{
+      const res = await axios.get(`${BACKEND_URL_V2}/events/admin/registrations`,{
         
         headers:{
         "Authorization":`Bearer ${Cookies.get('access-token')}`
-      },params:{club_id:clubContext.selectedClub?._id,eid:event_id,...filters}});
+      },params:{event_id:event_id,...filters,search}});
       setTotalResults(res.data.totalResults);
 return res.data.registrations
     } catch (error) {

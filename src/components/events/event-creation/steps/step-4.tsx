@@ -10,7 +10,7 @@ export default function Step4_MonetaryDetails() {
 
   const tickets = useFieldArray({ control, name: "monetaryDetails.ticketDetails.tickets" });
   const prizes = useFieldArray({ control, name: "monetaryDetails.prizes" });
-  const sponsors = useFieldArray({ control, name: "monetaryDetails.sponsors.sponsors" });
+  const sponsors = useFieldArray({ control, name: "monetaryDetails.sponsors" });
     const isFree = watch("eventStructure.isFree")
     const type = watch("type.type")
   return (
@@ -79,12 +79,7 @@ export default function Step4_MonetaryDetails() {
         <Label>Sponsors</Label>
 
         {/* Levels (you only had one object here, so keeping it simple) */}
-        <Input placeholder="Sponsorship Title" {...register("monetaryDetails.sponsors.levels.title")} />
-        <Input
-          type="number"
-          placeholder="Level Number"
-          {...register("monetaryDetails.sponsors.levels.level", { valueAsNumber: true })}
-        />
+      
 
         <div className="flex justify-between items-center">
           <Label>Sponsor List</Label>
@@ -95,19 +90,19 @@ export default function Step4_MonetaryDetails() {
 
         {sponsors.fields.map((s, idx) => (
           <div key={s.id} className="border p-4 rounded-md space-y-2">
-            <Input placeholder="Sponsor Name" {...register(`monetaryDetails.sponsors.sponsors.${idx}.name`)} />
+            <Input placeholder="Sponsor Name" {...register(`monetaryDetails.sponsors.${idx}.name`)} />
             <Textarea
               placeholder="Sponsor Description"
-              {...register(`monetaryDetails.sponsors.sponsors.${idx}.description`)}
+              {...register(`monetaryDetails.sponsors.${idx}.description`)}
             />
             <Input
               placeholder="Logo URL"
-              {...register(`monetaryDetails.sponsors.sponsors.${idx}.logo`)}
+              {...register(`monetaryDetails.sponsors.${idx}.logo`)}
             />
             <Input
               type="number"
               placeholder="Sponsor Level"
-              {...register(`monetaryDetails.sponsors.sponsors.${idx}.level`, { valueAsNumber: true })}
+              {...register(`monetaryDetails.sponsors.${idx}.level`, { valueAsNumber: true })}
             />
           </div>
         ))}

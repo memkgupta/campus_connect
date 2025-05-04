@@ -35,6 +35,7 @@ const {toast} = useToast();
 const fetchEvents = async()=>{
         const params:any = {}
         if(happening){
+          console.log(happening)
             params.happening=happening.value
         }
         if(location){
@@ -52,7 +53,7 @@ const fetchEvents = async()=>{
         if(page){
           params.page = page;
         }
-  
+  console.log(params)
 try {
     setLoading(true)
     const res = await axios.get(`${BACKEND_URL}/events`,{params:params});
@@ -71,13 +72,13 @@ finally{
     }
     const {data:events,isSuccess,isFetching} = useQuery<any>(
         {
-          queryKey:[happening,keyword,category,page,"events"],
+          queryKey:[happening,keyword,category,page],
           queryFn:fetchEvents,
           refetchOnWindowFocus:false,
           retry:false,
         }
       )
-      
+     useEffect(()=>{console.log(happening)},[happening]) 
   
   return (
    <>
@@ -102,7 +103,7 @@ finally{
 
    <div>
     
-     <div className='grid grid-cols-1 md:grid-cols-3 gap-5 justify-items-center'>
+     <div className='grid  gap-5 justify-items-center p-12'>
    {events.length>0 && 
    events.map((event:any)=>(<EventCard key={event._id} data={event}/>))
    }
