@@ -38,8 +38,8 @@ export const ticketingSchema = z.object({
     description:z.string().optional()
 });
 export const timeLineSchema = z.object({
-    start:z.date(),
-    end:z.date(),
+    start:z.union([z.date(),z.string()]),
+    end:z.union([z.date(),z.string()]),
     description:z.string()
 })
 export const prizeSchema = z.object({

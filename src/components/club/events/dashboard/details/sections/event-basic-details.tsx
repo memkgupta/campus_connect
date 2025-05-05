@@ -1,12 +1,15 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CustomImage from '@/components/ui/image';
+import { useEventDashboard } from '@/context/dashboard/useContext';
 import { format } from 'date-fns';
 import { BuildingIcon, CalendarIcon, ClockIcon, FlagIcon, MapPinIcon, UserPlusIcon, UsersIcon } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
 
-const EventBasicDetails = ({data}:{data:any}) => {
+const EventBasicDetails = () => {
+  const {data:event} = useEventDashboard()!
+  const data = event.basicDetails;
   return (
     <div >
     <div className="relative w-full h-64 mb-6">

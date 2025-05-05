@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import EventBasicDetails from './sections/event-basic-details'
 import EventStructureSection from './sections/structure'
 import MonetaryDetailsSection from './sections/monetary-details'
@@ -15,7 +15,9 @@ import EditBasicDetails from './sections/edit-components/edit-basic-details'
 import EditEventStructure from './sections/edit-components/edit-structure'
 import EditMonatoryDetails from './sections/edit-components/edit-monetary-details'
 import EditOrganiserDetails from './sections/edit-components/edit-organiser-details'
+import { useEventDashboard } from '@/context/dashboard/useContext'
 const EventDashboardOverview = ({ event_id }: { event_id:string }) => {
+  const eventContext = useEventDashboard()
     const {toast} = useToast()
     const fetchEvent = async () => {
         try {
@@ -29,11 +31,10 @@ const EventDashboardOverview = ({ event_id }: { event_id:string }) => {
               
             }
           );
-          const data = res.data.data;
+          eventContext?.setData(res.data.data)
+          return res.data.data;
       
-          // setIsRegistered(data.registered)
-         
-          return data;
+          
         } catch (error) {
          
           const axiosError = error as AxiosError<any>;
@@ -55,7 +56,7 @@ const EventDashboardOverview = ({ event_id }: { event_id:string }) => {
         } 
       };
     
-    const {data,isLoading} =  useQuery({
+    const {data:eventData,isLoading} =  useQuery({
         queryKey: [event_id],
         queryFn: fetchEvent,
         retry: false,
@@ -64,53 +65,53 @@ const EventDashboardOverview = ({ event_id }: { event_id:string }) => {
 return(
 
     <>
-    {isLoading?<Loader/>:(<InnerComponent data={data}/>)}
+    {isLoading?<Loader/>:(eventContext?.data && <InnerComponent />)}
     </>
 )
  
 }
-const InnerComponent = ({data}:{data:any})=>{
+const InnerComponent = ()=>{
     const [isEditing,setEditing] = useState<{
         section:string,
         data:any,
     }|null>(null)
     const tabs = [
-        data?.basicDetails && {
+         {
           id: 'basicDetails',
           label: 'Details',
           icon: FileText,
-          editcomponent:<EditBasicDetails data={data.basicDetails}/>,
-          component: <EventBasicDetails data={data.basicDetails} />
+          editcomponent:<EditBasicDetails />,
+          component: <EventBasicDetails  />
         },
-        data?.eventStructure && {
+         {
           id: 'eventStructure',
           label: 'Structure',
           icon: Layers,
-            editcomponent:<EditEventStructure data={data}/>,
-          component: <EventStructureSection eventStructure={data.eventStructure} />
+            editcomponent:<EditEventStructure />,
+          component: <EventStructureSection />
         },
-        data?.monetaryDetails && {
+        {
           id: 'monetaryDetails',
           label: 'Monetary Details',
           icon: Wallet,
-         editcomponent:<EditMonatoryDetails data={data}/>,
-          component: <MonetaryDetailsSection monetaryDetails={data.monetaryDetails} />
+         editcomponent:<EditMonatoryDetails />,
+          component: <MonetaryDetailsSection />
         },
-        data?.organiserDetails && {
+        {
           id: 'organiseDetails',
           label: 'Organiser Details',
-          editcomponent:<EditOrganiserDetails data={data}/>,
+          editcomponent:<EditOrganiserDetails />,
           icon: Users,
          
-          component: <OrganiserDetailsSection organiserDetails={data.organiserDetails} />
+          component: <OrganiserDetailsSection  />
         }
-      ].filter(Boolean)
+      ]
     
       const [selectedTab, setSelectedTab] = useState(tabs[0].id)
     
       const renderSelectedComponent = () => {
         const current = tabs.find((tab) => tab.id === selectedTab)
-        if(isEditing!=null && isEditing.section === current.id)
+        if(current && isEditing!=null && isEditing.section === current.id)
         {
             return current?.editcomponent
         }
@@ -150,10 +151,10 @@ const InnerComponent = ({data}:{data:any})=>{
     
           {/* Content Area */}
           <div className='flex-1 p-6 overflow-y-auto relative'>
-            <Button key={selectedTab.id} onClick={(e)=>{
+            <Button key={selectedTab} onClick={(e)=>{
                 setEditing({
                     section:selectedTab,
-                    data:data[selectedTab]
+                    data:selectedTab
                 })
             }}>Edit</Button>
             {renderSelectedComponent()}

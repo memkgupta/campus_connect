@@ -12,14 +12,18 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
 import { eventCreationMonetoryDetailsSchema } from '@/schema/eventRegistrationSchema';
+import { updateEventSection } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
+import { useEventDashboard } from '@/context/dashboard/useContext';
 
 
-export default function EditMonatoryDetails({data}:{data:any}) {
+export default function EditMonatoryDetails() {
+  const {data,setData} = useEventDashboard()!
   const form = useForm({
     resolver: zodResolver(eventCreationMonetoryDetailsSchema),
     defaultValues: data.monetaryDetails
   });
-
+const {toast} = useToast()
   const {
     control,
     register,
@@ -36,8 +40,22 @@ export default function EditMonatoryDetails({data}:{data:any}) {
   const isFree =data.basicDetails.isFree;
   const type = data.type
 
-  const onSubmit = (data: FormData) => {
-    console.log('Form Data:', data);
+  const onSubmit = async(update:any) => {
+    try{
+      const {event,message} = await updateEventSection("monetary",update,data._id)
+      setData(event)
+      toast({
+        title:message,
+      
+      })
+    }
+    catch(error:any){
+      toast({
+        title:error.message,
+        variant:"destructive"
+      })
+    }
+   
   };
 
   return (

@@ -27,10 +27,14 @@ import { CalendarIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { eventCreationEventStructureSchema } from '@/schema/eventRegistrationSchema';
+import { updateEventSection } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
+import { useEventDashboard } from '@/context/dashboard/useContext';
 
-const EditEventStructure = ({ data }: { data: any }) => {
+const EditEventStructure = () => {
+  const {data,setData} = useEventDashboard()!;
   const eventStructure = data.eventStructure;
-
+  const {toast} = useToast()
   const form = useForm({
     resolver: zodResolver(eventCreationEventStructureSchema),
     defaultValues: eventStructure
@@ -52,10 +56,23 @@ const EditEventStructure = ({ data }: { data: any }) => {
   const mentors = useFieldArray({ control, name: 'mentors' });
   const judges = useFieldArray({ control, name: 'judges' });
   const guests = useFieldArray({ control, name: 'guests' });
-
+const editSubmit = async(update:any)=>{
+  try{
+    const {event,message} = await updateEventSection("structure",update,data._id);
+    setData(event)
+    toast({
+      title:message
+    })
+  }
+  catch(error:any){
+    toast({
+      title:error.message
+    })
+  }
+}
   return (
     <Form {...form}>
-      <form className='grid gap-6' onSubmit={form.handleSubmit(console.log)}>
+      <form className='grid gap-6' onSubmit={form.handleSubmit(editSubmit)}>
         {/* Eligibility */}
         <FormField
           control={control}

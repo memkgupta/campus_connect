@@ -11,30 +11,46 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
 import { eventCreationOrganiserDetailsSchema } from '@/schema/eventRegistrationSchema';
+import { Trophy } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+import { updateEventSection } from '@/lib/api';
+import { useEventDashboard } from '@/context/dashboard/useContext';
 
 
 
-export default function EditOrganiserDetails({data}:{data:any}) {
+export default function EditOrganiserDetails() {
+  const {data,setData} = useEventDashboard()!
   const form = useForm({
     resolver: zodResolver(eventCreationOrganiserDetailsSchema),
     defaultValues: data.organiserDetails
     
   });
-
+const {toast} = useToast()
   const { control, register, handleSubmit, watch, formState: { errors } } = form;
 
   const organisers = useFieldArray({
     control,
-    name: 'organiserDetails.organisers'
+    name: 'organisers'
   });
 
   const guidelines = useFieldArray({
     control,
-    name: 'organiserDetails.guidelines'
+    name: 'guidelines'
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log('Form Data:', data);
+  const onSubmit = async(update:any) => {
+   try{
+    const {event,message} = await updateEventSection("organiser",update,data._id)
+    setData(event)
+    toast({
+      title:message
+    })
+   }
+   catch(error:any){
+    toast({
+      title:error.message
+    })
+   }
   };
 
   return (
@@ -57,7 +73,7 @@ export default function EditOrganiserDetails({data}:{data:any}) {
             <div key={organiser.id} className="border p-4 rounded-md space-y-4">
               <FormField
                 control={control}
-                name={`organiserDetails.organisers.${idx}.name`}
+                name={`organisers.${idx}.name`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
@@ -70,7 +86,7 @@ export default function EditOrganiserDetails({data}:{data:any}) {
 
               <FormField
                 control={control}
-                name={`organiserDetails.organisers.${idx}.position`}
+                name={`organisers.${idx}.position`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Position</FormLabel>
@@ -83,7 +99,7 @@ export default function EditOrganiserDetails({data}:{data:any}) {
 
               <FormField
                 control={control}
-                name={`organiserDetails.organisers.${idx}.level`}
+                name={`organisers.${idx}.level`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Level</FormLabel>
@@ -96,7 +112,7 @@ export default function EditOrganiserDetails({data}:{data:any}) {
 
               <FormField
                 control={control}
-                name={`organiserDetails.organisers.${idx}.image`}
+                name={`organisers.${idx}.image`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Image URL</FormLabel>
@@ -126,7 +142,7 @@ export default function EditOrganiserDetails({data}:{data:any}) {
             <div key={guide.id} className="border p-4 rounded-md space-y-4">
               <FormField
                 control={control}
-                name={`organiserDetails.guidelines.${idx}.title`}
+                name={`guidelines.${idx}.title`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Title</FormLabel>
@@ -139,7 +155,7 @@ export default function EditOrganiserDetails({data}:{data:any}) {
 
               <FormField
                 control={control}
-                name={`organiserDetails.guidelines.${idx}.description`}
+                name={`guidelines.${idx}.description`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Description</FormLabel>

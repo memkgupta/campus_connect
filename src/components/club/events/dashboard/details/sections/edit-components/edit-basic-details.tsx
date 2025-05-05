@@ -8,6 +8,9 @@ import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { useToast } from '@/components/ui/use-toast'
+import { useEventDashboard } from '@/context/dashboard/useContext'
+import { updateEventSection } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { eventCreationBasicDetailsSchema } from '@/schema/eventRegistrationSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,15 +19,28 @@ import { CalendarIcon } from 'lucide-react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
-const EditBasicDetails = ({ data }: { data: any }) => {
+const EditBasicDetails = () => {
+  const {toast }= useToast()
+  const {data:event,setData} = useEventDashboard()!
+  const data  = event.basicDetails
+  data.startDate = new Date(data.startDate);
+  data.endDate = new Date(data.endDate)
+  data.registrationDeadline = new Date(data.registrationDeadline);
   const form = useForm({
     resolver: zodResolver(eventCreationBasicDetailsSchema),
     defaultValues: data,
   })
 
+const editSubmit = async(update:any)=>{
+ const {event:updatedData,message} = await updateEventSection("basic_details",update,event._id);
+setData(updatedData);
+toast({
+  title:message
+})
+}
   return (
     <Form {...form}>
-      <form className="grid gap-4">
+      <form onSubmit={form.handleSubmit(editSubmit)}  className="grid gap-4">
         <FormField
           control={form.control}
           name="title"

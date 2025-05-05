@@ -14,6 +14,7 @@ import LeadTaskDashboard from "@/components/club/events/dashboard/tasks/lead-tas
 import { useClub } from '@/hooks/useClubContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import EventDashboardOverview from '@/components/club/events/dashboard/details/overview';
+import { EventContextProvider } from '@/context/dashboard/EventContext';
 const EventDashboardPage = ({params}:{params:{id:string}}) => {
 
 
@@ -27,10 +28,12 @@ const EventDashboardPage = ({params}:{params:{id:string}}) => {
     {value:"admin-reports",label:"Reports",content:<EventReportsDashboard/>},
     {value:"admin-config",label:"Config",content:<EventConfigDashboard event_id={params.id}/>},
     {value:"registrations",label:"Registrations",content:<EventRegistrationsDashboard event_id={params.id}/>},
+    {value:"assignments",label:"Assignments",content:"Assignments"}
  ]
   return (
     <div>
-  <Tabs defaultValue={tabs[0].value} className="w-full">
+      <EventContextProvider>
+      <Tabs defaultValue={tabs[0].value} className="w-full">
   <TabsList>
    {tabs.map(t=>(
     <TabsTrigger value={t.value}>{t.label}</TabsTrigger>
@@ -42,6 +45,8 @@ const EventDashboardPage = ({params}:{params:{id:string}}) => {
         </TabsContent>
       ))}
 </Tabs>
+      </EventContextProvider>
+ 
     
     </div>
   )

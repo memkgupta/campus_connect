@@ -1,7 +1,10 @@
 // OrganiserDetailsSection.tsx
+import { useEventDashboard } from "@/context/dashboard/useContext";
 import React from "react";
 
-const OrganiserDetailsSection = ({ organiserDetails }: { organiserDetails: any }) => {
+const OrganiserDetailsSection = () => {
+  const {data} = useEventDashboard()!
+  const organiserDetails = data.organiserDetails
   const organisers = organiserDetails?.organisers || [];
   const guidelines = organiserDetails?.guidelines || [];
 

@@ -1,8 +1,11 @@
 // MonetaryDetailsSection.tsx
 import React from "react";
 import { Badge } from "@/components/ui/badge";
+import { useEventDashboard } from "@/context/dashboard/useContext";
 
-const MonetaryDetailsSection = ({ monetaryDetails }: { monetaryDetails: any }) => {
+const MonetaryDetailsSection = () => {
+  const {data} = useEventDashboard()!
+  const monetaryDetails = data.monetaryDetails
   const { ticketDetails, prizes, sponsors } = monetaryDetails || {};
 
   return (

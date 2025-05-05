@@ -1,6 +1,7 @@
 // EventStructureSection.tsx
 import React from "react";
 import { Badge } from "@/components/ui/badge";
+import { useEventDashboard } from "@/context/dashboard/useContext";
 
 const PeopleGrid = ({ title, people }: { title: string; people: any[] }) => (
   <div className="mt-6">
@@ -17,7 +18,9 @@ const PeopleGrid = ({ title, people }: { title: string; people: any[] }) => (
   </div>
 );
 
-const EventStructureSection = ({ eventStructure }: { eventStructure: any }) => {
+const EventStructureSection = () => {
+  const {data:event} = useEventDashboard()!
+  const eventStructure = event.eventStructure
   const { eligibility, teamRequirements, roundsDetails, guests, speakers, mentors, judges } = eventStructure;
 
   return (
