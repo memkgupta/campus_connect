@@ -55,7 +55,7 @@ const CustomForm = ({ fields,submitText, onSubmit,submitDisabled}: Props) => {
       return { ...values, [field.name]: field.defaultValue  };
     }, {}),
   });
-
+console.log(form.getValues())
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -225,7 +225,7 @@ const CustomForm = ({ fields,submitText, onSubmit,submitDisabled}: Props) => {
                {field.type==="switch" &&(
                 <FormControl>
                   <Switch
-                  value={formField.value}
+                 checked={formField.value}
                 
                   onCheckedChange={formField.onChange}
                   />

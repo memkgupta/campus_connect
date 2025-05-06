@@ -18,54 +18,11 @@ import EditOrganiserDetails from './sections/edit-components/edit-organiser-deta
 import { useEventDashboard } from '@/context/dashboard/useContext'
 const EventDashboardOverview = ({ event_id }: { event_id:string }) => {
   const eventContext = useEventDashboard()
-    const {toast} = useToast()
-    const fetchEvent = async () => {
-        try {
-          
-          const res = await axios.get(
-            `${BACKEND_URL_V2}/events/admin/dashboard/${event_id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${Cookies.get("access-token")}`,
-              },
-              
-            }
-          );
-          eventContext?.setData(res.data.data)
-          return res.data.data;
-      
-          
-        } catch (error) {
-         
-          const axiosError = error as AxiosError<any>;
-          if (axiosError.response) {
-            if (axiosError.status !== 500) {
-              toast({
-                title: axiosError.response.data.message,
-                variant: "destructive",
-              });
-            } else {
-              toast({
-                title: "Some error occured",
-                variant: "destructive",
-              });
-            }
-          }
-  
-          return Promise.reject("Some error occured");
-        } 
-      };
-    
-    const {data:eventData,isLoading} =  useQuery({
-        queryKey: [event_id],
-        queryFn: fetchEvent,
-        retry: false,
-        refetchOnWindowFocus: false,
-      });
+   
 return(
 
     <>
-    {isLoading?<Loader/>:(eventContext?.data && <InnerComponent />)}
+   <InnerComponent/>
     </>
 )
  

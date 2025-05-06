@@ -1,4 +1,4 @@
-import { BACKEND_URL } from '@/constants'
+import { BACKEND_URL, BACKEND_URL_V2 } from '@/constants'
 import { useQuery } from '@tanstack/react-query'
 import axios, { AxiosError } from 'axios'
 import React from 'react'
@@ -10,48 +10,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEventDashboard } from '@/context/dashboard/useContext'
 
 const EventFormsDashboard = ({event_id}:{event_id:string}) => {
-    const clubContext = useClub();
+   
     const pathname = usePathname();
-    const fetchForms = async()=>{
-        if(clubContext.selectedClub){
-            try {
-                const res = await  axios.get(`${BACKEND_URL}/club/forms`,{
-                    params:{
-                        club_id:clubContext.selectedClub._id,
-                        eid:event_id,
-                    },
-                    headers:{
-                        "Authorization":`Bearer ${Cookies.get("access-token")}`
-                    }
-                });
-                return res.data.forms;
-            } catch (error) {
-                const aError = error as AxiosError<any>
-                const message = aError.response?.data.message || "Some error occured"
-                toast({
-                    title:message,
-                    variant:"destructive"
-                })
-                return Promise.reject(message);
-            }
-        }
-        
-       
-    }
-    const {data,isLoading} = useQuery({
-        queryKey:["event-forms",event_id],
-        queryFn:fetchForms,
-        retry:false,
-        refetchOnWindowFocus:false
-    })
+   const {forms:data} = useEventDashboard()!.data
   return (
     <div>
-        {isLoading && <Loader/>}
+        
         {data && <>
-        <div className='flex justify-end'><Link className='bg-yellow-300 text-black p-2 rounded-md' href={`${usePathname()}/add-form`}>Add Form</Link></div>
-        {data.map((form:any)=>(
+        <div className='flex justify-end gap-3'><Link className='bg-yellow-300 text-black p-2 rounded-md' href={`${usePathname()}/add-form`}>Add Form</Link></div>
+      <div className='grid grid-cols-2 gap-5 p-12'>
+      {data.map((form:any)=>(
                <Card key={form._id} className="w-full max-w-sm">
                <CardHeader>
                 <Link target='_blank' href={`${pathname}/forms/${form._id}`}>
@@ -81,6 +52,8 @@ const EventFormsDashboard = ({event_id}:{event_id:string}) => {
                </CardContent>
              </Card>
         ))}
+      </div>
+      
         </>}
     </div>
   )

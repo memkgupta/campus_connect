@@ -1,6 +1,6 @@
 "use client"
 import ClubAdminEventDashboard from '@/components/club/admin/admin-event-dashboard'
-import AllEventsPage from '@/components/club/all-events-page'
+import AllEventsPage from '@/components/club/events/dashboard/all-events-page'
 import TeamLeadDashboard from '@/components/club/lead/TeamLeadDashboard'
 import MemberEventDashboard from '@/components/club/member/member-event-dashboard'
 import { Button } from '@/components/ui/button'

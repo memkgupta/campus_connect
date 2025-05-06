@@ -17,3 +17,17 @@ catch(error){
     throw new Error(message);
 }
 }
+
+export const authorisedGetRequest = async(url:string,queryParams:any)=>{
+    try{
+        const req = await axios.get(url,{params:queryParams,headers:{
+            "Authorization":`Bearer ${Cookies.get('access-token')}`
+        }})
+        return req.data;
+    }
+    catch(error:any){
+        const axiosError = error as AxiosError<any>
+        const message = axiosError.response?.data.message || "Some error occured";
+      throw new Error(message)
+    }
+}

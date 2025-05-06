@@ -28,7 +28,7 @@ export function FormPreview({ fields }: FormPreviewProps) {
   }
 
   return (
-    <form className="space-y-6">
+    <form className="space-y-6" >
       {fields.map((field) => (
         <div key={field._id} className="space-y-2">
           <Label
@@ -43,6 +43,7 @@ export function FormPreview({ fields }: FormPreviewProps) {
 
           {field.fieldType === 'text' && (
             <Input
+            disabled
               id={`preview-${field._id}`}
               placeholder={field.placeholder}
               required={field.isRequired}
@@ -52,6 +53,7 @@ export function FormPreview({ fields }: FormPreviewProps) {
 
           {field.fieldType === 'textarea' && (
             <Textarea
+            disabled
               id={`preview-${field._id}`}
               placeholder={field.placeholder}
               required={field.isRequired}
@@ -61,6 +63,7 @@ export function FormPreview({ fields }: FormPreviewProps) {
 
           {field.fieldType === 'number' && (
             <Input
+            disabled
               id={`preview-${field._id}`}
               type="number"
               placeholder={field.placeholder}
@@ -71,6 +74,7 @@ export function FormPreview({ fields }: FormPreviewProps) {
 
           {field.fieldType === 'date' && (
             <Input
+            disabled
               id={`preview-${field._id}`}
               type="date"
               required={field.isRequired}
@@ -79,13 +83,13 @@ export function FormPreview({ fields }: FormPreviewProps) {
           )}
 
           {field.fieldType === 'select' && field.options && (
-            <Select>
+            <Select disabled>
               <SelectTrigger className="bg-slate-950">
                 <SelectValue placeholder={field.placeholder} />
               </SelectTrigger>
               <SelectContent>
                 {field.options.map((option, i) => (
-                  <SelectItem key={i} value={option}>
+                  <SelectItem key={i} value={option.length>0?option:"option"}>
                     {option}
                   </SelectItem>
                 ))}
@@ -94,7 +98,7 @@ export function FormPreview({ fields }: FormPreviewProps) {
           )}
 
           {field.fieldType === 'radio' && field.options && (
-            <RadioGroup>
+            <RadioGroup disabled>
               {field.options.map((option, i) => (
                 <div key={i} className="flex items-center space-x-2">
                   <RadioGroupItem value={option} id={`radio-${field._id}-${i}`} />
@@ -106,13 +110,14 @@ export function FormPreview({ fields }: FormPreviewProps) {
 
           {field.fieldType === 'checkbox' && (
             <div className="flex items-center space-x-2">
-              <Checkbox id={`preview-${field._id}`} required={field.isRequired} />
+              <Checkbox disabled id={`preview-${field._id}`} required={field.isRequired} />
               <Label htmlFor={`preview-${field._id}`}>{field.placeholder}</Label>
             </div>
           )}
 
           {field.fieldType === 'image' && (
             <Input
+            disabled
               id={`preview-${field._id}`}
               type="file"
               accept="image/*"

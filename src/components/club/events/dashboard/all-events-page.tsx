@@ -37,52 +37,77 @@ import {
 } from "@/components/ui/table"
 import { ChevronDownIcon, MoreHorizontal, SortAscIcon } from "lucide-react"
 import axios from "axios"
-import { useToast } from "../ui/use-toast"
+import { useToast } from "@/components/ui/use-toast"
 import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
-import { BACKEND_URL, eventCategories } from "@/constants"
+import { BACKEND_URL, BACKEND_URL_V2, eventCategories } from "@/constants"
 import Cookies from "js-cookie"
 import { useClub } from "@/hooks/useClubContext"
 import { useAppSelector } from "@/lib/hooks"
-import { CustomTable } from "../ui/custom-table"
-import { Event } from "@/types/club-dashboard"
+import { CustomTable } from "@/components/ui/custom-table"
+
+import { authorisedGetRequest } from "@/lib/api"
+import { format } from "date-fns"
+import { useDebounceCallback } from "usehooks-ts"
 
 
-
+interface Event{
+_id:string,
+basicDetails:{
+  title: string,
+  venue:string,
+  startDate:Date,
+  endDate:Date,
+  isOnline:boolean,
+  category: string,
+},
+isPublished:1,
+status:1
+}
 
 export const eventColumns: ColumnDef<Event>[] = [
   {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => row.original.name || "N/A",
+    accessorKey: "title",
+    header: "Title",
+    cell: ({ row }) => row.original.basicDetails.title || "N/A",
   },
+
   {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => row.original.description || "N/A",
-  },
-  {
-    accessorKey: "dateTime",
-    header: "Date & Time",
+    accessorKey: "startDate",
+    header: "Start",
     cell: ({ row }) =>
-      row.original.dateTime
-        ? new Date(row.original.dateTime).toLocaleString()
+      row.original.basicDetails.startDate
+        ? format( row.original.basicDetails.startDate,"PPP")
         : "N/A",
   },
   {
-    accessorKey: "location",
-    header: "Location",
-    cell: ({ row }) => row.original.location || "N/A",
+    accessorKey: "endDate",
+    header: "End",
+    cell: ({ row }) =>
+      row.original.basicDetails.startDate
+        ? format( row.original.basicDetails.startDate,"PPP")
+        : "N/A",
   },
   {
     accessorKey: "venue",
     header: "Venue",
-    cell: ({ row }) => row.original.venue || "N/A",
+    cell: ({ row }) => row.original.basicDetails.venue || "N/A",
   },
+
   {
     accessorKey: "category",
     header: "Category",
-    cell: ({ row }) => row.original.category || "N/A",
+    cell: ({ row }) => row.original.basicDetails.category || "N/A",
+  },
+  {
+    accessorKey:"isPublished",
+    header:"Published",
+    cell:({row})=>row.original.isPublished
+  },
+  {
+    accessorKey:"status",
+    header:"Status",
+    cell:({row})=>row.original.status
   },
   {
     accessorKey: "actions",
@@ -92,7 +117,7 @@ export const eventColumns: ColumnDef<Event>[] = [
         <DropdownMenuTrigger>...</DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>
-           <Link href={`/account/club/events/${row.original._id}`}>View</Link>
+           <Link href={`/dashboard/events/${row.original._id}`}>View</Link>
           </DropdownMenuLabel>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -102,31 +127,40 @@ export const eventColumns: ColumnDef<Event>[] = [
 
 export default function AllEventsPage() {
   const {toast} = useToast() 
-  const {events} = useAppSelector(state=>state.club);
+
 
   const [page,setPage] = React.useState(1);
-  const [filteredEvents,setFilteredEvents] = React.useState(
-   events.data.events.slice(0,Math.min(events.data.events.length,20))
-  );
+  const[total,setTotal] =React.useState(0);
   const [filters,setFilters] = React.useState({
-   name:"",
+   title:"",
    category:"",
+   page:1
   });
-  const clubContext = useClub();
-  const handlePageChange = ({ pageNumber, totalResults }: { pageNumber: number; totalResults: number; })=>{
-    setPage(pageNumber);
-  }
+
+ const debounced = useDebounceCallback(setFilters,500);
   const handleFilterChange = (name:string,value:string)=>{
-    setFilters((prev)=>({...prev,[name]:value}));
+debounced((prev)=>({...prev,[name]:value}))
   }
-  React.useEffect(()=>{
-    const filtered = events.data.events.filter(e=>{
-      return e.name!.startsWith(filters.name) && (filters.category!==""?e.category===filters.category:true)
-    })
-    const start = (page-1)*20;
-    const paginated = filtered.slice(start,Math.min(filtered.length,start+20))
-    setFilteredEvents(paginated)
-  },[page,filters])
+  const loadEvents = async()=>{
+    try{
+      const data = await authorisedGetRequest(`${BACKEND_URL_V2}/events/admin/all`,filters);
+      setTotal(data.total);
+
+      return data.events;
+    }
+    catch(error:any){
+
+    }
+  }
+
+const {data:events,isLoading} = useQuery<any>({
+  queryKey:[{...filters}],
+  queryFn:loadEvents
+})
+
+const handlePageChange = ({pageNumber,totalResults}:{pageNumber:number,totalResults:number})=>{
+debounced({...filters,page:pageNumber})
+}
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -138,11 +172,11 @@ export default function AllEventsPage() {
         <CustomTable
           pagination={false}
           manualPagination={true}
-          data={filteredEvents}
-          totalResults={events.data.events.length}
+          data={events}
+          totalResults={total}
           pageSize={20}
           filterable={[{
-            label:"name",type:"text"
+            label:"title",type:"text"
           },{label:"category",type:"select",options:eventCategories}]}
           onPageChange={handlePageChange}
           handleFilterStateChange={handleFilterChange}

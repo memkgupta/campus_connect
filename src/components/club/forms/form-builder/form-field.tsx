@@ -100,18 +100,48 @@ export function FormField({
           </div>
 
           {(field.fieldType === 'select' || field.fieldType === 'radio') && (
-            <div className="space-y-2">
-              <Label>Options</Label>
-              <Textarea
-                value={field.options?.join('\n')}
-                onChange={(e) =>
-                  onUpdate({ options: e.target.value.split('\n').filter(Boolean) })
-                }
-                placeholder="Enter options (one per line)"
-                className="bg-slate-950"
-              />
-            </div>
-          )}
+  <div className="space-y-2">
+    <Label>Options</Label>
+    <div className="space-y-2">
+      {field.options?.map((option, idx) => (
+        <div key={idx} className="flex items-center gap-2">
+          <Input
+            value={option}
+            onChange={(e) => {
+              const updated = [...(field.options || [])];
+              updated[idx] = e.target.value;
+              onUpdate({ options: updated });
+            }}
+            className="bg-slate-950"
+          />
+          <Button
+            type="button"
+            variant="destructive"
+            size="sm"
+            disabled={field.options?.length==1}
+            onClick={() => {
+              const updated = (field.options || []).filter((_, i) => i !== idx);
+              onUpdate({ options: updated });
+            }}
+          >
+            Remove
+          </Button>
+        </div>
+      ))}
+      <Button
+        type="button"
+        variant="secondary"
+        size="sm"
+        onClick={() => {
+          const updated = [...(field.options || []), `option-${field.options!.length}`];
+          onUpdate({ options: updated });
+        }}
+      >
+        Add Option
+      </Button>
+    </div>
+  </div>
+)}
 
           <div className="flex items-center justify-between">
             <Label htmlFor={`required-${field._id}`}>Required Field</Label>
