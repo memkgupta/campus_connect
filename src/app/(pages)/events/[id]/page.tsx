@@ -26,21 +26,30 @@ import Link from "next/link";
 import { useSession } from "@/hooks/useSession";
 import Cookies from "js-cookie";
 import EventDetails from "@/components/events/event-page";
+import { useEventContext } from "@/context/EventContext";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
-  const [isRegistered, setIsRegistered] = useState<boolean>(false);
-  const { isAuthenticated } = useSession();
-  const [data, setData] = useState<any>();
+
+
   const { toast } = useToast();
   const { id } = params;
-
+  const {data,setData} = useEventContext()
+  // const {isAuthenticated} = useSession()
   const fetchEvent = async () => {
     try {
-      const res = await axios.get(`${BACKEND_URL}/events/${id}`);
+      const res = await axios.get(`${BACKEND_URL}/events/${id}`,
+        {
+          headers:{
+            "Authorization":`Bearer ${Cookies.get("access-token")}`
+          }
+        }
+      );
       const reqData = res.data;
-      setData(reqData.data);
-      setIsRegistered(reqData.registered!=null)
+  
+      
+   setData({...reqData.data,registered:reqData.registered||"null"})
+
       return reqData.data;
     } catch (error) {
       const axiosError = error as AxiosError<any>;
@@ -52,51 +61,6 @@ const Page = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  const fetchRegistrationStatus = async () => {
-    if (isAuthenticated) {
-      try {
-        const res = await axios.get(`${BACKEND_URL}/events/registration/is-registered`, {
-          params: { eid: id },
-          headers: {
-            Authorization: `Bearer ${Cookies.get("access-token")}`,
-          },
-        });
-        return res.data.registration;
-      } catch (error) {
-        toast({
-          title: "Some error occurred",
-          variant: "destructive",
-        });
-        return { status: "not-registered", rid: null };
-      }
-    }
-  };
-
-  const registerNow = async () => {
-    if (!isAuthenticated) {
-      toast({
-        title: "Please sign in",
-      });
-      return;
-    }
-
-    try {
-      const res = await axios.post(
-        `${BACKEND_URL}/events/register`,
-        { event_id: id },
-        {
-          headers: {
-            Authorization: `Bearer ${Cookies.get("access-token")}`,
-          },
-        }
-      );
-      router.push(`/events/register?rid=${res.data.id}`);
-    } catch (error) {
-      const axiosError = error as AxiosError<any>;
-      const message = axiosError.response?.data.message || "Some error occurred";
-      toast({ title: message, variant: "destructive" });
-    }
-  };
 
   const { data: _data, isSuccess, isFetching } = useQuery({
     queryKey: [id],
@@ -117,7 +81,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       {isFetching ? (
         <Loader />
       ) : (
-    <EventDetails registered={isRegistered}  event={_data}/>
+    <EventDetails registered={data?.registered||"null"}  event={_data}/>
       )}
     </>
   );

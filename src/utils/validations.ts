@@ -18,6 +18,8 @@ export const createFieldSchema = (field: Field) => {
       schema = z.string().datetime();
       break;
     case 'select':
+      schema = z.string()
+      break;
     case 'radio':
       schema = z.enum(field.options as [string, ...string[]]);
       break;
@@ -25,7 +27,7 @@ export const createFieldSchema = (field: Field) => {
       schema = z.boolean();
       break;
     case 'image':
-      schema = z.instanceof(File);
+      schema = z.string();
       break;
   }
 

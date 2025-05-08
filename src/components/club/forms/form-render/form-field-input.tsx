@@ -13,7 +13,8 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { type Field } from '@/types/index';
-
+import { ImageEditor as ImageSelector } from '@/components/imageSelector/image-selector';
+import { useState } from 'react';
 interface FormFieldInputProps {
   field: Field;
   value: any;
@@ -22,6 +23,7 @@ interface FormFieldInputProps {
 }
 
 export function FormFieldInput({ field, value, onChange, error }: FormFieldInputProps) {
+  const[preview,setPreview] = useState<any>(null);
   return (
     <div className="space-y-2">
       <Label
@@ -113,13 +115,14 @@ export function FormFieldInput({ field, value, onChange, error }: FormFieldInput
       )}
 
       {field.fieldType === 'image' && (
-        <Input
-          id={`field-${field._id}`}
-          type="file"
-          accept="image/*"
-          onChange={(e) => onChange(e.target.files?.[0])}
-          className={`bg-slate-950 ${error ? 'border-red-500' : ''}`}
-        />
+        // <Input
+        //   id={`field-${field._id}`}
+        //   type="file"
+        //   accept="image/*"
+        //   onChange={(e) => onChange(e.target.files?.[0])}
+        //   className={`bg-slate-950 ${error ? 'border-red-500' : ''}`}
+        // />
+  <ImageSelector  preview={preview} isRound={false} type="image" title={``} setImage={(url)=>{setPreview(url);onChange(url)}}/>
       )}
 
       {error && (

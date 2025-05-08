@@ -94,9 +94,12 @@ const EventDetails: React.FC<EventProps> = ({ registered,event }) => {
               <div className="text-sm text-gray-400">
                 Registration closes on: {new Date(event.basicDetails.registrationDeadline).toLocaleString()}
               </div>
-              {!registered?<Button className="bg-blue-600 hover:bg-blue-700 text-white w-full">
-                Register Now
-              </Button>:<Link href={`/account/registrations/${registered._id}`} className="bg-green-600 hover:bg-green-700 text-white w-full p-1 text-center">Registered</Link>}
+              <div className="w-full">
+             <Link href={`/events/${event._id}/registration`} className="bg-blue-600 hover:bg-blue-700 text-white block text-center p-2 rounded-md w-full">
+                {!registered?"Register now":"View Registration"}
+              </Link>
+              </div>
+           
             </CardContent>
           </Card>
         </div>
