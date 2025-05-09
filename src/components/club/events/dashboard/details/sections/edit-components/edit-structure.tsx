@@ -23,7 +23,7 @@ import {
   PopoverContent
 } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Plus, Trash2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { eventCreationEventStructureSchema } from '@/schema/eventRegistrationSchema';
@@ -56,8 +56,13 @@ const EditEventStructure = () => {
   const mentors = useFieldArray({ control, name: 'mentors' });
   const judges = useFieldArray({ control, name: 'judges' });
   const guests = useFieldArray({ control, name: 'guests' });
+   const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'teamRequirements.otherCriterias',
+  })
 const editSubmit = async(update:any)=>{
   try{
+    console.log(update)
     const {event,message} = await updateEventSection("structure",update,data._id);
     setData(event)
     toast({
@@ -89,34 +94,77 @@ const editSubmit = async(update:any)=>{
         />
 
         {/* Team Requirements */}
-        {data.basicDetails.isTeam && (
+        {data.basicDetails.isTeamEvent && (
           <div className='space-y-2'>
             <Label>Team Requirements</Label>
-            <Input
-              type='number'
-              placeholder='Minimum Strength'
-              {...register('teamRequirements.minimumStrength', {
-                valueAsNumber: true
-              })}
-            />
-            <div className='flex items-center gap-2'>
-              <Switch
-                {...register(
-                  'teamRequirements.diffCollegeTeamMembersAllowed'
-                )}
-                onCheckedChange={(e) =>
-                  setValue(
-                    'teamRequirements.diffCollegeTeamMembersAllowed',
-                    e
-                  )
-                }
-              />
-              <Label>Allow different college team members</Label>
-            </div>
-            <Textarea
-              {...register('teamRequirements.otherCriterias.0')}
-              placeholder='Other team criteria'
-            />
+          <FormField
+  control={control}
+  name='teamRequirements.minimumStrength'
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Minimum Team Strength</FormLabel>
+      <FormControl>
+        <Input type='number' placeholder='Minimum Strength' {...field} />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+          <FormField
+  control={control}
+  name="teamRequirements.diffCollegeTeamMembersAllowed"
+  render={({ field }) => (
+    <FormItem className="flex flex-row items-center gap-2 space-y-0">
+      <FormControl>
+        <Switch
+          checked={field.value}
+          onCheckedChange={field.onChange}
+        />
+      </FormControl>
+      <FormLabel>Allow different college team members</FormLabel>
+    </FormItem>
+  )}
+/>
+
+ <div className="space-y-4">
+      {fields.map((field, index) => (
+        <FormField
+          key={field.id}
+          control={control}
+          name={`teamRequirements.otherCriterias.${index}`}
+          render={({ field }) => (
+            <FormItem className="relative">
+              <FormControl>
+                <Textarea
+                  placeholder={`Other team criteria #${index + 1}`}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-0 text-red-500"
+                onClick={() => remove(index)}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </FormItem>
+          )}
+        />
+      ))}
+
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => append('')}
+        className="mt-2"
+      >
+        <Plus className="w-4 h-4 mr-2" />
+        Add More Criteria
+      </Button>
+    </div>
           </div>
         )}
 

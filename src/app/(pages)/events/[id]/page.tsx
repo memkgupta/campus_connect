@@ -36,41 +36,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const {data,setData} = useEventContext()
   // const {isAuthenticated} = useSession()
-  const fetchEvent = async () => {
-    try {
-      const res = await axios.get(`${BACKEND_URL}/events/${id}`,
-        {
-          headers:{
-            "Authorization":`Bearer ${Cookies.get("access-token")}`
-          }
-        }
-      );
-      const reqData = res.data;
-  
-      
-   setData({...reqData.data,registered:reqData.registered||"null"})
 
-      return reqData.data;
-    } catch (error) {
-      const axiosError = error as AxiosError<any>;
-      toast({
-        title: axiosError.response?.data.message || "Some error occurred",
-        variant: "destructive",
-      });
-      return Promise.reject(error);
-    }
-  };
-
-
-  const { data: _data, isSuccess, isFetching } = useQuery({
-    queryKey: [id],
-    queryFn: fetchEvent,
-    refetchOnWindowFocus: false,
-    retry: (count, error) => {
-      const axiosError = error as AxiosError<any>;
-      return !(axiosError?.status === 500 || axiosError?.status === 401 || axiosError?.status === 404 || count > 3);
-    },
-  });
 
  
 
@@ -78,11 +44,9 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      {isFetching ? (
-        <Loader />
-      ) : (
-    <EventDetails registered={data?.registered||"null"}  event={_data}/>
-      )}
+  
+    <EventDetails registered={data?.registered||"null"}  event={data}/>
+      
     </>
   );
 };

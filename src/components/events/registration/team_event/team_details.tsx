@@ -5,24 +5,116 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
+import { useEventRegistration } from "@/context/event_registration/EventRegistrationContext";
+import { useToast } from "@/components/ui/use-toast";
+import axios, { AxiosError } from "axios";
+import { BACKEND_URL_V2 } from "@/constants";
+import Cookies from "js-cookie";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "@/components/Loader";
+import TeamDetailsCard from "./team_details_card";
 const TeamDetails = () => {
+  const {data:registrationContext,setData} = useEventRegistration()
+  const registrationDetails = registrationContext.registrationDetails;
+  
   const [selectedOption, setSelectedOption] = useState<"join" | "create" | null>(null);
   const [teamCode, setTeamCode] = useState("");
   const [teamName, setTeamName] = useState("");
-
-  const handleJoin = () => {
-    console.log("Joining team with code:", teamCode);
-    // TODO: Call your backend API to join a team using the teamCode
+  const {toast} = useToast();
+  const handleJoin = async() => {
+     try{
+      const req = await axios.post(`${BACKEND_URL_V2}/events/registrations/join-team`,{
+        team_code:teamCode,
+        registration_id:registrationDetails._id
+      },{
+        headers:{
+          "Authorization":`Bearer ${Cookies.get("access-token")}`
+        }
+      });
+      const {team} = req.data;
+      setData({...registrationContext,registrationDetails:{...registrationContext.registrationDetails,team:team._id}});
+    }
+    catch(error:any)
+    {
+      const aError = error as AxiosError<any>
+      const message = aError.response?.data.message || "Some error occured";
+      toast({
+        title:message,
+        variant:"destructive"
+      })
+    }
+  
   };
 
-  const handleCreate = () => {
-    console.log("Creating team with name:", teamName);
-    // TODO: Call your backend API to create a team with teamName
+  const handleCreate = async() => {
+    
+    try{
+      const req = await axios.post(`${BACKEND_URL_V2}/events/registrations/create-team`,{
+        team_name:teamName,
+        registration_id:registrationDetails._id
+      },{
+        headers:{
+          "Authorization":`Bearer ${Cookies.get("access-token")}`
+        }
+      });
+      const {team} = req.data;
+      setData({...registrationContext,registrationDetails:{...registrationContext.registrationDetails,team:team._id}});
+    }
+    catch(error:any)
+    {
+      const aError = error as AxiosError<any>
+      const message = aError.response?.data.message || "Some error occured";
+      toast({
+        title:message,
+        variant:"destructive"
+      })
+    }
   };
+const fetchTeamDetails = async()=>{
+  try{
+    if(registrationDetails.team && registrationDetails._id){
+   const res = await axios.get(`${BACKEND_URL_V2}/events/registrations/team-details`,{
+      params:{regId:registrationDetails._id,},headers:{
+        "Authorization":`Bearer ${Cookies.get("access-token")}`
+      }
+    });
+    return res.data.team;
+    }
+    return null;
+  }
+  catch(error:any){
+  const aError = error as AxiosError<any>
+  const message = aError.response?.data.message || "Some error occured";
+  toast({
+    title:message,
+    variant:"destructive"
+  })
 
+  }
+}
+
+const {data:team,isFetching} = useQuery({
+queryKey:[registrationDetails._id,registrationDetails.team],
+retry:false,
+refetchOnWindowFocus:false,
+queryFn:fetchTeamDetails
+})
   return (
-    <div className="flex w-full h-full border rounded-xl overflow-hidden shadow-lg">
+    <>
+       {isFetching ? (
+        <Loader/>
+       )
+      :
+      (
+     <>
+     {
+      team?(
+        <>
+        <TeamDetailsCard team={team}/>
+        </>
+      )
+      :(
+           <div className="flex w-full h-full border rounded-xl overflow-hidden shadow-lg">
       {/* Sidebar */}
       <aside className="w-1/4 bg-muted p-4 flex flex-col gap-4 border-r">
         <Button
@@ -70,6 +162,13 @@ const TeamDetails = () => {
         )}
       </main>
     </div>
+      )
+     }
+     </>
+      ) 
+      }
+    </>
+ 
   );
 };
 

@@ -92,6 +92,7 @@ export interface EventType {
       index: number;
     }[];
    registered?:string
+   passGenerated?:boolean
     status?: "upcoming" | "completion-pending" | "completed";
     isRemoved?: boolean;
     isClubEvent?: boolean;

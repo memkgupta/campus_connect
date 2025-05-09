@@ -9,8 +9,9 @@ import SimpleEventRegistrationDetails from './simple_event/simple_event'
 import { useQuery } from '@tanstack/react-query'
 import EventForm from './common/event_form'
 import Loader from '@/components/Loader'
+import { useEventContext } from '@/context/EventContext'
 const EventRegistrationContainer = ({id}:{id:string}) => {
-
+  const {data:event} = useEventContext()
   const registrationContext = useEventRegistration()
   const {toast} = useToast()
  const fetchRegistrationDetails = async()=>{
@@ -59,7 +60,7 @@ registrationId
     registrationContext.data.registrationDetails?.status==="completed"?(
       <>
       {
-        registrationContext.data.isTeamEvent?(<>
+        event?.basicDetails.isTeamEvent?(<>
         <TeamDetails/>
         </>):
         (

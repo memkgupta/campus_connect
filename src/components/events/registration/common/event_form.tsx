@@ -31,9 +31,9 @@ const EventForm = () => {
 
      const fetchForm= async()=>{
           try {
-            if(registrationContext.registrationId!=null)
+            if(registrationContext.registrationDetails?._id!=null)
             {
-              const res = await axios.get(`${BACKEND_URL}/forms/get-form?rid=${registrationContext.registrationId}`,{headers:{
+              const res = await axios.get(`${BACKEND_URL}/forms/get-form?rid=${registrationContext.registrationDetails._id}`,{headers:{
                 "Authorization":`Bearer ${Cookies.get('access-token')}`
             }})
             return res.data.fields
@@ -89,7 +89,7 @@ const EventForm = () => {
             try {
              
      setIsSubmitting(true);
-     const res = await axios.post(`${BACKEND_URL}/forms/fill-form`,{registrationId:registrationContext.registrationId,formData},{
+     const res = await axios.post(`${BACKEND_URL}/forms/fill-form`,{registrationId:registrationContext.registrationDetails._id,formData},{
          headers:{
              Authorization:`Bearer ${Cookies.get('access-token')}`
          }

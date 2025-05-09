@@ -14,9 +14,9 @@ export const eventRegistrationSchema = z.object({
 
 
 export const teamSchema = z.object({
-    minimumStrength:z.number(),
-    diffCollegeTeamMembersAllowed:z.boolean(),
-    otherCriterias:z.string().array(),
+    minimumStrength:z.string().transform((v)=>parseInt(v)),
+    diffCollegeTeamMembersAllowed:z.boolean().default(false).optional(),
+    otherCriterias:z.string().array().default([]).optional(),
 });
 export const roundsSchema = z.object({
   

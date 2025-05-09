@@ -9,10 +9,13 @@ type CollegeDetails = {
 };
 
 type RegistrationDetails = {
+  _id?:string;
   email: string;
   name: string;
+    team?:string;
   phoneNo: string;
   status?:string;
+  registrationTimestamp?:Date;
   isApproved?:boolean;
   collegeDetails: CollegeDetails;
 };
@@ -24,6 +27,7 @@ type EventRegistrationState = {
   outsideParticipantsAllowed: boolean;
   registrationId: string | null;
   isTeamEvent: boolean;
+
   registrationDetails: RegistrationDetails;
   formData: FormDataType;
   onFormSubmit: (data: FormDataType) => void;
