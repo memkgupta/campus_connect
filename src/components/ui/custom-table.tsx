@@ -187,7 +187,7 @@ export interface FilterState{
       )
       case "select":
         return(
-          <select className='bg-slate-950 rounded-md p-3'>
+          <select onChange={(e)=>onFilterChange(label,e.target.value)} className='bg-slate-950 rounded-md p-3'>
          <option className='text-white' value={""}>{"All"}</option>
          {
           options!.map((o)=>{

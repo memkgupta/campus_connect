@@ -22,6 +22,7 @@ import axios, { AxiosError } from 'axios';
 import { useEventDashboard } from '@/context/dashboard/useContext';
 import { useQuery } from '@tanstack/react-query';
 import Loader from '@/components/Loader';
+import EventTeams from '@/components/club/events/dashboard/teams/teams';
 const EventDashboardPage = ({params}:{params:{id:string}}) => {
 
 const eventContext = useEventDashboard();
@@ -36,6 +37,7 @@ const event_id = params.id;
     {value:"admin-config",label:"Config",content:<EventConfigDashboard event_id={params.id}/>},
     {value:"registrations",label:"Registrations",content:<EventRegistrationsDashboard event_id={params.id}/>},
     {value:"assignments",label:"Assignments",content:"Assignments"},
+    {value:"teams",label:"Teams",content:<EventTeams/>},
     {value:"forms",label:"Forms",content:<EventFormsDashboard event_id={params.id}/>}
  ]
   const {toast} = useToast()

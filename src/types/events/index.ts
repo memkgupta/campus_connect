@@ -1,4 +1,4 @@
-export interface EventType {
+export type EventType ={
     _id?: string;
     owner: string;
     type: "hackathon" | "session" | "workshop" | "contest" | "campaign" | "other" | "ground-work";
@@ -100,4 +100,55 @@ export interface EventType {
     createdAt?: string;
     updatedAt?: string;
   }
-  
+export type EventTeam={
+_id: string;
+  event: string;
+  name: string;
+  status: 'submitted' | string; // Extend if other statuses exist
+  code: string;
+  members: Member[];
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  __v: number;
+  lead: string; // lead is a user ID
+}  
+
+export type Member = {
+  _id: string;
+  event: string;
+  team: string;
+  user: string;
+  registrationDetails: RegistrationDetails;
+  __v: number;
+};
+
+export type RegistrationDetails = {
+  _id: string;
+  event: string;
+  user: string;
+  status: 'completed' | string; // extend if more statuses exist
+  isApproved: boolean;
+  registrationTimestamp: string; // ISO date string
+  email: string;
+  name: string;
+  phoneNo: string;
+  collegeDetails: CollegeDetails;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  formSubmission: string|FormSubmission;
+  team: string;
+};
+
+export interface FormSubmission {
+  _id: string;
+  formId: string;
+  submittedBy: string;
+  submissionData: Record<string, string>;
+  submittedAt: string;
+  __v: number;
+}
+export type CollegeDetails = {
+  collegeName: string;
+  year: number;
+};

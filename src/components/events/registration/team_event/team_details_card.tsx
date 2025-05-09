@@ -20,7 +20,9 @@ import { Clipboard, ClipboardCheck } from "lucide-react"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { useSession } from "@/hooks/useSession"
-
+import axios, { AxiosError } from "axios"
+import { BACKEND_URL_V2 } from "@/constants"
+import Cookies from "js-cookie"
 
 // inside component scope
 
@@ -41,11 +43,39 @@ const TeamDetailsCard = ({ team }: { team: any }) => {
   }
   return false;
 };
-
+const[isTeamSubmitting,setIsTeamSubmitting] = useState(false)
+ const[status,setStatus] = useState(team.status)
+    const handleSubmit = async() => {
+try{
+  setIsTeamSubmitting(true);
+const req = await axios.post(`${BACKEND_URL_V2}/events/registrations/submit-team`,
+  {
+    team_id:team._id
+  },
+  {headers:{
+    "Authorization":`Bearer ${Cookies.get("access-token")}`
+  }}
  
-    const handleSubmit = () => {
-    // 🧠 Add your actual logic here: PATCH request or mutation
-    console.log("Submitting team:", team._id)
+);
+toast({
+  title:"Team submitted"
+})
+ const data = req.data.team;
+  setStatus(data.status);
+
+}
+catch(error:any)
+{
+  const aError = error as AxiosError<any>
+  const message  = aError.response?.data.message || "Some error occured";
+  toast({
+    title:message,
+    variant:"destructive"
+  })
+}
+finally{
+  setIsTeamSubmitting(false)
+}
   }
 const [copied, setCopied] = useState(false)
 

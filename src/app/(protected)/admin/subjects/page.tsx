@@ -153,7 +153,6 @@ const [filters,setFilters] = useState({
      filterState={filters}
      onPageChange={handlePagination}
      handleFilterStateChange={handleFilterChange}
-
       filterable={[{label:"label",type:"text"},{label:"year",type:"text"}]}
       pagination={false}
       manualPagination={true}
