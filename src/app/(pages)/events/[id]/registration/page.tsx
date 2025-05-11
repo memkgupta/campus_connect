@@ -33,17 +33,7 @@ const Page = ({params}:{params:{id:string}}) => {
       router.back()
       return;
     }
-useEffect(()=>{
-  if(eventContext.data!=null){
-    eventRegistrationContext.setData({
-      ...eventRegistrationContext.data,eventId:eventContext.data?._id!,
-    registrationId:eventContext.data.registered as string,
-      isTeamEvent:eventContext.data.basicDetails.isTeamEvent,
-      outsideParticipantsAllowed:eventContext.data.basicDetails.participantsFromOutsideAllowed
-    });
-  }
 
-},[eventContext])
      return (
        <div className="min-h-screen bg-slate-950 p-6 flex flex-col md:flex-row gap-8 items-start">
       {

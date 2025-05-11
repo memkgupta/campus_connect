@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import { useToast } from '@/components/ui/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import Loader from '@/components/Loader';
+import { EventRegistrationContextProvider } from '@/context/event_registration/EventRegistrationContext';
 const EventLayout = ({children,params}:{children:React.ReactNode,params:{id:string}}) => {
   const {data,setData} = useEventContext()
   const {toast} = useToast()
@@ -48,8 +49,10 @@ const EventLayout = ({children,params}:{children:React.ReactNode,params:{id:stri
   });
   return (
     <div>
-       
-        {isFetching?<Loader/>:children}
+       <EventRegistrationContextProvider>
+   {isFetching?<Loader/>:children}
+       </EventRegistrationContextProvider>
+     
       
     </div>
   )

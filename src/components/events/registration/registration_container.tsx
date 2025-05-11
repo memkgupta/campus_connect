@@ -14,49 +14,11 @@ const EventRegistrationContainer = ({id}:{id:string}) => {
   const {data:event} = useEventContext()
   const registrationContext = useEventRegistration()
   const {toast} = useToast()
- const fetchRegistrationDetails = async()=>{
-  try{
-  const registrationId = id
-  console.log(registrationId)
-   if(
-registrationId
-   )
-  {
-    const req = await axios.get(`${BACKEND_URL_V2}/events/registrations/status`,{
-      params:{
-        regId:registrationId
-      },
-      headers:{
-        "Authorization":`Bearer ${Cookies.get("access-token")}`
-      }
-    })
-    registrationContext.setData({
-      ...registrationContext.data,registrationDetails:req.data.registration
-    });
-    return req.data.registration
-  }
 
-  }
-  catch(error:any)
-  {
-    const aError = error as AxiosError<any>
-    const message = aError.response?.data.message || "Some error occured";
-    toast({
-        title:message,
-        variant:"destructive"
-      })
-  }
- }
- const {data,isFetching} = useQuery({
-  queryKey:[id],
-  queryFn:fetchRegistrationDetails,
-  refetchOnWindowFocus:false,
-  retry:false
- })
   
   return (
     <div className='w-full'>
-{isFetching?<Loader/>:(<>
+{(<>
   {
     registrationContext.data.registrationDetails?.status==="completed"?(
       <>

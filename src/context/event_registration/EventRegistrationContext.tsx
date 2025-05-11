@@ -12,11 +12,12 @@ type RegistrationDetails = {
   _id?:string;
   email: string;
   name: string;
-    team?:string;
+    team?:any;
   phoneNo: string;
   status?:string;
   registrationTimestamp?:Date;
   isApproved?:boolean;
+  members?:any
   collegeDetails: CollegeDetails;
 };
 

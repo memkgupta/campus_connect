@@ -66,7 +66,10 @@ export default function AssignmentDialog({isEditing,initialData,handleUpdate}:{i
     const fullData = { ...formData, links,event:event._id };
     try{
 setSubmitting(true)
-const req = await axios.post(`${BACKEND_URL_V2}/events/assignments/${isEditing?"update-assignment":"add-assignment"}`,
+let req = null;
+if(isEditing)
+{
+    req = await axios.put(`${BACKEND_URL_V2}/events/assignments/${isEditing?"update-assignment":"add-assignment"}`,
     fullData,
     {
         headers:{
@@ -78,6 +81,22 @@ const req = await axios.post(`${BACKEND_URL_V2}/events/assignments/${isEditing?"
         }
     }
 );
+}
+else{
+    req = await axios.post(`${BACKEND_URL_V2}/events/assignments/${isEditing?"update-assignment":"add-assignment"}`,
+    fullData,
+    {
+        headers:{
+            "Authorization":`Bearer ${Cookies.get("access-token")}`
+        },
+        params:{
+            event_id:event._id,
+            assignment_id:initialData?._id
+        }
+    }
+);
+}
+
 const assignment = req.data.assignment;
 toast({title:"Assignment added"})
 if(isEditing && handleUpdate){

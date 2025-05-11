@@ -80,6 +80,7 @@ const fetchTeamDetails = async()=>{
         "Authorization":`Bearer ${Cookies.get("access-token")}`
       }
     });
+    setData({...registrationContext,registrationDetails:{...registrationContext.registrationDetails,members:res.data.team.members}})
     return res.data.team;
     }
     return null;

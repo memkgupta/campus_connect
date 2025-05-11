@@ -3,11 +3,13 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEventDashboard } from '@/context/dashboard/useContext'
 import { useEventContext } from '@/context/EventContext';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react'
 
 const TeamAssignmentList = ({submissions,assignments}:{submissions:any,assignments:any}) => {
     const {data:event} = useEventContext()!;
-    
+    const pathName = usePathname()
    assignments = assignments.reduce((acc:any,curr:any)=>{
         const key = curr._id;
         if(!acc[key])
@@ -16,7 +18,7 @@ const TeamAssignmentList = ({submissions,assignments}:{submissions:any,assignmen
             if(submissions[key])
             {
                 acc[key]["submission"] = submissions[key][0]
-                acc[key]["completed"] = true;
+                acc[key]["filled"] = true;
             }
             
         }
@@ -47,6 +49,14 @@ const TeamAssignmentList = ({submissions,assignments}:{submissions:any,assignmen
                     </Badge>
                 )
             }
+            {!value.filled && 
+            (
+                <div className='flex justify-end'>
+                <Link href={`${pathName}/assignment/${value._id}`} className='border border-white rounded-md p-2'>Submit</Link>
+
+                </div>
+            )}
+            {}
           </CardHeader>
           <CardContent>
              <Accordion type="single" collapsible className="w-full">
