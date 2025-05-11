@@ -92,6 +92,7 @@ export type EventType ={
       index: number;
     }[];
    registered?:string
+   assignments?:any,
    passGenerated?:boolean
     status?: "upcoming" | "completion-pending" | "completed";
     isRemoved?: boolean;

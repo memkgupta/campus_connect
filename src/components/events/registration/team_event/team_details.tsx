@@ -13,10 +13,12 @@ import Cookies from "js-cookie";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/Loader";
 import TeamDetailsCard from "./team_details_card";
+import TeamAssignmentList from "../../team/team-assignment-list";
+import { useEventContext } from "@/context/EventContext";
 const TeamDetails = () => {
   const {data:registrationContext,setData} = useEventRegistration()
   const registrationDetails = registrationContext.registrationDetails;
-  
+  const {data:event} = useEventContext()
   const [selectedOption, setSelectedOption] = useState<"join" | "create" | null>(null);
   const [teamCode, setTeamCode] = useState("");
   const [teamName, setTeamName] = useState("");
@@ -99,6 +101,39 @@ retry:false,
 refetchOnWindowFocus:false,
 queryFn:fetchTeamDetails
 })
+
+ const fetchRegistrationSubmissions = async()=>{
+     try{
+       const req = await axios.get(`${BACKEND_URL_V2}/events/assignments/registration-submissions`,
+         {
+           headers:{
+             "Authorization":`Bearer ${Cookies.get("access-token")}`
+           },
+           params:{
+            registration_id:registrationDetails._id
+           }
+         }
+       )
+       return req.data.submissions
+     }
+     catch(error:any)
+     {
+       const aError = error as AxiosError<any>
+       const message = aError.response?.data.message || "Some error occured";
+       toast({
+         title:message,
+         variant:"destructive"
+       })
+       return Promise.reject()
+     }
+   }
+ const {data:assignmentSubmissions,isFetching:submissionsFetching} = useQuery({
+  queryKey:[],
+  queryFn:fetchRegistrationSubmissions,
+  retry:false,
+  refetchOnWindowFocus:false
+ })
+
   return (
     <>
        {isFetching ? (
@@ -111,6 +146,7 @@ queryFn:fetchTeamDetails
       team?(
         <>
         <TeamDetailsCard team={team}/>
+        {submissionsFetching?<Loader/>:<TeamAssignmentList assignments={event?.assignments} submissions = {assignmentSubmissions}/>}
         </>
       )
       :(

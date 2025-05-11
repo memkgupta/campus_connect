@@ -23,7 +23,7 @@ const EventLayout = ({children,params}:{children:React.ReactNode,params:{id:stri
       const reqData = res.data;
   
       
-   setData({...reqData.data,registered:reqData.registered||"null"})
+   setData({...reqData.data,registered:reqData.registered||"null",assignments:reqData.assignments})
 
       return reqData.data;
     } catch (error) {

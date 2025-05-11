@@ -53,6 +53,7 @@ registrationId
   refetchOnWindowFocus:false,
   retry:false
  })
+  
   return (
     <div className='w-full'>
 {isFetching?<Loader/>:(<>
@@ -69,6 +70,8 @@ registrationId
           </>
         )
       }
+      {/* Event assignmnet submissions */}
+
       </>
     )
     :(

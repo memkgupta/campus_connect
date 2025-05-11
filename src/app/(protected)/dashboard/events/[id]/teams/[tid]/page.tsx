@@ -9,6 +9,9 @@ import { Member, RegistrationDetails } from '@/types/events';
 import Loader from '@/components/Loader';
 import TeamMemberCard from '@/components/club/events/dashboard/teams/team_member_card';
 import { headers } from 'next/headers';
+import AssignmentList from '@/components/club/events/dashboard/assignments/assignment_list';
+import TeamAssignmentList from '@/components/club/events/dashboard/assignments/team_assignment_list';
+
 
 const EventTeamPage = ({ params }: { params: { tid: string; id: string } }) => {
   const [approving, setApproving] = useState(false);
@@ -61,14 +64,44 @@ const EventTeamPage = ({ params }: { params: { tid: string; id: string } }) => {
       setApproving(false);
     }
   };
-
+  const fetchTeamSubmissions = async()=>{
+    try{
+      const req = await axios.get(`${BACKEND_URL_V2}/events/assignments/team-submissions`,
+        {
+          headers:{
+            "Authorization":`Bearer ${Cookies.get("access-token")}`
+          },
+          params:{
+            team_id:params.tid
+          }
+        }
+      )
+      return req.data.submissions
+    }
+    catch(error:any)
+    {
+      const aError = error as AxiosError<any>
+      const message = aError.response?.data.message || "Some error occured";
+      toast({
+        title:message,
+        variant:"destructive"
+      })
+      return Promise.reject()
+    }
+  }
   const { data, isFetching } = useQuery({
     queryKey: [params.tid],
     queryFn: fetchTeamDetails,
     refetchOnWindowFocus: false,
     retry: false,
   });
-
+  const {data:teamSubmissions,isFetching:teamSubmissionsFetching}=useQuery({
+    queryKey:[params.tid,data],
+    queryFn:fetchTeamSubmissions,
+    enabled:(data?.team)!=null,
+    retry:false,
+    refetchOnWindowFocus:false
+  })
   return (
     <>
       {isFetching ? (
@@ -76,7 +109,8 @@ const EventTeamPage = ({ params }: { params: { tid: string; id: string } }) => {
       ) : (
         <>
           {data&& (
-            <div className="bg-[#1e1e1e] p-6 rounded-lg shadow-md border border-gray-700 text-white">
+           <>
+ <div className="bg-[#1e1e1e] p-6 rounded-lg shadow-md border border-gray-700 text-white">
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <h2 className="text-2xl font-bold">{data.team.name}</h2>
@@ -104,6 +138,10 @@ const EventTeamPage = ({ params }: { params: { tid: string; id: string } }) => {
                 </div>
               </div>
             </div>
+            <div className='mt-12'>
+             {teamSubmissionsFetching ?<Loader/>: <TeamAssignmentList submissions={teamSubmissions} members={data.team.members}/>}
+            </div>
+           </>
           )}
           
         </>

@@ -23,6 +23,7 @@ import { useEventDashboard } from '@/context/dashboard/useContext';
 import { useQuery } from '@tanstack/react-query';
 import Loader from '@/components/Loader';
 import EventTeams from '@/components/club/events/dashboard/teams/teams';
+import Assignments from '@/components/club/events/dashboard/assignments/page';
 const EventDashboardPage = ({params}:{params:{id:string}}) => {
 
 const eventContext = useEventDashboard();
@@ -36,54 +37,11 @@ const event_id = params.id;
     {value:"admin-reports",label:"Reports",content:<EventReportsDashboard/>},
     {value:"admin-config",label:"Config",content:<EventConfigDashboard event_id={params.id}/>},
     {value:"registrations",label:"Registrations",content:<EventRegistrationsDashboard event_id={params.id}/>},
-    {value:"assignments",label:"Assignments",content:"Assignments"},
+    {value:"assignments",label:"Assignments",content:<Assignments/>},
     {value:"teams",label:"Teams",content:<EventTeams/>},
     {value:"forms",label:"Forms",content:<EventFormsDashboard event_id={params.id}/>}
  ]
-  const {toast} = useToast()
-     const fetchEvent = async () => {
-         try {
-           
-           const res = await axios.get(
-             `${BACKEND_URL_V2}/events/admin/dashboard/${event_id}`,
-             {
-               headers: {
-                 Authorization: `Bearer ${Cookies.get("access-token")}`,
-               },
-               
-             }
-           );
-           eventContext?.setData(res.data.data)
-           return res.data.data;
-       
-           
-         } catch (error) {
-          
-           const axiosError = error as AxiosError<any>;
-           if (axiosError.response) {
-             if (axiosError.status !== 500) {
-               toast({
-                 title: axiosError.response.data.message,
-                 variant: "destructive",
-               });
-             } else {
-               toast({
-                 title: "Some error occured",
-                 variant: "destructive",
-               });
-             }
-           }
-   
-           return Promise.reject("Some error occured");
-         } 
-       };
-     
-     const {data:eventData,isLoading} =  useQuery({
-         queryKey: [event_id],
-         queryFn: fetchEvent,
-         retry: false,
-         refetchOnWindowFocus: false,
-       });
+
   return (
     <div>
     {
