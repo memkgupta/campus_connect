@@ -17,7 +17,11 @@ import {
   SettingsIcon,
   ListChecks,
   CalendarCheck,
-  Calendar
+  Calendar,
+  TicketCheck,
+  BellDot,
+  FoldersIcon,
+  UploadCloud
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -53,31 +57,45 @@ export const DashboardSidebar = () => {
       items: [
           {
               title: "Dashboard",
-              url: `/account/club`,
+              url: `/dashboard`,
               icon: Home,
           },
      
         {
           title: "Events",
-          url: `/account/club/events`, 
+          url: `/dashboard/events`, 
           icon: CalendarCheck,
         },
-      
         {
-            title:"Messages",
-            url:`/account/club/messages`,
-            icon:Users
+title:"My Registrations",
+url:"/dashboard/my-registrations",
+icon:TicketCheck
         },
-      
+        {
+            title:"Notifications",
+            url:`/dashboard/notifications`,
+            icon:BellDot
+        },
+        {
+      title:"My Resources",
+      url:"/dashboard/my-resources",
+      icon:FoldersIcon
+    },
+    {
+      title:"Contributions",
+      url:"/dashboard/contributions",
+      icon:UploadCloud
+    },
       
       ],
     },
+  
     {
-      group: "Config",
+      group: "Account",
       items: [
         {
-          title: "Config",
-          url: `/account/club/config`,
+          title: "Account",
+          url: `/dashboard/account`,
           icon: SettingsIcon,
         },
        

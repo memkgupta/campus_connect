@@ -1,13 +1,15 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import FormSubmissionRenderer from '@/components/utils/forms/form-renderer';
 import { useEventDashboard } from '@/context/dashboard/useContext'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const TeamAssignmentList = ({submissions,members}:{submissions:any,members:any}) => {
     const {data:event} = useEventDashboard()!;
-    let assignments =event.assignments;
-   assignments = assignments.reduce((acc:any,curr:any)=>{
+    let [assignments,setAssignments] =useState(event.assignments);
+ useEffect(()=>{
+setAssignments(assignments.reduce((acc:any,curr:any)=>{
         const key = curr._id;
         if(!acc[key])
         {
@@ -20,7 +22,10 @@ const TeamAssignmentList = ({submissions,members}:{submissions:any,members:any})
             
         }
         return acc;
-    },{}) 
+    },{}) )
+ },[event.assignments])
+
+
     return (
     <div>
         {
@@ -47,21 +52,31 @@ const TeamAssignmentList = ({submissions,members}:{submissions:any,members:any})
                 )
             }
           </CardHeader>
-          <CardContent>
-             <Accordion type="single" collapsible className="w-full">
-            {
-                
-                value.submissions?.map((s:any)=>(
-                    <Card>
-                        <CardHeader>
-
-                        </CardHeader>
-                    </Card>
-                ))
-            }
-
-    </Accordion>
-          </CardContent>
+        <CardContent>
+  <Accordion type="single" collapsible className="w-full">
+    {value.submissions &&
+      Object.entries(value.submissions).map(([key, submissions]: any) => {
+        return submissions.map((sub: any) => (
+          <AccordionItem value={sub._id} key={sub._id}>
+            <AccordionTrigger>
+              {/* You can customize what appears in the header */}
+              Submission ID: {sub._id}
+            </AccordionTrigger>
+            <AccordionContent>
+              <Card>
+                <CardHeader>
+                  <FormSubmissionRenderer
+                    data={sub.formSubmission.submissionData}
+                    formId={sub.formSubmission.formId}
+                  />
+                </CardHeader>
+              </Card>
+            </AccordionContent>
+          </AccordionItem>
+        ));
+      })}
+  </Accordion>
+</CardContent>
                 </Card>
             ))
         }
