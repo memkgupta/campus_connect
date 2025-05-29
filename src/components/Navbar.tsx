@@ -42,7 +42,7 @@ const [isFocused, setIsFocused] = useState(false);
       
      <SearchBar/>
    {<div className='mr-2'>
-    {isAuthenticated?<Link className='bg-gray-400 rounded-full w-14 h-12 flex justify-center items-center' href={"/account"}><User2 size={40} color='yellow'/></Link>:<Button className='bg-yellow-300  hover:bg-yellow-400 '><Link href={"/auth/sign-in"} className=''>Sign in</Link></Button>}
+    {isAuthenticated?<Link className='bg-gray-400 rounded-full w-14 h-12 flex justify-center items-center' href={"/dashboard"}><User2 size={40} color='yellow'/></Link>:<Button className='bg-yellow-300  hover:bg-yellow-400 '><Link href={"/auth/sign-in"} className=''>Sign in</Link></Button>}
    </div> }
         </div>
         <div className='sm:block md:hidden '>

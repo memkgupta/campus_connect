@@ -1,5 +1,6 @@
- // export const BACKEND_URL = "https://campus-connect-dev.xyz/api/v1"
+//  export const BACKEND_URL = "https://campus-connect-dev.xyz/api/v1"
 export const BACKEND_URL = "http://localhost:8000/api/v1"
+export const BACKEND_URL_V2 = "http://localhost:8000/api/v2"
 export const universities = [
     { "value": "AKTU", "label": "AKTU", "id": "AKTU" },
    
@@ -12,17 +13,13 @@ export const paperType = [
     {value:'mid-term',label:'Mid term exams',id:'mid-term'}
 ]
 export const eventCategories = [
-    {value:'all',label:'All',id:'all'},
-    { value: 'tech-fest', label: 'Technical Fest', id: 'tech-fest' },
-    { value: 'cultural-fest', label: 'Cultural Fest', id: 'cultural-fest' },
-    { value: 'workshop', label: 'Workshop', id: 'workshop' },
-    { value: 'conference', label: 'Conference', id: 'conference' },
-    { value: 'seminar', label: 'Seminar', id: 'seminar' },
     { value: 'hackathon', label: 'Hackathon', id: 'hackathon' },
-    { value: 'competition', label: 'Competition', id: 'competition' },
-    { value: 'sports', label: 'Sports Event', id: 'sports' },
-   
-    
+    { value: 'session', label: 'Session', id: 'session' },
+    { value: 'workshop', label: 'Workshop', id: 'workshop' },
+    { value: 'contest', label: 'Contest', id: 'contest' },
+    { value: 'campaign', label: 'Campaign', id: 'campaign' },
+    { value: 'other', label: 'Other', id: 'other' },
+    { value: 'ground-work', label: 'Ground Work', id: 'ground-work' },
   ];
 export const eventFormTypes = [
     {value:'registration',label:"Registration",id:'registration'},

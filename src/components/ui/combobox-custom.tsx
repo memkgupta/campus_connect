@@ -17,7 +17,8 @@ const ComboBox = ({options,stateSetter,label,defaultNull,defaultValue}:{options:
     )
   
    useEffect(()=>{
-stateSetter(value?.value);
+
+stateSetter(value);
    },[value])
    useEffect(()=>{
 setFilteredData(options);
