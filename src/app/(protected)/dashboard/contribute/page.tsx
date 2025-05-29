@@ -138,7 +138,7 @@ const Page = () => {
     }
     const fetchSubjects = async () => {
       try {
-        const res = await axios.get(`${BACKEND_URL}/utils/subjects`, { params: params });
+        const res = await axios.get(`${BACKEND_URL}/subjects`, { params: params });
         const data = res.data;
         if (data.success) {
           setSubjects(data.subjects);

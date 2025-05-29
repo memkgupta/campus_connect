@@ -107,7 +107,7 @@ icon:TicketCheck
     <Sidebar className='mt-12'>
       <SidebarContent>
       <div className="px-3 py-2">
-      <Select onValueChange={(value) => { clubContext.handleChangeSelectedClub(value)}} defaultValue={clubContext.clubs.find(b=>b._id===clubContext.selectedClub?._id)?._id}>
+      {/* <Select onValueChange={(value) => { clubContext.handleChangeSelectedClub(value)}} defaultValue={clubContext.clubs.find(b=>b._id===clubContext.selectedClub?._id)?._id}>
         <SelectTrigger className="w-full mb-6">
           <SelectValue placeholder="Select a business">
             <div className="flex items-center">
@@ -131,7 +131,7 @@ icon:TicketCheck
             </SelectItem>
           </SelectGroup>
         </SelectContent>
-      </Select>
+      </Select> */}
         </div>
 
 

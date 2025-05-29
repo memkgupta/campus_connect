@@ -53,7 +53,7 @@ const fetchSubjects = async()=>{
      params.branch =  selectedBranch.value
    }
    try {
-    const res = await axios.get(`/api/subjects`,{params:params});
+    const res = await axios.get(`${BACKEND_URL}/subjects`,{params:params});
     const data = res.data;
     if(data.success){
         setSubjects(data.subjects);

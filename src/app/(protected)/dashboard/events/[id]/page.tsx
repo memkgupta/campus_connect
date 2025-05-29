@@ -24,6 +24,7 @@ import { useQuery } from '@tanstack/react-query';
 import Loader from '@/components/Loader';
 import EventTeams from '@/components/club/events/dashboard/teams/teams';
 import Assignments from '@/components/club/events/dashboard/assignments/page';
+import CheckIn from '@/components/club/events/dashboard/check-in/CheckIn';
 const EventDashboardPage = ({params}:{params:{id:string}}) => {
 
 const eventContext = useEventDashboard();
@@ -31,15 +32,14 @@ const eventContext = useEventDashboard();
 const event_id = params.id;
  const tabs = [
     {value:"admin-overview",label:"Overview",content:<EventDashboardOverview event_id={params.id}/>},
- 
-    
     {value:"admin-feedbacks",label:"Feedbacks",content:<EventFeedbacksDashboard/>},
     {value:"admin-reports",label:"Reports",content:<EventReportsDashboard/>},
     {value:"admin-config",label:"Config",content:<EventConfigDashboard event_id={params.id}/>},
     {value:"registrations",label:"Registrations",content:<EventRegistrationsDashboard event_id={params.id}/>},
     {value:"assignments",label:"Assignments",content:<Assignments/>},
     {value:"teams",label:"Teams",content:<EventTeams/>},
-    {value:"forms",label:"Forms",content:<EventFormsDashboard event_id={params.id}/>}
+    {value:"forms",label:"Forms",content:<EventFormsDashboard event_id={params.id}/>},
+    {value:"check-in",label:"Check in",content:<CheckIn />}
  ]
 
   return (

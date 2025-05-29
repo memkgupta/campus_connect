@@ -91,8 +91,8 @@ function Page() {
   if (error) return <ErrorLoadingPage />;
 
   return (
-    <div className="flex flex-col w-full items-center justify-center min-h-screen">
-      <div className="relative w-full max-w-4xl bg-slate-800 rounded-md p-6 border-gray-100 shadow-md">
+    <div className="flex  w-full ">
+      <div className="relative w-full max-w-4xl bg-slate-900 rounded-md p-6 border-gray-100 shadow-md">
         {/* Profile Picture */}
         <div className="relative flex items-center gap-4 mb-4">
           <div className="w-[100px] h-[100px] md:w-[150px] md:h-[150px] rounded-full overflow-hidden border-2 border-black bg-slate-500">
