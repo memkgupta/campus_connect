@@ -1,6 +1,6 @@
 "use client"
-import AssignmentDialog from '@/components/club/events/dashboard/assignments/add_assignment_dialog'
-import { FormPreview } from '@/components/club/forms/form-builder/form-preview'
+import AssignmentDialog from '@/components/dashboard/events/dashboard/assignments/add_assignment_dialog'
+import { FormPreview } from '@/components/dashboard/events/dashboard/forms/form-builder/form-preview'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useEventDashboard } from '@/context/dashboard/useContext'

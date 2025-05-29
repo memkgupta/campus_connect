@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { FormField } from './form-field';
 import { FieldControls } from './field-controls';
 import { FormPreview } from './form-preview';
-import { type Field } from '@/types/index';
+import { type Field } from '@/types';
 
 export function FormBuilder({id,setFields,fields}:{id:string,setFields:(fields:Field[])=>void,fields:Field[]}) {
   // const [fields, setFields] = useState<Field[]>([]);

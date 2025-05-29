@@ -1,5 +1,5 @@
 'use client'
-import { FormFieldInput } from '@/components/club/forms/form-render/form-field-input'
+import { FormFieldInput } from '@/components/dashboard/events/dashboard/forms/form-render/form-field-input'
 import { Button } from '@/components/ui/button'
 import { BACKEND_URL } from '@/constants'
 import { Field } from '@/types'

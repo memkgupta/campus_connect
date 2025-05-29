@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Field } from '@/types'
-import { FormFieldInput } from '@/components/club/forms/form-render/form-field-input'
+import { FormFieldInput } from '@/components/dashboard/events/dashboard/forms/form-render/form-field-input'
 import { Button } from '@/components/ui/button'
 import Loader from '@/components/Loader'
 import { createFieldSchema } from '@/utils/validations'

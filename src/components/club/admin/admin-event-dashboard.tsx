@@ -1,4 +1,4 @@
-import AllEventsPage from '../events/dashboard/all-events-page'
+import AllEventsPage from '../../dashboard/events/dashboard/all-events-page'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PlusIcon, SearchIcon } from 'lucide-react'

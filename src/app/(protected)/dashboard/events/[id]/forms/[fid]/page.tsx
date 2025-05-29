@@ -1,5 +1,5 @@
 'use client'
-import { FormBuilder } from '@/components/club/forms/form-builder/FormBuilder'
+import { FormBuilder } from '@/components/dashboard/events/dashboard/forms/form-builder/FormBuilder'
 import { toast } from '@/components/ui/use-toast'
 import { BACKEND_URL, BACKEND_URL_V2 } from '@/constants'
 import { Field } from '@/types'

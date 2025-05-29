@@ -6,7 +6,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { ChevronUp, ChevronDown, X } from 'lucide-react';
-import { type Field } from '@/types/index';
+import { type Field } from '@/types';
 
 interface FormFieldProps {
   field: Field;

@@ -1,4 +1,4 @@
-import AllEventsPage from '@/components/club/events/dashboard/all-events-page'
+import AllEventsPage from '@/components/dashboard/events/dashboard/all-events-page'
 import React from 'react'
 
 const EventsListingPage = () => {

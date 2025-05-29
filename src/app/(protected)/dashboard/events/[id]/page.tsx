@@ -1,19 +1,19 @@
 "use client"
 import React from 'react'
-import AdminEventDetails from "@/components/club/events/dashboard/details/admin-event-details";
-import AdminTasksDashboard from "@/components/club/events/dashboard/tasks/admin-tasks";
-import EventFormsDashboard from "@/components/club/events/dashboard/forms/forms";
-import EventFeedbacksDashboard from "@/components/club/events/dashboard/feedbacks/feedbacks";
-import EventReportsDashboard from "@/components/club/events/dashboard/reports/reports";
-import EventConfigDashboard from "@/components/club/events/dashboard/config/config";
-import EventRegistrationsDashboard from "@/components/club/events/dashboard/registrations/registrations";
+import AdminEventDetails from "@/components/dashboard/events/dashboard/details/admin-event-details";
+import AdminTasksDashboard from "@/components/dashboard/events/dashboard/tasks/admin-tasks";
+import EventFormsDashboard from "@/components/dashboard/events/dashboard/forms/forms";
+import EventFeedbacksDashboard from "@/components/dashboard/events/dashboard/feedbacks/feedbacks";
+import EventReportsDashboard from "@/components/dashboard/events/dashboard/reports/reports";
+import EventConfigDashboard from "@/components/dashboard/events/dashboard/config/config";
+import EventRegistrationsDashboard from "@/components/dashboard/events/dashboard/registrations/registrations";
 import MemberEventDashboard from "@/components/club/member/member-event-dashboard";
-import MemberEventDetails from "@/components/club/events/dashboard/details/member-event-details";
-import MemberTasksDashboard from "@/components/club/events/dashboard/tasks/member-tasks";
-import LeadTaskDashboard from "@/components/club/events/dashboard/tasks/lead-tasks";
+import MemberEventDetails from "@/components/dashboard/events/dashboard/details/member-event-details";
+import MemberTasksDashboard from "@/components/dashboard/events/dashboard/tasks/member-tasks";
+import LeadTaskDashboard from "@/components/dashboard/events/dashboard/tasks/lead-tasks";
 import { useClub } from '@/hooks/useClubContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import EventDashboardOverview from '@/components/club/events/dashboard/details/overview';
+import EventDashboardOverview from '@/components/dashboard/events/dashboard/details/overview';
 import { EventContextProvider } from '@/context/dashboard/EventContext';
 import { useToast } from '@/components/ui/use-toast';
 import { BACKEND_URL_V2 } from '@/constants';
@@ -22,9 +22,9 @@ import axios, { AxiosError } from 'axios';
 import { useEventDashboard } from '@/context/dashboard/useContext';
 import { useQuery } from '@tanstack/react-query';
 import Loader from '@/components/Loader';
-import EventTeams from '@/components/club/events/dashboard/teams/teams';
-import Assignments from '@/components/club/events/dashboard/assignments/page';
-import CheckIn from '@/components/club/events/dashboard/check-in/CheckIn';
+import EventTeams from '@/components/dashboard/events/dashboard/teams/teams';
+import Assignments from '@/components/dashboard/events/dashboard/assignments/page';
+import CheckIn from '@/components/dashboard/events/dashboard/check-in/CheckIn';
 const EventDashboardPage = ({params}:{params:{id:string}}) => {
 
 const eventContext = useEventDashboard();

@@ -7,10 +7,10 @@ import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import { Member, RegistrationDetails } from '@/types/events';
 import Loader from '@/components/Loader';
-import TeamMemberCard from '@/components/club/events/dashboard/teams/team_member_card';
+import TeamMemberCard from '@/components/dashboard/events/dashboard/teams/team_member_card';
 import { headers } from 'next/headers';
-import AssignmentList from '@/components/club/events/dashboard/assignments/assignment_list';
-import TeamAssignmentList from '@/components/club/events/dashboard/assignments/team_assignment_list';
+import AssignmentList from '@/components/dashboard/events/dashboard/assignments/assignment_list';
+import TeamAssignmentList from '@/components/dashboard/events/dashboard/assignments/team_assignment_list';
 
 
 const EventTeamPage = ({ params }: { params: { tid: string; id: string } }) => {

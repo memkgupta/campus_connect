@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
-import { FormFieldInput } from '@/components/club/forms/form-render/form-field-input'
+import { FormFieldInput } from '@/components/dashboard/events/dashboard/forms/form-render/form-field-input'
 const EventForm = () => {
     const router = useRouter()
     const {data:registrationContext,setData} = useEventRegistration()

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
-import { type Field } from '@/types/index';
+import { type Field } from '@/types';
 import { ImageEditor as ImageSelector } from '@/components/imageSelector/image-selector';
 import { useState } from 'react';
 interface FormFieldInputProps {

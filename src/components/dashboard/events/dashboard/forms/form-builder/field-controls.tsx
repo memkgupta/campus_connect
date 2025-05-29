@@ -11,7 +11,7 @@ import {
   Circle,
   Image as ImageIcon,
 } from 'lucide-react';
-import { type Field } from '@/types/index';
+import { type Field } from '@/types';
 
 const FIELD_TYPES = [
   { type: 'text', icon: Type, label: 'Text' },

@@ -1,4 +1,4 @@
-import { DashboardSidebar } from '@/components/club/events/event-dashboard-sidebar'
+import { DashboardSidebar } from '@/components/dashboard/events/event-dashboard-sidebar'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { MenuIcon } from 'lucide-react'
 import React from 'react'
