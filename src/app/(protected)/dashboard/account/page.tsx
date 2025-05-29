@@ -128,7 +128,7 @@ function Page() {
             {clubContext.clubs.length > 0 && (
               <Link
                 className="bg-yellow-300 hover:bg-yellow-400 rounded-md px-4 py-2 text-black text-sm"
-                href="/account/club"
+                href="/dashboard/club"
               >
                 Your Club
               </Link>

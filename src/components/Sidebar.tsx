@@ -157,7 +157,7 @@ const Sidebar = ({show,setter}:{show:boolean,setter:any}) => {
             />
         { isAuthenticated? <MenuItem 
           name="Account"
-          route="/account"
+          route="/dashboard"
           icon={<User/>}/>:<MenuItem
           name="Sign In"
         route="/sign-in" icon={<User/>}/>}

@@ -69,7 +69,7 @@ export const columns:ColumnDef<ContributionColumn>[]=[
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 
-                  <Link href={`/account/contribution/${contribution._id}`} className="text-sm  hover:bg-slate-950 hover:border w-full py-2 px-5 rounded-md">View</Link>
+                  <Link href={`/dashboard/contribution/${contribution._id}`} className="text-sm  hover:bg-slate-950 hover:border w-full py-2 px-5 rounded-md">View</Link>
               
                 <DropdownMenuSeparator />
                

@@ -67,7 +67,7 @@ function Signin() {
     
     useEffect(()=>{
       if(authContext?.isAuthenticated){
-        router.replace("/account")
+        router.replace("/dashboard")
       }
     },[authContext])
     return (

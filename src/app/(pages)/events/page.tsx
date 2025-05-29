@@ -128,7 +128,7 @@ finally{
    </div>
    )}
    <div className='w-full flex justify-center mt-12'>
-   <Link className='text-center text-indigo-700' href={"/account/register-a-club"}>Register your club</Link>
+   <Link className='text-center text-indigo-700' href={"/dashboard/register-a-club"}>Register your club</Link>
 
    </div>
    </>

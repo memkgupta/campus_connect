@@ -18,7 +18,7 @@ const ClubAdminEventDashboard = () => {
           className="w-64"
        
         />
-        <Link href={"/account/club/add-event"} className='bg-yellow-400 text-black rounded-md p-4 flex justify-between'>
+        <Link href={"/dashboard/events"} className='bg-yellow-400 text-black rounded-md p-4 flex justify-between'>
           <PlusIcon className="mr-2 h-4 w-4" /> New Event
         </Link>
       </div>
