@@ -32,7 +32,7 @@ const CustomDocViewer = memo(({src}:{src:string}) => {
     return ()=>{}
             },[src])
         return(
-        <div className="max-w-[1000px] px-24">
+        <div className="max-w-[1000px] px-24 w-full">
         {url && <DocViewer documents={[
             {uri:url}
             
