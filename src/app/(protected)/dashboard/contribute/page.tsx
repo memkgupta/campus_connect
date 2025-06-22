@@ -67,7 +67,7 @@ const Page = () => {
     label: "AKTU",
     id: "AKTU",
   });
-
+const [previewOpen, setPreviewOpen] = useState(false);
   const handleSubmit = async () => {
     if (
       selectedBranch &&
@@ -157,21 +157,27 @@ const Page = () => {
         <>
           <div className="flex justify-center ">
             <div className="grid md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 ">
-              {!fileUrl ? (
-                <FileUpload
-                  fileUrl={fileUrl}
-                  setFileUrl={(v: string | null) => {
-                    setFileUrl(v);
-                  }}
-                  setLabel={(v:string)=>{setLabel(v)}}
-                  fileType="pdf"
-                />
-              ) : (
-                <div className="bg-slate-800 rounded-md flex justify-around col-span-2 w-full h-[200px]">
-                  <FileText size={50} className="text-white" />
-                  <p className="font-bold text-xl font-white">{label}</p>
-                </div>
-              )}
+        <div className="col-span-2 flex flex-col items-center gap-3">
+<div
+  className="bg-slate-800 rounded-md flex justify-around items-center col-span-2 w-full h-[200px] cursor-pointer hover:shadow-md"
+  onClick={() => setPreviewOpen(true)}
+>
+  <FileText size={50} className="text-white" />
+  <p className="font-bold text-xl text-white">{label}</p>
+</div>
+  <FileUpload
+    fileUrl={fileUrl}
+    setFileUrl={(v: string | null) => {
+      setFileUrl(v);
+    }}
+    previewOpen = {previewOpen}
+    setPreviewOpen={setPreviewOpen}
+    setLabel={(v: string) => {
+      setLabel(v);
+    }}
+    fileType="pdf"
+  />
+</div>
 
               <div className="grid col-span-2 gap-1">
                 <Label className="text-gray-800">Label</Label>
