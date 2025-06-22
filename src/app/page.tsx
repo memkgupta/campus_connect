@@ -46,7 +46,7 @@ else{
        
         
        <div className={"flex-col items-center justify-center"}>
-         <h1 className={"text-4xl relative z-20 md:text-5xl lg:text-8xl font-bold text-center text-white font-sans tracking-tight"}>
+         <h1 className={"text-4xl relative z-10 md:text-5xl lg:text-8xl font-bold text-center text-white font-sans tracking-tight"}>
            Campus Connect
          </h1>
          <div className="text-xl md:text-xl text-yellow-400 text-center lg:text-4xl  font-bold py-4  [text-shadow:0_0_rgba(0,0,0,0.1)]">

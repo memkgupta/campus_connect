@@ -19,7 +19,7 @@ import Cookies from 'js-cookie';
 import CustomDocViewer from '@/components/ui/doc-viewer';
 // import {Document, Page,pdfjs} from 'react-pdf'
 
-const Page = ({params}:{params:{id:string,type:string}}) => {
+const Page = ({params}:{params:{id:string}}) => {
     // pdfjs.GlobalWorkerOptions.workerSrc =  
     // `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`; 
     // const {data:session} = useSession();

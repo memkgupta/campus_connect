@@ -40,7 +40,7 @@ const checkUsername = async()=>{
     setIsUsernameChecking(true);
     setUsernameMessage('');
     try {
-     const response = await axios.get(`${BACKEND_URL}/utils/username-valid-check?username=${username}`)
+     const response = await axios.get(`${BACKEND_URL}/username-valid-check?username=${username}`)
      setUsernameMessage(response.data.message)
     } catch (error) {
       const axiosError = error as AxiosError<any>;

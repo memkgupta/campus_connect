@@ -48,7 +48,7 @@ const Page = ({params}:{params:{type:string,id:string}}) => {
             <CardFooter className='flex justify-between'>
               <Link href={res.data.type==='lectures'?
                 `/lectures/${res.data._id}`
-                :`/resources/${res.data.type}/${res.data._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
+                :`/resource/${res.data._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
               <div className='flex gap-2'>
                 <div className='flex gap-1'>
                     <Image alt='upvotes' src={"/upvote.svg"} width={20} height={20}/>

@@ -27,6 +27,7 @@ import { Label } from "@/components/ui/label";
 import FileUpload from "@/components/utils/files/file-upload";
 import { headers } from "next/headers";
 import Cookies from "js-cookie";
+import { Textarea } from "@/components/ui/textarea";
 const Page = () => {
   const date = new Date();
   const isContributor = useContext(ContributorContext);
@@ -58,7 +59,7 @@ const Page = () => {
     label: string;
     id: string;
   } | null>();
-
+  const [description,setDescription] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [label, setLabel] = useState("");
   const [selectedUniversity, setSelectedUniversity] = useState({
@@ -78,11 +79,12 @@ const Page = () => {
     ) {
       const data = {
         label: label,
-        type: resourceType,
-        branch: selectedBranch,
-        code: selectedSubject,
-        collegeYear: year,
-        sessionYear: sessionYear,
+        type: resourceType.value,
+        branch: selectedBranch.value,
+        code: selectedSubject.value,
+        collegeYear: year.value,
+        description:description,
+        sessionYear: sessionYear.value,
         file: fileUrl?.replace("view", "preview"),
         university: selectedUniversity.value,
       };
@@ -181,6 +183,16 @@ const Page = () => {
                   }}
                   className="w-[500px] mb-5 text-white "
                   type="text"
+                />
+                <Label className="text-gray-800">Description</Label>
+                {/* description */}
+                <Textarea
+                  value={description}
+                  onChange={(e)=>{
+                    setDescription(e.target.value)
+                  }}
+                  className="mb-5 text-white"
+                  
                 />
               </div>
               <ComboBox

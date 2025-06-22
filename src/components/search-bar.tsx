@@ -10,7 +10,7 @@ const SearchBar = () => {
     const [query, setQuery] = useState('');
 const debounced = useDebounceCallback(setQuery,500);
 const [searchType,setSearchType] = useState('resources')
-const [searchResult,setSearchResult] = useState<{label:string,href:string,thumbnail:string|undefined,sub:string|undefined}[]>([]);
+const [searchResult,setSearchResult] = useState<{_id:string,label:string,url:string,thumbnail:string|undefined,sub:string|undefined}[]>([]);
 const {toast} = useToast();
 const [isSearching,setIsSearching] = useState(false);
 const [isFocused, setIsFocused] = useState(false);
@@ -23,29 +23,16 @@ const handleInputChange = (e:any) => {
     else{
       setIsSearching(false)
     }
-    if(e.target.value.length==1){
-      if(e.target.value==='@'){
-        setSearchType('users');
-      }
-      else {
-        setSearchType('resources');
-      }
-  
-    }
-   
-    if(!e.target.value.startsWith('@')){
-  debounced(e.target.value);
-    }
-    else{
-      debounced(e.target.value.slice(1));
-    }
+ 
+      debounced(e.target.value);
+    
   };
   useEffect(()=>{
   
     const fetchResults = async()=>{
       try {
         if(query.length>0){
-          const res = await axios.get(`${BACKEND_URL}/utils/search`,{params:{type:searchType,query:query}});
+          const res = await axios.get(`${BACKEND_URL}/search`,{params:{q:query}});
        setSearchResult(res.data.results);
         }
     else{
@@ -99,7 +86,7 @@ return (
         
       ):(<>
       {searchResult.length==0?(<>No Results</>):(<>
-      {searchResult.map(res=><SearchResult href={res.href} label={res.label} sub={res.sub} thumbnail={res.thumbnail}  key={res.href}/>)}
+      {searchResult.map(res=><SearchResult href={res.url} label={res.label} sub={res.sub} thumbnail={res.thumbnail}  key={res._id}/>)}
       </>)}
       </>)}
     </div>}

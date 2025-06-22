@@ -33,7 +33,7 @@ const [isFocused, setIsFocused] = useState(false);
 
   return (
   <>
-    <div className='z-40 flex items-center  justify-between w-full text-yellow-300 bg-slate-950 px-4'>
+    <div className='z-60 flex items-center  justify-between w-full text-yellow-300 bg-slate-950 px-4'>
         <Image src={"/logo.png"} width={70} height={70} alt='logo'/>
         <div className='md:block hidden'>
 <NavigationMenuDemo/>

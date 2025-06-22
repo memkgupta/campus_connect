@@ -18,7 +18,7 @@ const routes = [
   {
     label: 'Dashboard',
     icon: BarChart3,
-    href: '/admin/dashboard',
+    href: '/admin',
     color: 'text-sky-500',
   },
   {

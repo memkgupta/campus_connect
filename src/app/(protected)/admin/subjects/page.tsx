@@ -1,10 +1,10 @@
 "use client"
 import { BACKEND_URL } from '@/constants'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import React, { useState } from 'react'
 import Cookies from 'js-cookie'
-import { toast } from '@/components/ui/use-toast'
+import { toast, useToast } from '@/components/ui/use-toast'
 import { Input } from '@/components/ui/input'
 import { useDebounceCallback } from 'usehooks-ts'
 import {
@@ -83,11 +83,7 @@ interface Subject {
 const SubjectsPage = () => {
 const [totalResults,setTotalResults] = useState(0);
 const [modalOpen, setModalOpen] = useState(false);
-
-
-
-
-
+const {toast} = useToast()
 const [filters,setFilters] = useState({
     label:"",
     branch:"",
@@ -113,7 +109,6 @@ const [filters,setFilters] = useState({
             return Promise.reject("Some error occured");
         }
     }
-
     const debouncedFilter = useDebounceCallback(setFilters,500);
     const {data:subjects,isLoading} = useQuery({
         queryKey:['subjects-admin',{...filters}],
@@ -128,6 +123,28 @@ const [filters,setFilters] = useState({
         
         return { ...prev, page: state.pageNumber};
       });}
+    const handleSubmit = async(data:any)=>{
+      try{
+        const req = await axios.post(`${BACKEND_URL}/admin/subjects`,data,{headers:{
+          "Authorization":`Bearer ${Cookies.get('access-token')}`
+        }});
+        const  res = req.data.subject;
+        toast({
+        title:"Subject added ",
+        variant:"default",
+        color:"#008000"
+       })
+        setModalOpen(false)
+      }
+      catch(error)
+      {
+        const aError = error as AxiosError<any>
+       toast({
+        title:"Something went wrong",
+        variant:"destructive"
+       })
+      }
+    }
   return (
     <div>
 
@@ -135,16 +152,22 @@ const [filters,setFilters] = useState({
       <div className="flex flex-col sm:flex-row gap-4">
         
          <Button
-          
+           onClick={()=>setModalOpen(true)}
           className="sm:w-auto"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Subject
         </Button>
+      {modalOpen && <SubjectModal
+        onOpenChange={(o)=>setModalOpen(o)}
+        onSubmit={handleSubmit}
+        open={modalOpen}
+      />}
+        
       </div>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-md border mt-2">
        
     
       <CustomTable

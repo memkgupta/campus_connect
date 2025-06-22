@@ -7,43 +7,77 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Search, BookMarked, Link as LinkIcon, ExternalLink, Bookmark, Clock, Star } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { BACKEND_URL, BACKEND_URL_V2 } from "@/constants";
+import Cookies from "js-cookie";
+import { useToast } from "@/components/ui/use-toast";
+import Loader from "@/components/Loader";
+// const resources = [
+//   {
+//     id: 1,
+//     title: "Machine Learning Fundamentals",
+//     description: "Comprehensive guide to ML basics and algorithms",
+//     type: "Course",
+//     url: "https://example.com/ml-course",
+//     savedDate: "2024-03-15",
+//     category: "Academic",
+//     status: "In Progress",
+//     progress: 45,
+//   },
+//   {
+//     id: 2,
+//     title: "React Best Practices 2024",
+//     description: "Latest React patterns and optimization techniques",
+//     type: "Article",
+//     url: "https://example.com/react-2024",
+//     savedDate: "2024-03-10",
+//     category: "Technical",
+//     status: "Saved",
+//   },
+//   {
+//     id: 3,
+//     title: "Campus Placement Preparation",
+//     description: "Complete roadmap for placement preparation",
+//     type: "Guide",
+//     url: "https://example.com/placement-prep",
+//     savedDate: "2024-03-08",
+//     category: "Career",
+//     status: "Completed",
+//     progress: 100,
+//   },
+// ];
 
-const resources = [
-  {
-    id: 1,
-    title: "Machine Learning Fundamentals",
-    description: "Comprehensive guide to ML basics and algorithms",
-    type: "Course",
-    url: "https://example.com/ml-course",
-    savedDate: "2024-03-15",
-    category: "Academic",
-    status: "In Progress",
-    progress: 45,
-  },
-  {
-    id: 2,
-    title: "React Best Practices 2024",
-    description: "Latest React patterns and optimization techniques",
-    type: "Article",
-    url: "https://example.com/react-2024",
-    savedDate: "2024-03-10",
-    category: "Technical",
-    status: "Saved",
-  },
-  {
-    id: 3,
-    title: "Campus Placement Preparation",
-    description: "Complete roadmap for placement preparation",
-    type: "Guide",
-    url: "https://example.com/placement-prep",
-    savedDate: "2024-03-08",
-    category: "Career",
-    status: "Completed",
-    progress: 100,
-  },
-];
 
 export default function ResourcesPage() {
+  const {toast} = useToast()
+  const fetchResources = async()=>{
+  try{
+    const req = await axios.get(`${BACKEND_URL}/resources/saved-resources`,
+      {headers:{
+        "Authorization":`Bearer ${Cookies.get("access-token")}`
+      }}
+    )
+    return req.data.bookmarks;
+  }
+  catch(error)
+  {
+    const aError = error as AxiosError<any>
+    const message = aError.response?.data.message || "Some error occured"
+    toast(
+      {
+        variant:"destructive",
+        title:message
+      }
+    )
+    return Promise.reject("Some error occured")
+  }
+}
+
+const {data:resources,isFetching} = useQuery({
+  queryKey:["saved-resources"],
+  queryFn:fetchResources
+})
   return (
 
       <div className="flex flex-col gap-6 p-4 md:p-6">
@@ -64,7 +98,8 @@ export default function ResourcesPage() {
           </div>
         </div>
 
-        <Tabs defaultValue="all" className="w-full">
+        {isFetching?<Loader/>:(
+          <Tabs defaultValue="all" className="w-full">
           <TabsList className="bg-slate-800 mb-4">
             <TabsTrigger value="all">All Resources</TabsTrigger>
             <TabsTrigger value="academic">Academic</TabsTrigger>
@@ -74,8 +109,8 @@ export default function ResourcesPage() {
 
           <TabsContent value="all" className="mt-0">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {resources.map((resource) => (
-                <ResourceCard key={resource.id} resource={resource} />
+              {resources.map((resource:any) => (
+                <ResourceCard key={resource._id} resource={resource} />
               ))}
             </div>
           </TabsContent>
@@ -84,20 +119,21 @@ export default function ResourcesPage() {
             <TabsContent key={category} value={category} className="mt-0">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {resources
-                  .filter((r) => r.category.toLowerCase() === category)
-                  .map((resource) => (
+                  .filter((r:any) => r.category.toLowerCase() === category)
+                  .map((resource:any) => (
                     <ResourceCard key={resource.id} resource={resource} />
                   ))}
               </div>
             </TabsContent>
           ))}
         </Tabs>
+        )}
       </div>
 
   );
 }
 
-function ResourceCard({ resource }: { resource: typeof resources[0] }) {
+function ResourceCard({ resource }: { resource: any }) {
   return (
     <Card className="bg-slate-900 border-slate-800 hover:border-slate-700 transition-colors">
       <CardHeader className="pb-3">

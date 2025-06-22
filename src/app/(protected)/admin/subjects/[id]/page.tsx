@@ -33,7 +33,7 @@ function Modal({
             onClick={onClose}
             className="absolute top-4 right-4 text-gray-400 hover:text-white"
           >
-            <X size={20} />
+            <X size={20} /> 
           </button>
           {children}
         </div>
