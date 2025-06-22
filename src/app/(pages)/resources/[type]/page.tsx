@@ -37,30 +37,43 @@ const Page = ({params}:{params:{type:string,id:string}}) => {
           <div className='grid md:grid-cols-3 grid-cols-1 gap-4 justify-items-center mt-12'>
           {
             data?.map((res)=>(
-              <Card className='min-w-[300px] '>
-              <CardContent className='flex flex-col justify-center items-center'>  
-                {res.data.thumbnail && <CustomImage src={res.data.thumbnail} className='max-w-fit w-[200px] h-[200px]' />}
-                {res.data.label}
-                
-                {res.data.sessionYear}
-                </CardContent>
-            
-            <CardFooter className='flex justify-between'>
-              <Link href={res.data.type==='lectures'?
-                `/lectures/${res.data._id}`
-                :`/resource/${res.data._id}`} className=''><Button className='bg-yellow-300 hover:bg-yellow-400 text-black'>View</Button></Link>
-              <div className='flex gap-2'>
-                <div className='flex gap-1'>
-                    <Image alt='upvotes' src={"/upvote.svg"} width={20} height={20}/>
-                   <p className='text-gray-500'>{res.upvoteCount}</p>
-                </div>
-                <div className='flex gap-1'>
-                    <Image alt='downvotes' src={"/downvote.svg"} width={20} height={20}/>
-                   <p className='text-gray-500'>{res.downvoteCount}</p>
-                </div>
-              </div>
-            </CardFooter>
-          </Card>
+           <Card className="w-full max-w-sm shadow-lg border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+  <CardContent className="p-0">
+    {res.data.thumbnail && (
+      <CustomImage
+        src={res.data.thumbnail}
+        className="w-full h-48 object-cover rounded-t-2xl"
+      />
+    )}
+    <div className="p-4 space-y-2">
+      <CardTitle className="text-lg font-semibold text-gray-800 truncate">{res.data.label}</CardTitle>
+      <CardDescription className="text-sm text-gray-500">{res.data.sessionYear}</CardDescription>
+    </div>
+  </CardContent>
+  <CardFooter className="flex items-center justify-between px-4 pb-4">
+    <Link
+      href={
+        res.data.type === "lectures"
+          ? `/lectures/${res.data._id}`
+          : `/resource/${res.data._id}`
+      }
+    >
+      <Button className="bg-yellow-300 hover:bg-yellow-400 text-black rounded-xl text-sm">
+        View
+      </Button>
+    </Link>
+    <div className="flex items-center space-x-4">
+      <div className="flex items-center gap-1 text-gray-500 text-sm">
+        <Image alt="upvotes" src={"/upvote.svg"} width={18} height={18} />
+        <span>{res.upvoteCount}</span>
+      </div>
+      <div className="flex items-center gap-1 text-gray-500 text-sm">
+        <Image alt="downvotes" src={"/downvote.svg"} width={18} height={18} />
+        <span>{res.downvoteCount}</span>
+      </div>
+    </div>
+  </CardFooter>
+</Card>
             ))
           }
                   </div>

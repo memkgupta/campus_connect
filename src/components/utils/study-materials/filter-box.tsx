@@ -194,7 +194,7 @@ const {data:resourceData,isSuccess} = useQuery<any>(
               id: "4",
             },
           ]}
-          stateSetter={(v:any)=>{setYear(v.value)}}
+          stateSetter={(v:any)=>{v && setYear(v.value)}}
         />
       )}
       {/* Subject filter */}
@@ -203,20 +203,20 @@ const {data:resourceData,isSuccess} = useQuery<any>(
         defaultValue={subject}
           label="Select Subject"
           options={subjectsFilterOptions&&subjectsFilterOptions.length>0?subjectsFilterOptions:[{id:'all',value:'all',label:'All'}]}
-          stateSetter={(v:any)=>setSubject(v.value)}
+          stateSetter={(v:any)=>v&&setSubject(v.value)}
         />
       )}
       {
      ( parseInt(year)>1) && <ComboBox label="Select Branch"
      defaultValue={selectedBranch}
-      options={branches} stateSetter={(v:any)=>{setSelectedBranch(v.value)}}/>
+      options={branches} stateSetter={(v:any)=>{v&&setSelectedBranch(v.value)}}/>
       }
       {filters.university && (
         <ComboBox
         defaultValue={selectedUniversity}
           label="Select university"
           options={universities}
-          stateSetter={(v:any)=>{setSelectedUniversity(v.value)}}
+          stateSetter={(v:any)=>{v&&setSelectedUniversity(v.value)}}
         />
       )}
       {/* <ComboBox label='Select university' options={paperType} stateSetter={setSelectedPaperType} /> */}

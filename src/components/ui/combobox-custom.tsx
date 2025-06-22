@@ -8,13 +8,21 @@ const ComboBox = ({options,stateSetter,label,defaultNull,defaultValue}:{options:
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState<{ id:string,value: string; label: string; }|null>(options.find((o)=>o.value===defaultValue)||options[0])
     const [query,setQuery] = useState('');
-    const [filteredData,setFilteredData] =useState(
-      query === ''
+const [filteredData, setFilteredData] = useState(() => {
+
+
+  const result =
+    query === ''
       ? options
       : options.filter((option) => {
-          return option.label.toLowerCase().includes(query.toLowerCase())
-        })
-    )
+          const match = option.label.toLowerCase().includes(query.toLowerCase());
+        
+          return match;
+        });
+
+
+  return result;
+});
   
    useEffect(()=>{
 
@@ -24,7 +32,18 @@ stateSetter(value);
 setFilteredData(options);
  
    },[options])
-  
+  useEffect(() => {
+ 
+  if (query === '') {
+    setFilteredData(options);
+  } else {
+    const filtered = options.filter((option) =>
+      option.label.toLowerCase().includes(query.toLowerCase())
+    );
+   
+    setFilteredData(filtered);
+  }
+}, [query, options]);
     return (
         <div className="  w-52 ">
             <p className="text-sm text-slate-700">{label}</p>
