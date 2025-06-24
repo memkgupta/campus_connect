@@ -132,6 +132,7 @@ function Signin() {
          
           </form>
         </Form>
+        <div className='flex justify-center'><Link className='text-indigo-600' href={"/auth/forgot-password"}>Forgot Password</Link></div>
         <div className='flex justify-center'><Link className='text-indigo-600' href={"/auth/sign-up"}>Don't have an account ? Sign up</Link></div>
       </div>
     </div>

@@ -1,9 +1,9 @@
- export const BACKEND_URL = "https://campus-connect-dev.xyz/api/v1"
+//  export const BACKEND_URL = "https://campus-connect-dev.xyz/api/v1"
 
-export const BACKEND_URL_V2 = "https://campus-connect-dev.xyz/api/v2"
-//  export const BACKEND_URL = "http://localhost:8000/api/v1"
+// export const BACKEND_URL_V2 = "https://campus-connect-dev.xyz/api/v2"
+ export const BACKEND_URL = "http://localhost:8000/api/v1"
 
-// export const BACKEND_URL_V2 = "http://localhost:8000/api/v2"
+export const BACKEND_URL_V2 = "http://localhost:8000/api/v2"
 export const universities = [
     { "value": "AKTU", "label": "AKTU", "id": "AKTU" },
    
@@ -81,3 +81,40 @@ export const eventFormTypes = [
             {value: 'bioinformatics', label: 'Bioinformatics', id: 'bioinformatics'},
             {value: 'fintech', label: 'Fintech', id: 'fintech'}
         ];      
+export const navResourceOptions : { title: string; href: string; description: string }[] = [
+  {
+    title: "PYQ's",
+    href: "/resources/pyq",
+    description:
+      "Previous Year papers of aktu university",
+  },
+  {
+    title: "Question Bank",
+    href: "/resources/question-bank",
+    description:
+      "Question banks subjectwise for each subjects.",
+  },
+  {
+    title: "Lectures",
+    href: "/resources/lectures",
+    description:
+      "Online lectures sorted for you subjectwise and topicwise",
+  },
+  {
+    title: "Notes",
+    href: "/resources/notes",
+    description: "Subjectwise and chapterwise notes for each year.",
+  },
+  {
+    title: "Short Notes",
+    href: "/resources/short-notes",
+    description:
+      "Short Notes for quick revision",
+  },
+  {
+    title: "Quantum",
+    href: "/resources/quantum",
+    description:
+      "Subjectwise quantum",
+  },
+]

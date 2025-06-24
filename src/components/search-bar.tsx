@@ -1,95 +1,106 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { useDebounceCallback } from 'usehooks-ts';
-import { useToast } from './ui/use-toast';
-import { Loader2, Search } from 'lucide-react';
-import SearchResult from './search-results';
-import {BACKEND_URL} from "@/constants";
+import axios from "axios"
+import React, { useEffect, useRef, useState } from "react"
+import { useDebounceCallback } from "usehooks-ts"
+import { useToast } from "./ui/use-toast"
+import { Loader2, Search } from "lucide-react"
+import SearchResult from "./search-results"
+import { BACKEND_URL } from "@/constants"
+import { Input } from "./ui/input" // import your shadcn Input
 
 const SearchBar = () => {
-    const [query, setQuery] = useState('');
-const debounced = useDebounceCallback(setQuery,500);
-const [searchType,setSearchType] = useState('resources')
-const [searchResult,setSearchResult] = useState<{_id:string,label:string,url:string,thumbnail:string|undefined,sub:string|undefined}[]>([]);
-const {toast} = useToast();
-const [isSearching,setIsSearching] = useState(false);
-const [isFocused, setIsFocused] = useState(false);
-const handleInputChange = (e:any) => {
-    // if(e.target.value)
-   
-    if(e.target.value.length>0){
-      setIsSearching(true)
+  const [query, setQuery] = useState("")
+  const debounced = useDebounceCallback(setQuery, 500)
+  const [searchResult, setSearchResult] = useState<
+    { _id: string; label: string; url: string; thumbnail?: string; sub?: string }[]
+  >([])
+  const { toast } = useToast()
+  const [isSearching, setIsSearching] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
+
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setIsSearching(value.length > 0)
+    debounced(value)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsFocused(false)
+      }
     }
-    else{
-      setIsSearching(false)
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
     }
- 
-      debounced(e.target.value);
-    
-  };
-  useEffect(()=>{
-  
-    const fetchResults = async()=>{
+  }, [])
+
+  useEffect(() => {
+    const fetchResults = async () => {
       try {
-        if(query.length>0){
-          const res = await axios.get(`${BACKEND_URL}/search`,{params:{q:query}});
-       setSearchResult(res.data.results);
+        if (query.length > 0) {
+          const res = await axios.get(`${BACKEND_URL}/search`, {
+            params: { q: query },
+          })
+          setSearchResult(res.data.results)
+        } else {
+          setSearchResult([])
         }
-    else{
-      setSearchResult([]);
-    }
       } catch (error) {
         toast({
-          title:"Some error occured",
-          variant:'destructive'
+          title: "Some error occurred",
+          variant: "destructive",
         })
-      }
-      finally{
-        setIsSearching(false);
+      } finally {
+        setIsSearching(false)
       }
     }
-    fetchResults();
-  },[query])
-return (
-    <div className='relative'>
-    <div className="relative flex items-center h-full w-full ">
-      <input
-        type="text"
-       
-        onFocus={()=>{setIsFocused(true)}}
-        onBlur={()=>{setIsFocused(false)}}
-        onChange={handleInputChange}
-        className="w-full pl-10 pr-4 text-black py-2 rounded-l-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white "
-        placeholder="Search..."
-      />
-      <svg
-        className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M21 21l-4.35-4.35m1.41-5.41A7.5 7.5 0 1110.5 3.5a7.5 7.5 0 017.5 7.5z"
-        ></path>
-      </svg>
-      <button className='h-10 px-2 bg-yellow-300 rounded-r-md'><Search color='black'/></button>
-    </div>
-    {(isFocused||searchResult.length>0)&&<div className='absolute z-40 top-14 rounded-md bg-slate-950 p-2 w-full'>
-      {isSearching?(
-        <div className='flex w-full h-full items-center justify-center'>
-<Loader2 className='text-gray-700 animate-spin'/>
+
+    fetchResults()
+  }, [query])
+
+  return (
+    <div className="relative  items-center flex-1 max-w-md mx-6" ref={wrapperRef}>
+      {/* Search Input */}
+      <div className="relative w-full">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+        <Input
+          placeholder="Search courses, events, announcements..."
+          onFocus={() => setIsFocused(true)}
+          onChange={handleInputChange}
+          className="pl-10 pr-4 h-10 bg-muted/50 border-border/50 text-white placeholder:text-muted-foreground focus:bg-background focus:ring-1 focus:ring-yellow-400 transition-colors"
+        />
+      </div>
+
+      {/* Dropdown Results */}
+      {isFocused && (
+        <div className="absolute top-12 left-0 w-full z-50 bg-background border border-slate-800 rounded-md shadow-xl animate-fadeIn max-h-80 overflow-y-auto">
+          {isSearching ? (
+            <div className="flex items-center justify-center py-4">
+              <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
+            </div>
+          ) : searchResult.length === 0 ? (
+            <div className="px-4 py-3 text-sm text-center text-muted-foreground">
+              No results found
+            </div>
+          ) : (
+            <div className="p-2 flex flex-col gap-1">
+              {searchResult.map((res) => (
+                <SearchResult
+                  key={res._id}
+                  href={res.url}
+                  label={res.label}
+                  sub={res.sub}
+                  thumbnail={res.thumbnail}
+                />
+              ))}
+            </div>
+          )}
         </div>
-        
-      ):(<>
-      {searchResult.length==0?(<>No Results</>):(<>
-      {searchResult.map(res=><SearchResult href={res.url} label={res.label} sub={res.sub} thumbnail={res.thumbnail}  key={res._id}/>)}
-      </>)}
-      </>)}
-    </div>}
+      )}
     </div>
   )
 }

@@ -17,11 +17,13 @@ import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { toast } from "@/components/ui/use-toast";
 import { BACKEND_URL } from "@/constants";
+import { Event } from "@/types/types";
+import { EventType } from "@/types/events";
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
-  feed:any
+  feed:{upcomingEvents:Partial<EventType>[],topRecentAnnouncements:Announcement[],recentActivities:any[]}
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(

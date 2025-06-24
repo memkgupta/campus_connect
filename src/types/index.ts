@@ -1,6 +1,7 @@
 export type User ={
 id?:string,
 email:string,
+profile?:string,
 name:string,
 username:string,
 role:string,
