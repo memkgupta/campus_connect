@@ -21,14 +21,14 @@ export default function Home() {
   const router = useRouter()
 
  
-const [isLoading,setIsLoading] = useState(true);
+
   const session = useSession();
 if(session.isAuthenticated){
   router.replace("/home")
 }
   return (
     <>
-      {isLoading ? (
+      {session.isLoading ? (
         <Loader />
       ) : (
         <div className="overflow-x-hidden">
