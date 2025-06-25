@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
 import { useSession } from '@/hooks/useSession'
 import { BACKEND_URL } from '@/constants'
+import OverlayLoader from '@/components/ui/overlay-loader'
 function page() {
   // const [email,setEmail] = useState<string>("");
   const[username,setUsername] = useState('')
@@ -71,13 +72,10 @@ try {
   setIsSubmitting(false);
 }
   }
-  useEffect(()=>{
-    if(isAuthenticated){
-      router.replace("/account")
-    }
-  },[isAuthenticated])
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-black">
+   <OverlayLoader show={isSubmitting}/>
     <div className="w-full max-w-md p-8 space-y-6 bg-slate-950 rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold text-center text-yellow-400">Sign Up</h2>
       <Form {...form} >

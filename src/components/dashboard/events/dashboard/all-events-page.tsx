@@ -164,8 +164,10 @@ debounced({...filters,page:pageNumber})
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-
- 
+     
+  <Link href={`/dashboard/events/create-event`} className="bg-yellow-300 rounded-md text-black p-2 ">
+      Create Event 
+      </Link>
       </div>
       <div className="rounded-md border">
        

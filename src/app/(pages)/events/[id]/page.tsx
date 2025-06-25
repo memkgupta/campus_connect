@@ -45,7 +45,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   return (
     <>
   
-    <EventDetails registered={data?.registered||"null"}  event={data}/>
+  {data &&  <EventDetails registered={data?.registered||"null"}  event={data}/>}
       
     </>
   );

@@ -9,6 +9,7 @@ import React, { createContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useAppDispatch } from "@/lib/hooks";
 import { setClubDetails } from "@/lib/slices/clubSlice";
+import Loader from "@/components/Loader";
 type ClubContextState = {
      clubs:{
         _id:string,
@@ -119,10 +120,7 @@ return(()=>{})
     <ClubContext.Provider value={{clubs:state?.clubs||[],selectedClub:state?.selectedClub,handleChangeSelectedClub:handleChangeSelectedClub}} >
       <>
       {isLoading?(
-        <div className="flex jsutify-center items-center min-h-[80vh] w-full">
-           <Loader2 className="animate-spin text-gray-500"  size={40}/>
-
-        </div>
+       <Loader/>
         ):<>
 {
     state && children

@@ -16,6 +16,7 @@ import { Loader2 } from 'lucide-react'
 // import {signIn, useSession} from "next-auth/react"
 import { useSession } from '@/hooks/useSession'
 import { AuthContext } from '@/context/AuthContext'
+import OverlayLoader from '@/components/ui/overlay-loader'
 function Signin() {
     // const [email,setEmail] = useState<string>("");
     const[username,setUsername] = useState('')
@@ -38,7 +39,7 @@ function Signin() {
    
   
     const handleSubmit = async(data:Zod.infer<typeof signInSchema>)=>{
-        console.log("data")
+       
         setIsSubmitting(true)
         try {
           const res = await authContext?.login({email:data.identifier,password:data.password})
@@ -50,7 +51,7 @@ function Signin() {
               color:'green'
           });
          
-       
+          router.replace(`/dashboard`)
           setIsSubmitting(false)
         } catch (error) {
           toast({
@@ -65,13 +66,10 @@ function Signin() {
  }
 
     
-    useEffect(()=>{
-      if(authContext?.isAuthenticated){
-        router.replace("/dashboard")
-      }
-    },[authContext])
+
     return (
       <div className="flex items-center justify-center min-h-screen bg-black">
+     <OverlayLoader show={isSubmitting}/>
       <div className="w-full max-w-md p-8 space-y-6 bg-slate-950 rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-yellow-400">Sign In</h2>
         <Form {...form} >

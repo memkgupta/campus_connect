@@ -20,8 +20,10 @@ import { BACKEND_URL_V2 } from "@/constants";
 import { headers } from "next/headers";
 import Cookies from "js-cookie";
 import { useToast } from "@/components/ui/use-toast";
+import { useEventContext } from "@/context/EventContext";
 export default function RegistrationDetailsForm() {
     const router = useRouter()
+    const eventContext = useEventContext()
     const registrationContext = useEventRegistration()
     const pathName = usePathname()
     const {toast} = useToast()
@@ -41,7 +43,7 @@ export default function RegistrationDetailsForm() {
  async function onSubmit(data: z.infer<typeof registrationDetailsSchema>) {
  try{
     const req = await axios.post(`${BACKEND_URL_V2}/events/registrations/register`,{
-        event_id:registrationContext.data.eventId,
+        event_id:eventContext.data?._id,
         registrationDetails:data
     },
 {headers:{
@@ -52,7 +54,10 @@ toast({
   title:"Registration started"
 })
 registrationContext.setData({...registrationContext.data,registrationId:rid,registrationDetails:data})
+if(eventContext.data){
+eventContext.setData({...eventContext.data,registered:rid})
 
+}
  }
  catch(error:any)
  {

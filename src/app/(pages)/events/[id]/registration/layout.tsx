@@ -22,7 +22,7 @@ const EventRegistrationLayout = ({children}:{children:ReactNode}) => {
    const fetchRegistrationDetails = async()=>{
   try{
   const registrationId = eventContext.data?.registered
-  if(registrationId == null){
+  if(registrationId == "null"){
     return Promise.reject("Registration id is null");
   }
 

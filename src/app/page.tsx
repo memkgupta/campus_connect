@@ -23,18 +23,9 @@ export default function Home() {
  
 const [isLoading,setIsLoading] = useState(true);
   const session = useSession();
-  useEffect(()=>{
-if(session?.user){
-  setIsLoading(false);
-  router.replace("/home");  
+if(session.isAuthenticated){
+  router.replace("/home")
 }
-else{
-  setIsLoading(false)
-}
-  },[session])
-  useEffect(()=>{
-
-  },[])
   return (
     <>
       {isLoading ? (

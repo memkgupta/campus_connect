@@ -1,6 +1,6 @@
 export interface EventType {
     _id?: string;
-    owner: string;
+    owner?: string;
     type: "hackathon" | "session" | "workshop" | "contest" | "campaign" | "other" | "ground-work";
     basicDetails: {
       title: string;

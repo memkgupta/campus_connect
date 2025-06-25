@@ -109,7 +109,7 @@ toast({
         <Input type='text' placeholder='Search By title' onChange={(e)=>{debounced({...params,title:e.target.value})}}/>
        </div>
        {!ss||isFetching?(<>
-       <Loader2 className='animate-spin text-gray-400'/>
+       <Loader/>
        </>):(<div className='grid grid-cols-3 gap-3 mt-12 px-12'>
        {
  projects.map(project=>(

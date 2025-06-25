@@ -20,6 +20,7 @@ import {
     PaginationPrevious,
   } from "@/components/ui/pagination"
 import Link from 'next/link';
+import Loader from '@/components/Loader';
 const Page = () => {
 // const [events,setEvents] = useState([]);
 const [happening,setHappening] = useState({value:"this-week",label:'This Week',id:"this-week"});
@@ -96,9 +97,7 @@ finally{
          </div>
     </div>
    {!events ||isFetching?(
-    <div className='w-full min-h-screen flex justify-center items-center'>
-        <Loader2 className='text-gray-500 animate-spin'/>
-    </div>
+   <Loader/>
    ):(
 
    <div>

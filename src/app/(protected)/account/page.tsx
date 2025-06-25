@@ -42,6 +42,7 @@ import SocialLinkDialog from "@/components/account/SocialLinkDialog";
 import dynamic from "next/dynamic";
 import { BACKEND_URL } from "@/constants";
 import CustomImage from "@/components/ui/image";
+import Loader from "@/components/Loader";
 
 function Page() {
   const [userDetails, setUserDetails] = useState({
@@ -221,17 +222,13 @@ function Page() {
             )}
           </>
         ) : (
-          <div className="min-h-[80vh] flex justify-center items-center w-full">
-            <Loader2 size={40} className="animate-spin text-gray-700" />
-          </div>
+         <Loader/>
         )}
       </>
     );
   } else {
     return (
-      <div className="flex justify-center items-center h-full w-full">
-        <Loader2 className="animate-spin text-gray-500" />
-      </div>
+    <Loader/>
     );
   }
 }
