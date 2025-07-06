@@ -111,31 +111,26 @@ const testimonials:any = [
     quote:
       "Campus Connect is a good project and is problem solving. From finding team members for hackathons to staying updated with events, everything is now seamless!",
     name: "Priyanshu Pal",
-    title: "CSE",
+    title: "Student",
   },
-  {
-    quote:
-      "Campus Connect is a good project and is problem solving. From finding team members for hackathons to staying updated with events, everything is now seamless!",
-    name: "Nikhil Soni",
-    title: "CSE",
-  },
+
   {
     quote:
       "Before Campus Connect, it was tough to discover project collaborations. Now, I can easily connect with peers who share my interests and work on real-world applications.",
-    name: "Mantosh",
-    title: "CSE",
+    name: "Shiven",
+    title: "Student",
   },
   {
     quote:
       "Our college clubs struggled with event promotions. With Campus Connect, we saw a huge increase in participation and engagement. It's a must-have for any campus!",
     name: "Rudraksh Kushwaha",
-    title: "GDSC Lead",
+    title: "Board Of Directors GFG Student Chapter",
   },
   {
     quote:
       "I always wanted a platform where students from different branches could collaborate easily. Campus Connect makes it effortless to share knowledge and work on interdisciplinary projects.",
-    name: "Mayank Rana",
-    title: "CSE",
+    name: "Divyank Batham",
+    title: "GFG Student Chapter Vice Chairperson",
   },
  
 ]
