@@ -95,7 +95,7 @@ setIsVoted(res.data.data.isVoted);
               </div>
 </div>
         <div className="mt-5 flex justify-center">
-{pdfUrl&&(<CustomDocViewer src={pdfUrl}/>)}
+{pdfUrl&&(<CustomDocViewer src={pdfUrl} fileName={data.resource?.label}/>)}
         </div>
         </div>
       ):

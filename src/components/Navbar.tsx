@@ -274,7 +274,7 @@ function Navbar() {
       <ProgressBar
         height="3px"
         color="hsl(270, 100%, 50%)"
-
+        disableSameURL
         options={{ showSpinner: false }}
         shallowRouting
       />
